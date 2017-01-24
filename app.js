@@ -103,8 +103,8 @@ io.on("connection", function (socket) {
         Game.red_planet_list = {};
         id = uuid.v4();
         Game.id = id;
-        console.log("Room Created : " + lobby);
-        console.log("Game Created : " + Game.id);
+        //console.log("Room Created : " + lobby);
+        //console.log("Game Created : " + Game.id);
         for (var i in queue_list) {
             if (temp < 2)                                                  // To select first 2 users from list
             {
