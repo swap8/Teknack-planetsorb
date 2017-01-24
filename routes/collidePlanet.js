@@ -69,6 +69,7 @@ var self = module.exports = {
 									if (called) {
 										gameover.stop_the_game(player.location.id);
 										gameover.display_winner(Game,player.location.id);
+										Game.overstate = true;
 										delete Game.id;
 									}
 									called = false;
@@ -148,6 +149,7 @@ var self = module.exports = {
 							player.location.rad--;
 							if (player.location.rad < 3) {
 								gameover.display_winner(Game,player.location.id);
+								Game.overstate = true;
 								delete Game.id;
 								//delete Game.player_list[player.username]
 							}

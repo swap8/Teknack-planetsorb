@@ -124,8 +124,8 @@ io.on("connection", function (socket) {
                 Game.Game_list[socket.username] = socket;
                 room_list[lobby] = lobby;
                 ready_list[socket.username] = socket;
-                console.log(socket.username + " Joined Room with Name : " + socket.lobby);
-                console.log(socket.username + " Joined Game with Name : " + Game.id);
+                //console.log(socket.username + " Joined Room with Name : " + socket.lobby);
+                //console.log(socket.username + " Joined Game with Name : " + Game.id);
             }
             else {
                 break;                                                  // Don't search in the entire list
@@ -188,8 +188,8 @@ setInterval(function () {
                     gmtime: game_list[socket.game_id].time,
                     player1: player.identify_player_first(game_list[socket.game_id]),
                     player2: player.identify_player_second(game_list[socket.game_id]),
-                    winner : game_list[socket.game_id].winner,
-                    overstate : game_list[socket.game_id].overstate,
+                    winner: game_list[socket.game_id].winner,
+                    overstate: game_list[socket.game_id].overstate,
                 };
             socket.broadcast.to(socket.lobby).emit('message', their_game);
         }
