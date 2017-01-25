@@ -67,10 +67,9 @@ var self = module.exports = {
 								}
 								else {
 									if (called) {
-										gameover.stop_the_game(player.location.id);
 										gameover.display_winner(Game,player.location.id);
 										Game.overstate = true;
-										delete Game.id;
+										//delete Game.id;
 									}
 									called = false;
 
@@ -78,12 +77,13 @@ var self = module.exports = {
 							}
 						}
 						else {
+							//console.log(Game.overstate);
 								//console.log("you are of wrong type");
 							player.location.rad--;
 							if (player.location.rad  < 3) {
 								gameover.display_winner(Game,player.location.id);
 								Game.overstate = true;
-								delete Game.id;
+								//delete Game.id;
 							}
 							else {
 								green_planet.rad += player.location.rad / 100;
@@ -133,10 +133,9 @@ var self = module.exports = {
 								else {
 									//console.log(called);
 									if (called) {
-										gameover.stop_the_game(player.location.id);
 										gameover.display_winner(Game,player.location.id);
 										Game.overstate = true;
-										delete Game.id;										
+										//delete Game.id;										
 						
 									}
 									called = false;
@@ -147,10 +146,11 @@ var self = module.exports = {
 						else {
 							//console.log("you are of wrong type");
 							player.location.rad--;
+							//console.log(Game.overstate);
 							if (player.location.rad < 3) {
 								gameover.display_winner(Game,player.location.id);
 								Game.overstate = true;
-								delete Game.id;
+								//delete Game.id;
 								//delete Game.player_list[player.username]
 							}
 							else {

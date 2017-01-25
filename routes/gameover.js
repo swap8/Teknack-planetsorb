@@ -29,11 +29,6 @@ check:function(Game){
 
 },
 
-stop_the_game : function(player)
-{
-   // console.log(" Player with id : " + player + " lost.")
-
-},
 winner :'',
 display_winner : function(Game,lost_player)
 {

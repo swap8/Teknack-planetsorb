@@ -58,15 +58,15 @@ app.use(function (err, req, res, next) {
 });
 
 //Few Constants
-var usernames = {};   //contains all username
-var planet_list = {};   //contains all planet
-var socket_list = {};   //contains all sockets
-var user_list = {};   //contains all Users
-var queue_list = {};   //contains players to be joined
-var room_list = {};   //contains list of lobbys/rooms
-var game_list = {};   //contains list of games that are currently executing
-var ready_list = {};   //contains player that are ready for game
-
+var usernames    = {};   //contains all username
+var planet_list  = {};   //contains all planet
+var socket_list  = {};   //contains all sockets
+var user_list    = {};   //contains all Users
+var queue_list   = {};   //contains players to be joined
+var room_list    = {};   //contains list of lobbys/rooms
+var game_list    = {};   //contains list of games that are currently executing
+var ready_list   = {};   //contains player that are ready for game
+var active_games = 0;
 var check_win = function (lobby_name) {
     for (var i in socket_list) {
         var socket = socket_list[i];
@@ -78,6 +78,7 @@ var check_win = function (lobby_name) {
 
 io.on("connection", function (socket) {
     socket.username = uuid.v1();
+    socket.communication = false;
     socket_list[socket.username] = socket;
     usernames[socket.username] = socket.username;
     user_list[socket.username] = socket;
@@ -143,6 +144,8 @@ io.on("connection", function (socket) {
         Game.planet_list = planet.create_planet(Game);                      // Create Planets
         game_list[Game.id] = Game;
         gameover.game_over(game_list[socket.game_id]);
+        active_games = Object.keys(game_list).length;
+        console.log("Total Games : " + active_games);
     }
 
     socket.on('disconnect', function () {
@@ -170,6 +173,38 @@ io.on("connection", function (socket) {
                 socket.location.pressingDown = data.state;
         }
     });
+
+    socket.on('communication_lost', function (data) {
+        socket.communication = data.communication;
+    });
+
+    socket.on('player_lost', function (data) {
+        for (var i in game_list) {
+            var Game = game_list[i];
+            if (data.gameid === Game.id) {
+                for (var j in Game.Game_list) {
+                    var player = Game.Game_list[j];
+                    var temp = player.username;
+                    if (player.communication) {
+                        for (var k in Game.Game_list) {
+                            var temp_player = Game.Game_list[k];
+                            if (temp != temp_player.username) {
+                                if (temp_player.communication) {
+                                    delete ready_list[temp_player.location.id];
+                                    delete ready_list[temp];
+                                    delete game_list[Game.id];
+                                    Game.overstate = false;
+                                    active_games = Object.keys(game_list).length;
+                                    console.log("Active Games " + active_games);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    });
 });
 
 setInterval(function () {
@@ -190,6 +225,7 @@ setInterval(function () {
                     player2: player.identify_player_second(game_list[socket.game_id]),
                     winner: game_list[socket.game_id].winner,
                     overstate: game_list[socket.game_id].overstate,
+                    gameid: game_list[socket.game_id].id
                 };
             socket.broadcast.to(socket.lobby).emit('message', their_game);
         }

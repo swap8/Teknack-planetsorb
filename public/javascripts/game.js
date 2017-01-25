@@ -16,10 +16,9 @@ GameState.start = {
     preload: function () {
         game.load.image('backstart', './images/spacetile.jpg');
         game.load.image('buttonimage', './images/start_button.png');
-        game.load.image('background', './images/realblack.png');
         game.load.image('matter', './images/earth.png');
         game.load.image('antimatter', './images/mars.png');
-        game.load.image('player', './images/player.png');
+        game.load.image('over', './images/over1.jpg');
 
     },
     create: function () {
@@ -42,7 +41,7 @@ GameState.start = {
 
 GameState.end = {
     preload: function () {
-        game.load.image('over', './images/over1.jpg');
+        
     },
     create: function () {
         game.add.sprite(0, 0, 'over');
@@ -124,8 +123,14 @@ GameState.main = {
             finalwinner = data.winner;
 
             if (data.overstate) {
+                
+                //socket.emit('player_lost',{gameid : data.gameid});
+                //game.world.removeAll();
                 myGroup.destroy();
+                socket.emit('communication_lost', { communication : true });
+                socket.emit('player_lost',{gameid : data.gameid});
                 game.state.start('end');
+                
             }
         });
 
