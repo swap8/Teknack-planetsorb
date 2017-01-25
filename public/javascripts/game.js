@@ -58,10 +58,22 @@ GameState.main = {
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
         socket = io();
 
+        //create a group
+        myGroup = game.add.group();
+        graphics = game.add.graphics(0, 0);
+        graphics.beginFill(0xFFC900, 1);
+        graphics.moveTo(340, 0);
+        graphics.lineTo(1180, 0);
+        graphics.lineTo(1140, 70);
+        graphics.lineTo(380, 70);
+        graphics.endFill();
+
         socket.on('message', function (data) {
-            game.world.removeAll();
+            //game.world.removeAll();
             //console.log("responce");
-            graphics = game.add.graphics(0, 0);
+            myGroup.destroy();
+            myGroup = game.add.group();
+
 
             for (var i = 0; i < data.greenPlanet.length; i++) {
 
@@ -70,6 +82,7 @@ GameState.main = {
                 var radius = data.greenPlanet[i].rad / 140;
                 matter_scale = radius;
                 matter.scale.setTo(matter_scale, matter_scale);
+                myGroup.add(matter);
             }
 
             for (var i = 0; i < data.redPlanet.length; i++) {
@@ -78,34 +91,40 @@ GameState.main = {
                 var radius = data.redPlanet[i].rad / 140;
                 antimatter_scale = radius;
                 antimatter.scale.setTo(antimatter_scale, antimatter_scale);
+                myGroup.add(antimatter);
+
             }
 
             for (var i = 0; i < data.player.length; i++) {
                 if (data.player[i].rad > 1) {
+                    graphics = game.add.graphics(0, 0);
                     graphics.lineStyle(3, 0x8016F0);
                     graphics.beginFill(0xB4ABBD, 1);
                     graphics.arc(data.player[i].x, data.player[i].y, data.player[i].rad, 0, game.math.degToRad(365), false);
                     graphics.endFill();
+                    myGroup.add(graphics);
                 }
             }
-            graphics.beginFill(0xFFC900, 1);
-            graphics.moveTo(340, 0);
-            graphics.lineTo(1180, 0);
-            graphics.lineTo(1140, 70);
-            graphics.lineTo(380, 70);
-            graphics.endFill();
             style = { fontSize: '14px', fill: '#000' }
-            game.add.text(370, 10, data.player1.username, style);
-            /*game.add.text(380, 28, 'Absorb : ' + data.player1.type, style);
-            game.add.text(385, 48, 'Score : ' + data.player1.score, style);*/
-            game.add.text(870, 10, data.player2.username, style);
-            /*game.add.text(1050, 28, 'Absorb : ' + data.player2.type, style);
-            game.add.text(1050, 48, 'Score : ' + data.player2.score, style);
-            game.add.text(720, 15, 'Time : ' + data.gmtime, { fontSize: '16px', fill: '#000' });*/
+            mytext = game.add.text(370, 10, data.player1.username, style);
+            myGroup.add(mytext);
+            /*game.add.text(380, 28, 'Absorb : ' + data.player1.type, style);*/
+            mytext = game.add.text(385, 48, 'Score : ' + data.player1.score, style);
+            myGroup.add(mytext);
+
+            mytext = game.add.text(870, 10, data.player2.username, style);
+            myGroup.add(mytext);
+            /*game.add.text(1050, 28, 'Absorb : ' + data.player2.type, style);*/
+            mytext = game.add.text(1050, 48, 'Score : ' + data.player2.score, style);
+            myGroup.add(mytext);
+
+            mytext = game.add.text(720, 15, 'Time : ' + data.gmtime, { fontSize: '16px', fill: '#000' });
+            myGroup.add(mytext);
 
             finalwinner = data.winner;
 
             if (data.overstate) {
+                myGroup.destroy();
                 game.state.start('end');
             }
         });
