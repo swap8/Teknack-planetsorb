@@ -19,6 +19,7 @@ GameState.start = {
         game.load.image('matter', './images/earth.png');
         game.load.image('antimatter', './images/mars.png');
         game.load.image('over', './images/over1.jpg');
+        game.load.image('playagain', './images/playagain.png');
 
     },
     create: function () {
@@ -33,21 +34,17 @@ GameState.start = {
         var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
         var text = game.add.text(winwidth / 2, winheight / 3, "Planetsorb", style);
         text.anchor.setTo(0.5, 0.5);
-    },
-    update: function () {
-
     }
 }
 
 GameState.end = {
-    preload: function () {
-        
-    },
     create: function () {
         game.add.sprite(0, 0, 'over');
         winner = game.add.text(300, 40, 'Winner : ' + finalwinner, { fontSize: '25px', fill: '#fff' });
-
-    },
+        replay = game.add.button(winwidth / 3, winheight / 1.5, 'playagain', play_again, this, 2, 1, 0);
+        replay.scale.setTo(0.2,0.2);
+        replay.scale.setTo(0.5,0.5);
+    }
 }
 
 
@@ -123,14 +120,14 @@ GameState.main = {
             finalwinner = data.winner;
 
             if (data.overstate) {
-                
+
                 //socket.emit('player_lost',{gameid : data.gameid});
                 //game.world.removeAll();
                 myGroup.destroy();
-                socket.emit('communication_lost', { communication : true });
-                socket.emit('player_lost',{gameid : data.gameid});
+                socket.emit('communication_lost', { communication: true });
+                socket.emit('player_lost', { gameid: data.gameid });
                 game.state.start('end');
-                
+
             }
         });
 
@@ -175,7 +172,9 @@ function actionOnClick() {
     game.state.start('main');
 
 }
-
+function play_again(){
+    game.state.start('main');
+}
 
 
 
