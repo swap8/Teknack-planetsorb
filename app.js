@@ -58,20 +58,28 @@ app.use(function (err, req, res, next) {
 });
 
 //Few Constants
-var usernames    = {};   //contains all username
-var planet_list  = {};   //contains all planet
-var socket_list  = {};   //contains all sockets
-var user_list    = {};   //contains all Users
-var queue_list   = {};   //contains players to be joined
-var room_list    = {};   //contains list of lobbys/rooms
-var game_list    = {};   //contains list of games that are currently executing
-var ready_list   = {};   //contains player that are ready for game
+var usernames = {};   //contains all username
+var planet_list = {};   //contains all planet
+var socket_list = {};   //contains all sockets
+var user_list = {};   //contains all Users
+var queue_list = {};   //contains players to be joined
+var room_list = {};   //contains list of lobbys/rooms
+var game_list = {};   //contains list of games that are currently executing
+var ready_list = {};   //contains player that are ready for game
 var active_games = 0;
-var check_win = function (lobby_name) {
+
+var check_win = function (lobby_name, Game, lost_player_name) {
     for (var i in socket_list) {
         var socket = socket_list[i];
         if (socket.lobby == lobby_name) {
-            console.log("Player with Name : " + socket.username + " Win !")
+            socket.disconnect = true;
+            socket.emit('player_disconnected', { username: socket.username, disconnect: socket.disconnect });
+            delete ready_list[lost_player_name];
+            delete ready_list[socket.username];
+            delete game_list[Game.id];
+            active_games = Object.keys(game_list).length;
+            console.log("Active Games " + active_games);
+            //console.log("Player with Name : " + socket.username + " Win !")
         }
     }
 }
@@ -79,6 +87,7 @@ var check_win = function (lobby_name) {
 io.on("connection", function (socket) {
     socket.username = uuid.v1();
     socket.communication = false;
+    socket.disconnect = false;
     socket_list[socket.username] = socket;
     usernames[socket.username] = socket.username;
     user_list[socket.username] = socket;
@@ -157,7 +166,15 @@ io.on("connection", function (socket) {
         delete socket_list[socket.username];
         delete user_list[socket.username];
         delete queue_list[socket.username];
-        check_win(lobby_name);                                              // If one player left the lobby, Declare Win for other
+        //console.log(lobby_name);
+        if (lobby_name != undefined) {
+            for (var i in game_list) {
+                var Game = game_list[i];
+                if (lobby_name === Game.lobby) {
+                    check_win(lobby_name, Game, socket.username);
+                }
+            }
+        }                                                 // If one player left the lobby, Declare Win for other
     });
 
     //-----keyboard movements--------------------------------
@@ -227,6 +244,7 @@ setInterval(function () {
                     overstate: game_list[socket.game_id].overstate,
                     gameid: game_list[socket.game_id].id
                 };
+            //console.log(their_game.overstate);
             socket.broadcast.to(socket.lobby).emit('message', their_game);
         }
 
