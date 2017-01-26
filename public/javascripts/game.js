@@ -8,6 +8,7 @@ var Player1score = 0;
 var player2score = 0;
 var Player2Type = '';
 var Player2Text = '';
+var angle = 0;
 var game = new Phaser.Game(winwidth, winheight, Phaser.AUTO);
 
 var GameState = {};
@@ -20,6 +21,10 @@ GameState.start = {
         game.load.image('antimatter', './images/mars.png');
         game.load.image('over', './images/over1.jpg');
         game.load.image('playagain', './images/playagain.png');
+        game.load.image('blackhole', './images/blackhole2.png');
+
+        //game.load.spritesheet('dude', 'images/dude.png', 32, 48);
+
 
     },
     create: function () {
@@ -49,6 +54,7 @@ GameState.end = {
 
 
 GameState.main = {
+    player: null,
     create: function () {
         game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
@@ -93,12 +99,14 @@ GameState.main = {
 
             for (var i = 0; i < data.player.length; i++) {
                 if (data.player[i].rad > 1) {
-                    graphics = game.add.graphics(0, 0);
-                    graphics.lineStyle(3, 0x8016F0);
-                    graphics.beginFill(0xB4ABBD, 1);
-                    graphics.arc(data.player[i].x, data.player[i].y, data.player[i].rad, 0, game.math.degToRad(365), false);
-                    graphics.endFill();
-                    myGroup.add(graphics);
+                    player = game.add.sprite(data.player[i].x, data.player[i].y, 'blackhole');
+                    //player.scale.setTo(0.2, 0.2);
+                    player.anchor.setTo(0.5, 0.5);
+                    var radius = data.player[i].rad / 380;
+                    player_scale = radius;
+                    player.scale.setTo(player_scale, player_scale);
+                    player.angle = calangle();
+                    myGroup.add(player);
                 }
             }
             style = { fontSize: '14px', fill: '#000' }
@@ -136,11 +144,10 @@ GameState.main = {
                 console.log("hii");
                 finalwinner = data.username;
                 game.state.start('end');
-                
+
             }
+
         });
-
-
 
     },
 
@@ -169,9 +176,6 @@ GameState.main = {
 
 }
 
-
-
-
 game.state.add('main', GameState.main);
 game.state.add('end', GameState.end);
 game.state.add('start', GameState.start);
@@ -184,6 +188,10 @@ function actionOnClick() {
 function play_again() {
     game.state.start('main');
 }
-
+function calangle()
+{
+    angle+=1;
+    return angle;
+}
 
 

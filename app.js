@@ -72,6 +72,7 @@ var check_win = function (lobby_name, Game, lost_player_name) {
     for (var i in socket_list) {
         var socket = socket_list[i];
         if (socket.lobby == lobby_name) {
+            console.log("hi i am here");
             socket.disconnect = true;
             socket.emit('player_disconnected', { username: socket.username, disconnect: socket.disconnect });
             delete ready_list[lost_player_name];
