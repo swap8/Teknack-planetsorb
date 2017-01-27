@@ -14,6 +14,7 @@ var red_planet_angle = 0;
 var loading_planet_angle = 0;
 var filter;
 var sprite;
+var stop_movements = false;
 var game = new Phaser.Game(winwidth, winheight, Phaser.AUTO);
 
 var GameState = {};
@@ -64,6 +65,7 @@ GameState.main = {
     create: function () {
         game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+        stop_movements = false;
         socket = io();
 
         //create a group
@@ -149,6 +151,7 @@ GameState.main = {
             if (data.start_the_game) {
                 //game.world.removeAll();
                 //console.log("responce");
+                stop_movements = true;
                 myGroup.destroy();
                 myGroup = game.add.group();
 
@@ -158,7 +161,7 @@ GameState.main = {
                     var matter = game.add.sprite(data.greenPlanet[i].x, data.greenPlanet[i].y, 'matter');
                     matter.anchor.setTo(0.5, 0.5);
                     matter.angle = greenplanetangle();
-                    var radius = data.greenPlanet[i].rad / 200;
+                    var radius = data.greenPlanet[i].rad / 140;
                     matter_scale = radius;
                     matter.scale.setTo(matter_scale, matter_scale);
                     myGroup.add(matter);
@@ -249,7 +252,8 @@ GameState.main = {
     },
 
     update: function () {
-        document.onkeydown = function (event) {
+        if(stop_movements){
+            document.onkeydown = function (event) {
             if (event.keyCode === 68)//d
                 socket.emit('keyPress', { InputId: 'right', state: true });
             else if (event.keyCode === 83)//s
@@ -269,7 +273,10 @@ GameState.main = {
             else if (event.keyCode === 87)//w
                 socket.emit('keyPress', { InputId: 'up', state: false });
         }
+        }
+        
         loading_planet.angle += 0.1;
+        if(!stop_movements)
         filter.update(game.input.activePointer);
 
     }
