@@ -22,10 +22,6 @@ GameState.start = {
         game.load.image('over', './images/over1.jpg');
         game.load.image('playagain', './images/playagain.png');
         game.load.image('blackhole', './images/blackhole2.png');
-
-        //game.load.spritesheet('dude', 'images/dude.png', 32, 48);
-
-
     },
     create: function () {
 
