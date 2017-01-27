@@ -9,6 +9,11 @@ var player2score = 0;
 var Player2Type = '';
 var Player2Text = '';
 var angle = 0;
+var green_planet_angle = 0;
+var red_planet_angle = 0;
+var loading_planet_angle = 0;
+var filter;
+var sprite;
 var game = new Phaser.Game(winwidth, winheight, Phaser.AUTO);
 
 var GameState = {};
@@ -18,11 +23,13 @@ GameState.start = {
         game.load.image('backstart', './images/spacetile.jpg');
         game.load.image('buttonimage', './images/start_button.png');
         game.load.image('matter', './images/earth.png');
+        game.load.image('peopleplanet', './images/peopleplanet.png');
         game.load.image('antimatter', './images/mars.png');
         game.load.image('over', './images/over1.jpg');
         game.load.image('playagain', './images/playagain.png');
         game.load.image('blackhole', './images/blackhole2.png');
         game.load.image('fireball', './images/fireball.png');
+
 
     },
     create: function () {
@@ -52,7 +59,6 @@ GameState.end = {
     }
 }
 
-
 GameState.main = {
     player: null,
     create: function () {
@@ -70,6 +76,62 @@ GameState.main = {
         graphics.lineTo(380, 70);
         graphics.endFill();
 
+        var fragmentSrc = [
+
+            "precision mediump float;",
+
+            "uniform float     time;",
+            "uniform vec2      resolution;",
+            "uniform vec2      mouse;",
+
+            "#define MAX_ITER 4",
+
+            "void main( void )",
+            "{",
+            "vec2 v_texCoord = gl_FragCoord.xy / resolution;",
+
+            "vec2 p =  v_texCoord * 8.0 - vec2(20.0);",
+            "vec2 i = p;",
+            "float c = 1.0;",
+            "float inten = .05;",
+
+            "for (int n = 0; n < MAX_ITER; n++)",
+            "{",
+            "float t = time * (1.0 - (3.0 / float(n+1)));",
+
+            "i = p + vec2(cos(t - i.x) + sin(t + i.y),",
+            "sin(t - i.y) + cos(t + i.x));",
+
+            "c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten),",
+            "p.y / (cos(i.y+t)/inten)));",
+            "}",
+
+            "c /= float(MAX_ITER);",
+            "c = 1.5 - sqrt(c);",
+
+            "vec4 texColor = vec4(0.0, 0.01, 0.015, 1.0);",
+
+            "texColor.rgb *= (1.0 / (1.0 - (c + 0.05)));",
+
+            "gl_FragColor = texColor;",
+            "}"
+        ];
+
+        filter = new Phaser.Filter(game, null, fragmentSrc);
+        filter.setResolution(winwidth, winheight);
+        sprite = game.add.sprite();
+        sprite.width = winwidth;
+        sprite.height = winheight;
+        sprite.filters = [filter];
+        myGroup.add(sprite);
+
+
+
+        loading_planet = game.add.sprite(winwidth / 2, winheight / 2, 'peopleplanet');
+        loading_planet.anchor.setTo(0.5, 0.5);
+        loading_planet.scale.setTo(0.4, 0.4);
+        myGroup.add(loading_planet);
+
         socket.on('message', function (data) {
             //game.world.removeAll();
             //console.log("responce");
@@ -81,7 +143,8 @@ GameState.main = {
 
                 var matter = game.add.sprite(data.greenPlanet[i].x, data.greenPlanet[i].y, 'matter');
                 matter.anchor.setTo(0.5, 0.5);
-                var radius = data.greenPlanet[i].rad / 140;
+                matter.angle = greenplanetangle();
+                var radius = data.greenPlanet[i].rad / 200;
                 matter_scale = radius;
                 matter.scale.setTo(matter_scale, matter_scale);
                 myGroup.add(matter);
@@ -90,6 +153,7 @@ GameState.main = {
             for (var i = 0; i < data.redPlanet.length; i++) {
                 var antimatter = game.add.sprite(data.redPlanet[i].x, data.redPlanet[i].y, 'antimatter');
                 antimatter.anchor.setTo(0.5, 0.5);
+                antimatter.angle = redplanetangle();
                 var radius = data.redPlanet[i].rad / 140;
                 antimatter_scale = radius;
                 antimatter.scale.setTo(antimatter_scale, antimatter_scale);
@@ -130,7 +194,7 @@ GameState.main = {
             // drawing the fireball image on screen
             fireball_meteor = game.add.image(winwidth / 2, winheight / 2, 'fireball');
             fireball_meteor.anchor.setTo(0.5, 0.5);
-            fireball_meteor.scale.setTo(0.4,0.4);
+            fireball_meteor.scale.setTo(0.4, 0.4);
             myGroup.add(fireball_meteor);
 
             if (data.overstate) {
@@ -143,6 +207,7 @@ GameState.main = {
                 game.state.start('end');
 
             }
+
         });
 
         socket.on('player_disconnected', function (data) {
@@ -178,6 +243,9 @@ GameState.main = {
             else if (event.keyCode === 87)//w
                 socket.emit('keyPress', { InputId: 'up', state: false });
         }
+        loading_planet.angle += 0.1;
+        filter.update(game.input.activePointer);
+
     }
 
 }
@@ -194,8 +262,17 @@ function actionOnClick() {
 function play_again() {
     game.state.start('main');
 }
-function calangle()
-{
-    angle+=1;
+function calangle() {
+    angle += 1;
     return angle;
 }
+function greenplanetangle() {
+    green_planet_angle += 0.01;
+    return green_planet_angle;
+}
+function redplanetangle() {
+    red_planet_angle += 0.01;
+    return red_planet_angle;
+}
+
+
