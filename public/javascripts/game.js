@@ -76,6 +76,7 @@ GameState.main = {
         graphics.lineTo(380, 70);
         graphics.endFill();
 
+        //filter background
         var fragmentSrc = [
 
             "precision mediump float;",
@@ -126,11 +127,19 @@ GameState.main = {
         myGroup.add(sprite);
 
 
-
+        //loading planet
         loading_planet = game.add.sprite(winwidth / 2, winheight / 2, 'peopleplanet');
         loading_planet.anchor.setTo(0.5, 0.5);
         loading_planet.scale.setTo(0.4, 0.4);
         myGroup.add(loading_planet);
+
+        //text
+        var style = { font: "45px Arial", fill: "#ffffff", align: "center" };
+        var wait_text = game.add.text(420, 600, "Waiting for another player to Join", style);
+        myGroup.add(wait_text);
+
+        //text.anchor.set(0.5);
+
 
         socket.on('message', function (data) {
             //game.world.removeAll();
