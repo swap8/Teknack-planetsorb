@@ -22,6 +22,7 @@ GameState.start = {
         game.load.image('over', './images/over1.jpg');
         game.load.image('playagain', './images/playagain.png');
         game.load.image('blackhole', './images/blackhole2.png');
+        game.load.image('fireball', './images/fireball.png');
 
         //game.load.spritesheet('dude', 'images/dude.png', 32, 48);
 
@@ -39,6 +40,8 @@ GameState.start = {
         var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
         var text = game.add.text(winwidth / 2, winheight / 3, "Planetsorb", style);
         text.anchor.setTo(0.5, 0.5);
+
+
     }
 }
 
@@ -127,6 +130,12 @@ GameState.main = {
 
             finalwinner = data.winner;
 
+            // drawing the fireball image on screen
+            fireball_meteor = game.add.image(winwidth / 2, winheight / 2, 'fireball');
+            fireball_meteor.anchor.setTo(0.5, 0.5);
+            fireball_meteor.scale.setTo(0.4,0.4);
+            myGroup.add(fireball_meteor);
+
             if (data.overstate) {
 
                 //socket.emit('player_lost',{gameid : data.gameid});
@@ -193,5 +202,3 @@ function calangle()
     angle+=1;
     return angle;
 }
-
-
