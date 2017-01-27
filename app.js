@@ -106,7 +106,9 @@ io.on("connection", function (socket) {
         var next_player_position = 0;
         var lobby = uuid.v1();
         var Game = {};
-        Game.time = 120;
+        Game.time = 127;
+        Game.start_the_game = false;
+        Game.start_time = 5;
         Game.overstate = false;
         Game.winner = '';
         Game.Game_list = {};
@@ -153,6 +155,7 @@ io.on("connection", function (socket) {
         }
         Game.planet_list = planet.create_planet(Game);                      // Create Planets
         game_list[Game.id] = Game;
+        gameover.start_game(game_list[socket.game_id]);
         gameover.game_over(game_list[socket.game_id]);
         active_games = Object.keys(game_list).length;
         console.log("Total Games : " + active_games);
@@ -243,7 +246,9 @@ setInterval(function () {
                     player2: player.identify_player_second(game_list[socket.game_id]),
                     winner: game_list[socket.game_id].winner,
                     overstate: game_list[socket.game_id].overstate,
-                    gameid: game_list[socket.game_id].id
+                    gameid: game_list[socket.game_id].id,
+                    start_the_game: game_list[socket.game_id].start_the_game,
+                    start_time: game_list[socket.game_id].start_time
                 };
             //console.log(their_game.overstate);
             socket.broadcast.to(socket.lobby).emit('message', their_game);

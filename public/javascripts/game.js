@@ -132,88 +132,101 @@ GameState.main = {
         loading_planet.anchor.setTo(0.5, 0.5);
         loading_planet.scale.setTo(0.4, 0.4);
         myGroup.add(loading_planet);
-
+        startgroup = game.add.group();
+        var start_text = game.add.text(600, 25, "Game Status : ", { font: "17px Arial", fill: "#000000", align: "center" });
+        startgroup.add(start_text);
         //text
-        var style = { font: "45px Arial", fill: "#ffffff", align: "center" };
-        var wait_text = game.add.text(420, 600, "Waiting for another player to Join", style);
-        myGroup.add(wait_text);
+        var style = { font: "35px Arial", fill: "#ffffff", align: "center" };
+        var wait_text = game.add.text(500, 600, "Waiting for another player to Join", style);
+        startgroup.add(wait_text);
 
         //text.anchor.set(0.5);
 
 
         socket.on('message', function (data) {
-            //game.world.removeAll();
-            //console.log("responce");
-            myGroup.destroy();
-            myGroup = game.add.group();
 
-
-            for (var i = 0; i < data.greenPlanet.length; i++) {
-
-                var matter = game.add.sprite(data.greenPlanet[i].x, data.greenPlanet[i].y, 'matter');
-                matter.anchor.setTo(0.5, 0.5);
-                matter.angle = greenplanetangle();
-                var radius = data.greenPlanet[i].rad / 200;
-                matter_scale = radius;
-                matter.scale.setTo(matter_scale, matter_scale);
-                myGroup.add(matter);
-            }
-
-            for (var i = 0; i < data.redPlanet.length; i++) {
-                var antimatter = game.add.sprite(data.redPlanet[i].x, data.redPlanet[i].y, 'antimatter');
-                antimatter.anchor.setTo(0.5, 0.5);
-                antimatter.angle = redplanetangle();
-                var radius = data.redPlanet[i].rad / 140;
-                antimatter_scale = radius;
-                antimatter.scale.setTo(antimatter_scale, antimatter_scale);
-                myGroup.add(antimatter);
-
-            }
-
-            for (var i = 0; i < data.player.length; i++) {
-                if (data.player[i].rad > 1) {
-                    player = game.add.sprite(data.player[i].x, data.player[i].y, 'blackhole');
-                    //player.scale.setTo(0.2, 0.2);
-                    player.anchor.setTo(0.5, 0.5);
-                    var radius = data.player[i].rad / 380;
-                    player_scale = radius;
-                    player.scale.setTo(player_scale, player_scale);
-                    player.angle = calangle();
-                    myGroup.add(player);
-                }
-            }
-            style = { fontSize: '14px', fill: '#000' }
-            mytext = game.add.text(370, 10, data.player1.username, style);
-            myGroup.add(mytext);
-            /*game.add.text(380, 28, 'Absorb : ' + data.player1.type, style);*/
-            mytext = game.add.text(385, 48, 'Score : ' + data.player1.score, style);
-            myGroup.add(mytext);
-
-            mytext = game.add.text(870, 10, data.player2.username, style);
-            myGroup.add(mytext);
-            /*game.add.text(1050, 28, 'Absorb : ' + data.player2.type, style);*/
-            mytext = game.add.text(1050, 48, 'Score : ' + data.player2.score, style);
-            myGroup.add(mytext);
-
-            mytext = game.add.text(720, 15, 'Time : ' + data.gmtime, { fontSize: '16px', fill: '#000' });
-            myGroup.add(mytext);
-
-            finalwinner = data.winner;
-
-            // drawing the fireball image on screen
-            fireball_meteor = game.add.image(winwidth / 2, winheight / 2, 'fireball');
-            fireball_meteor.anchor.setTo(0.5, 0.5);
-            fireball_meteor.scale.setTo(0.4, 0.4);
-            myGroup.add(fireball_meteor);
-
-            if (data.overstate) {
-
-                //socket.emit('player_lost',{gameid : data.gameid});
+            startgroup.destroy();
+            if (data.start_the_game) {
                 //game.world.removeAll();
+                //console.log("responce");
                 myGroup.destroy();
-                socket.emit('communication_lost', { communication: true });
-                socket.emit('player_lost', { gameid: data.gameid });
-                game.state.start('end');
+                myGroup = game.add.group();
+
+
+                for (var i = 0; i < data.greenPlanet.length; i++) {
+
+                    var matter = game.add.sprite(data.greenPlanet[i].x, data.greenPlanet[i].y, 'matter');
+                    matter.anchor.setTo(0.5, 0.5);
+                    matter.angle = greenplanetangle();
+                    var radius = data.greenPlanet[i].rad / 200;
+                    matter_scale = radius;
+                    matter.scale.setTo(matter_scale, matter_scale);
+                    myGroup.add(matter);
+                }
+
+                for (var i = 0; i < data.redPlanet.length; i++) {
+                    var antimatter = game.add.sprite(data.redPlanet[i].x, data.redPlanet[i].y, 'antimatter');
+                    antimatter.anchor.setTo(0.5, 0.5);
+                    antimatter.angle = redplanetangle();
+                    var radius = data.redPlanet[i].rad / 140;
+                    antimatter_scale = radius;
+                    antimatter.scale.setTo(antimatter_scale, antimatter_scale);
+                    myGroup.add(antimatter);
+
+                }
+
+                for (var i = 0; i < data.player.length; i++) {
+                    if (data.player[i].rad > 1) {
+                        player = game.add.sprite(data.player[i].x, data.player[i].y, 'blackhole');
+                        //player.scale.setTo(0.2, 0.2);
+                        player.anchor.setTo(0.5, 0.5);
+                        var radius = data.player[i].rad / 380;
+                        player_scale = radius;
+                        player.scale.setTo(player_scale, player_scale);
+                        player.angle = calangle();
+                        myGroup.add(player);
+                    }
+                }
+                style = { fontSize: '14px', fill: '#000' }
+                mytext = game.add.text(370, 10, data.player1.username, style);
+                myGroup.add(mytext);
+                /*game.add.text(380, 28, 'Absorb : ' + data.player1.type, style);*/
+                mytext = game.add.text(385, 48, 'Score : ' + data.player1.score, style);
+                myGroup.add(mytext);
+
+                mytext = game.add.text(870, 10, data.player2.username, style);
+                myGroup.add(mytext);
+                /*game.add.text(1050, 28, 'Absorb : ' + data.player2.type, style);*/
+                mytext = game.add.text(1050, 48, 'Score : ' + data.player2.score, style);
+                myGroup.add(mytext);
+
+                mytext = game.add.text(720, 15, 'Time : ' + data.gmtime, { fontSize: '16px', fill: '#000' });
+                myGroup.add(mytext);
+
+                finalwinner = data.winner;
+
+                // drawing the fireball image on screen
+                fireball_meteor = game.add.image(winwidth / 2, winheight / 2, 'fireball');
+                fireball_meteor.anchor.setTo(0.5, 0.5);
+                fireball_meteor.scale.setTo(0.4, 0.4);
+                myGroup.add(fireball_meteor);
+
+                if (data.overstate) {
+
+                    //socket.emit('player_lost',{gameid : data.gameid});
+                    //game.world.removeAll();
+                    myGroup.destroy();
+                    socket.emit('communication_lost', { communication: true });
+                    socket.emit('player_lost', { gameid: data.gameid });
+                    game.state.start('end');
+
+                }
+
+            }
+            else {
+                startgroup = game.add.group();
+                start_text = game.add.text(600, 25, "Game Status : Your game will begin in " + data.start_time, { font: "17px Arial", fill: "#000000", align: "center" });
+                startgroup.add(start_text);
 
             }
 
@@ -228,6 +241,10 @@ GameState.main = {
             }
 
         });
+
+
+
+
 
     },
 
