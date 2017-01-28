@@ -10,10 +10,12 @@ var self = module.exports = {
                 //console.log(Game.time);
                 Game.time--;
                 self.check(Game);
-                if(Game.time==10)
+                if(Game.time==15)
                 {
+                    Game.generate_fireball = true;
                     var locate_fireball  = fireball.createfireball();
-                    fireball.render_fireball(locate_fireball);
+                    Game.fireball = locate_fireball;
+                    //fireball.render_fireball(locate_fireball);
                 }
 
             }

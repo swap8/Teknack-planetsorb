@@ -9,9 +9,36 @@ var self = module.exports = {
         return fireball;
     },
 
-    render_fireball: function (fireball) {
-        fireball.x++;
-        fireball.y--;
+    /* render_fireball: function (fireball) {
+         fireball.x++;
+         fireball.y--;
+     },
+ */
+    assignfireballposition: function (Game) {
+        //console.log("hi");
+
+        if (Game.generate_fireball) {
+            var fireball_pack = [];
+            if (Game.fireball.y > 0) {
+                Game.fireball.x++;
+                Game.fireball.y--;
+
+                fireball_pack.push({
+                    x:Game.fireball.x,
+                    y:Game.fireball.y
+                })
+                return fireball_pack;
+            }
+            else{
+                Game.generate_fireball=false;
+                return 0;
+            }
+
+        }
+        else
+        {
+            return 0;
+        }
     }
 
 

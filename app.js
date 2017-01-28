@@ -15,6 +15,7 @@ var gameover = require('./routes/gameover');
 var socket_io = require("socket.io");
 var collidePlayer = require('./routes/collidePlayer');
 var collidePlanet = require('./routes/collidePlanet');
+var fireball = require('./routes/fireball');
 var app = express();
 
 // Socket.io
@@ -106,7 +107,8 @@ io.on("connection", function (socket) {
         var next_player_position = 0;
         var lobby = uuid.v1();
         var Game = {};
-        Game.time = 20;
+        Game.time = 30;
+        Game.generate_fireball = false;
         Game.start_the_game = false;
         Game.start_time = 5;
         Game.overstate = false;
@@ -259,9 +261,9 @@ setInterval(function () {
                     overstate: game_list[socket.game_id].overstate,
                     gameid: game_list[socket.game_id].id,
                     start_the_game: game_list[socket.game_id].start_the_game,
-                    start_time: game_list[socket.game_id].start_time
+                    start_time: game_list[socket.game_id].start_time,
+                    fireball : fireball.assignfireballposition(game_list[socket.game_id])
                 };
-            //console.log(their_game.overstate);
             socket.broadcast.to(socket.lobby).emit('message', their_game);
         }
 

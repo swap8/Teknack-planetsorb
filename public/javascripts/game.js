@@ -211,14 +211,19 @@ GameState.main = {
                 finalwinner = data.winner;
 
                 // drawing the fireball image on screen
-                fireball_meteor = game.add.sprite(winwidth / 2, winheight / 2, 'fireball');
-
-                // fireball_meteor.anchor.setTo(0.5, 0.5);
+                for(i=0;i<data.fireball.length;i++)
+            {
+                //console.log(data.fireball[i].x);
+                fireball_meteor = game.add.sprite(data.fireball[i].x, data.fireball[i].y, 'fireball');
                 fireball_meteor.scale.setTo(0.2, 0.2);
-                game.physics.enable(fireball_meteor, Phaser.Physics.ARCADE);
+                fireball_meteor.anchor.setTo(0.5,0.5);
+                myGroup.add(fireball_meteor);
+            }
+                
+                //game.physics.enable(fireball_meteor, Phaser.Physics.ARCADE);
                 // fireball_meteor.body.velocity.y = -50;
                 //fireball_x_coord = game.rnd.integerInRange(0,window.screen.availWidth);
-                myGroup.add(fireball_meteor);
+                
                 if (data.gmtime == 0) {
                     if (call_only_once) {
                         call_only_once = false;
@@ -226,7 +231,7 @@ GameState.main = {
                     }
                 }
 
-                if (data.overstate) {
+                else if (data.overstate) {
                     myGroup.destroy();
                     socket.emit('communication_lost', { communication: true });
                     socket.emit('player_lost', { gameid: data.gameid });
@@ -240,7 +245,7 @@ GameState.main = {
                 startgroup.add(start_text);
 
             }
-
+            
         });
 
         socket.on('player_disconnected', function (data) {
