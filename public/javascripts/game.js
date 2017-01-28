@@ -48,9 +48,6 @@ GameState.start = {
         var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
         var text = game.add.text(winwidth / 2, winheight / 3, "Planetsorb", style);
         text.anchor.setTo(0.5, 0.5);
-
-
-
     }
 }
 
@@ -222,30 +219,18 @@ GameState.main = {
                 // fireball_meteor.body.velocity.y = -50;
                 //fireball_x_coord = game.rnd.integerInRange(0,window.screen.availWidth);
                 myGroup.add(fireball_meteor);
-
-                //game.time.events.repeat(Phaser.Timer.SECOND * 2, 10, createfireball, this);
-                /*
-                function createfireball() {
-                       game.debug.text(fireball_x_coord,32,32);
-                }
-                */
                 if (data.gmtime == 0) {
                     if (call_only_once) {
                         call_only_once = false;
                         socket.emit('find_winner', { gameid: data.gameid });
-                        //socket.emit('game_time_over', { gameid: data.gameid });
                     }
                 }
 
                 if (data.overstate) {
-
-                    //socket.emit('player_lost',{gameid : data.gameid});
-                    //game.world.removeAll();
                     myGroup.destroy();
                     socket.emit('communication_lost', { communication: true });
                     socket.emit('player_lost', { gameid: data.gameid });
                     game.state.start('end');
-
                 }
 
             }
@@ -271,7 +256,6 @@ GameState.main = {
 
     update: function () {
         if (stop_movements) {
-
             document.onkeydown = function (event) {
                 if (event.keyCode === 68)//d
                     socket.emit('keyPress', { InputId: 'right', state: true });
@@ -293,23 +277,18 @@ GameState.main = {
                     socket.emit('keyPress', { InputId: 'up', state: false });
             }
         }
-            loading_planet.angle += 0.1;
-            if (!stop_movements)
+        loading_planet.angle += 0.1;
+        if (!stop_movements)
             filter.update(game.input.activePointer);
-        
-
     }
 }
-
-
 game.state.add('main', GameState.main);
-    game.state.add('end', GameState.end);
-    game.state.add('start', GameState.start);
-    game.state.start('start');
+game.state.add('end', GameState.end);
+game.state.add('start', GameState.start);
+game.state.start('start');
 
-    function actionOnClick() {
+function actionOnClick() {
     game.state.start('main');
-
 }
 function play_again() {
     game.state.start('main');
