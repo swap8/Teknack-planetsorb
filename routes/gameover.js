@@ -1,5 +1,5 @@
 
-
+var fireball = require('./fireball');
 var self = module.exports = {
 
 
@@ -10,6 +10,11 @@ var self = module.exports = {
                 //console.log(Game.time);
                 Game.time--;
                 self.check(Game);
+                if(Game.time==10)
+                {
+                    var locate_fireball  = fireball.createfireball();
+                    fireball.render_fireball(locate_fireball);
+                }
 
             }
         }, 1000)

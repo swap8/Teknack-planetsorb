@@ -15,7 +15,9 @@ var loading_planet_angle = 0;
 var filter;
 var sprite;
 
-var fireball_x_coord;
+var stop_movements = false;
+var call_only_once = true;
+//var fireball_x_coord;
 var game = new Phaser.Game(winwidth, winheight, Phaser.AUTO);
 
 var GameState = {};
@@ -67,6 +69,8 @@ GameState.main = {
     create: function () {
         game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+        stop_movements = false;
+        call_only_once = true;
         socket = io();
 
         //create a group
@@ -152,6 +156,7 @@ GameState.main = {
             if (data.start_the_game) {
                 //game.world.removeAll();
                 //console.log("responce");
+                stop_movements = true;
                 myGroup.destroy();
                 myGroup = game.add.group();
 
@@ -161,7 +166,7 @@ GameState.main = {
                     var matter = game.add.sprite(data.greenPlanet[i].x, data.greenPlanet[i].y, 'matter');
                     matter.anchor.setTo(0.5, 0.5);
                     matter.angle = greenplanetangle();
-                    var radius = data.greenPlanet[i].rad / 200;
+                    var radius = data.greenPlanet[i].rad / 140;
                     matter_scale = radius;
                     matter.scale.setTo(matter_scale, matter_scale);
                     myGroup.add(matter);
@@ -212,18 +217,25 @@ GameState.main = {
                 fireball_meteor = game.add.sprite(winwidth / 2, winheight / 2, 'fireball');
 
                 // fireball_meteor.anchor.setTo(0.5, 0.5);
-                fireball_meteor.scale.setTo(0.4, 0.4);
-                game.physics.enable(fireball_meteor,Phaser.Physics.ARCADE);
+                fireball_meteor.scale.setTo(0.2, 0.2);
+                game.physics.enable(fireball_meteor, Phaser.Physics.ARCADE);
                 // fireball_meteor.body.velocity.y = -50;
-                fireball_x_coord = game.rnd.integerInRange(0,window.screen.availWidth);
+                //fireball_x_coord = game.rnd.integerInRange(0,window.screen.availWidth);
                 myGroup.add(fireball_meteor);
 
-                 game.time.events.repeat(Phaser.Timer.SECOND * 2, 10, createfireball, this);
-
-                 function createfireball() {
-                        game.debug.text(fireball_x_coord,32,32);
-                 }
-
+                //game.time.events.repeat(Phaser.Timer.SECOND * 2, 10, createfireball, this);
+                /*
+                function createfireball() {
+                       game.debug.text(fireball_x_coord,32,32);
+                }
+                */
+                if (data.gmtime == 0) {
+                    if (call_only_once) {
+                        call_only_once = false;
+                        socket.emit('find_winner', { gameid: data.gameid });
+                        //socket.emit('game_time_over', { gameid: data.gameid });
+                    }
+                }
 
                 if (data.overstate) {
 
@@ -248,54 +260,54 @@ GameState.main = {
 
         socket.on('player_disconnected', function (data) {
             if (data.disconnect) {
-                console.log("hii");
+                // console.log("hii");
                 finalwinner = data.username;
                 game.state.start('end');
 
             }
 
         });
-
-
-
-
-
     },
 
     update: function () {
-        document.onkeydown = function (event) {
-            if (event.keyCode === 68)//d
-                socket.emit('keyPress', { InputId: 'right', state: true });
-            else if (event.keyCode === 83)//s
-                socket.emit('keyPress', { InputId: 'down', state: true });
-            else if (event.keyCode === 65)//a
-                socket.emit('keyPress', { InputId: 'left', state: true });
-            else if (event.keyCode === 87)//w
-                socket.emit('keyPress', { InputId: 'up', state: true });
+        if (stop_movements) {
+
+            document.onkeydown = function (event) {
+                if (event.keyCode === 68)//d
+                    socket.emit('keyPress', { InputId: 'right', state: true });
+                else if (event.keyCode === 83)//s
+                    socket.emit('keyPress', { InputId: 'down', state: true });
+                else if (event.keyCode === 65)//a
+                    socket.emit('keyPress', { InputId: 'left', state: true });
+                else if (event.keyCode === 87)//w
+                    socket.emit('keyPress', { InputId: 'up', state: true });
+            }
+            document.onkeyup = function (event) {
+                if (event.keyCode === 68)//d
+                    socket.emit('keyPress', { InputId: 'right', state: false });
+                else if (event.keyCode === 83)//s
+                    socket.emit('keyPress', { InputId: 'down', state: false });
+                else if (event.keyCode === 65)//a
+                    socket.emit('keyPress', { InputId: 'left', state: false });
+                else if (event.keyCode === 87)//w
+                    socket.emit('keyPress', { InputId: 'up', state: false });
+            }
         }
-        document.onkeyup = function (event) {
-            if (event.keyCode === 68)//d
-                socket.emit('keyPress', { InputId: 'right', state: false });
-            else if (event.keyCode === 83)//s
-                socket.emit('keyPress', { InputId: 'down', state: false });
-            else if (event.keyCode === 65)//a
-                socket.emit('keyPress', { InputId: 'left', state: false });
-            else if (event.keyCode === 87)//w
-                socket.emit('keyPress', { InputId: 'up', state: false });
-        }
-        loading_planet.angle += 0.1;
-        filter.update(game.input.activePointer);
+            loading_planet.angle += 0.1;
+            if (!stop_movements)
+            filter.update(game.input.activePointer);
+        
 
     }
-
 }
 
-game.state.add('main', GameState.main);
-game.state.add('end', GameState.end);
-game.state.add('start', GameState.start);
-game.state.start('start');
 
-function actionOnClick() {
+game.state.add('main', GameState.main);
+    game.state.add('end', GameState.end);
+    game.state.add('start', GameState.start);
+    game.state.start('start');
+
+    function actionOnClick() {
     game.state.start('main');
 
 }

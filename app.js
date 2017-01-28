@@ -106,7 +106,7 @@ io.on("connection", function (socket) {
         var next_player_position = 0;
         var lobby = uuid.v1();
         var Game = {};
-        Game.time = 127;
+        Game.time = 20;
         Game.start_the_game = false;
         Game.start_time = 5;
         Game.overstate = false;

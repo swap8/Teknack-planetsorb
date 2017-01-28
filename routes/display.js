@@ -36,5 +36,9 @@ var self = module.exports = {
 			})
 		}
 		return planetpack;
+	},
+
+	assignfireballposition : function(){
+
 	}
 }
