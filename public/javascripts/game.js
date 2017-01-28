@@ -15,6 +15,7 @@ var loading_planet_angle = 0;
 var filter;
 var sprite;
 var stop_movements = false;
+var call_only_once = true;
 var game = new Phaser.Game(winwidth, winheight, Phaser.AUTO);
 
 var GameState = {};
@@ -66,6 +67,7 @@ GameState.main = {
         game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
         stop_movements = false;
+        call_only_once = true;
         socket = io();
 
         //create a group
@@ -214,6 +216,13 @@ GameState.main = {
                 fireball_meteor.scale.setTo(0.4, 0.4);
                 myGroup.add(fireball_meteor);
 
+                if (data.gmtime == 0) {
+                    if (call_only_once) {
+                        call_only_once = false;
+                        socket.emit('find_winner',{ gameid: data.gameid });
+                        //socket.emit('game_time_over', { gameid: data.gameid });
+                    }
+                }
                 if (data.overstate) {
 
                     //socket.emit('player_lost',{gameid : data.gameid});
@@ -252,32 +261,32 @@ GameState.main = {
     },
 
     update: function () {
-        if(stop_movements){
+        if (stop_movements) {
             document.onkeydown = function (event) {
-            if (event.keyCode === 68)//d
-                socket.emit('keyPress', { InputId: 'right', state: true });
-            else if (event.keyCode === 83)//s
-                socket.emit('keyPress', { InputId: 'down', state: true });
-            else if (event.keyCode === 65)//a
-                socket.emit('keyPress', { InputId: 'left', state: true });
-            else if (event.keyCode === 87)//w
-                socket.emit('keyPress', { InputId: 'up', state: true });
+                if (event.keyCode === 68)//d
+                    socket.emit('keyPress', { InputId: 'right', state: true });
+                else if (event.keyCode === 83)//s
+                    socket.emit('keyPress', { InputId: 'down', state: true });
+                else if (event.keyCode === 65)//a
+                    socket.emit('keyPress', { InputId: 'left', state: true });
+                else if (event.keyCode === 87)//w
+                    socket.emit('keyPress', { InputId: 'up', state: true });
+            }
+            document.onkeyup = function (event) {
+                if (event.keyCode === 68)//d
+                    socket.emit('keyPress', { InputId: 'right', state: false });
+                else if (event.keyCode === 83)//s
+                    socket.emit('keyPress', { InputId: 'down', state: false });
+                else if (event.keyCode === 65)//a
+                    socket.emit('keyPress', { InputId: 'left', state: false });
+                else if (event.keyCode === 87)//w
+                    socket.emit('keyPress', { InputId: 'up', state: false });
+            }
         }
-        document.onkeyup = function (event) {
-            if (event.keyCode === 68)//d
-                socket.emit('keyPress', { InputId: 'right', state: false });
-            else if (event.keyCode === 83)//s
-                socket.emit('keyPress', { InputId: 'down', state: false });
-            else if (event.keyCode === 65)//a
-                socket.emit('keyPress', { InputId: 'left', state: false });
-            else if (event.keyCode === 87)//w
-                socket.emit('keyPress', { InputId: 'up', state: false });
-        }
-        }
-        
+
         loading_planet.angle += 0.1;
-        if(!stop_movements)
-        filter.update(game.input.activePointer);
+        if (!stop_movements)
+            filter.update(game.input.activePointer);
 
     }
 

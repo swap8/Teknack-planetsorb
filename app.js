@@ -226,6 +226,49 @@ io.on("connection", function (socket) {
         }
 
     });
+
+    socket.on('find_winner', function (data) {
+
+        for (var i in game_list) {
+            var Game = game_list[i];
+            if (data.gameid === Game.id) {
+                gameover.calculate_winner(Game);
+            }
+        }
+        gameover.calculate_winner(Game);
+    });
+
+    socket.on('game_time_over', function (data) {
+        for (var i in game_list) {
+            var Game = game_list[i];
+            if (data.gameid === Game.id) {
+                for (var j in Game.Game_list) {
+                    var player = Game.Game_list[j];
+                    var temp = player.username;
+                    if (player.communication) {
+                        for (var k in Game.Game_list) {
+                            var temp_player = Game.Game_list[k];
+                            if (temp != temp_player.username) {
+                                if (temp_player.communication) {
+                                    delete ready_list[temp_player.location.id];
+                                    delete ready_list[temp];
+                                    delete game_list[Game.id];
+                                    Game.overstate = false;
+                                    active_games = Object.keys(game_list).length;
+                                    console.log("Active Games " + active_games);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+    });
+
+
+
 });
 
 setInterval(function () {

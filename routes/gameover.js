@@ -12,10 +12,6 @@ var self = module.exports = {
                 self.check(Game);
 
             }
-            else {
-                Game.time = 'Game Over';
-                // console.log("Game Over");
-            }
         }, 1000)
 
     },
@@ -31,7 +27,7 @@ var self = module.exports = {
         setTimeout(function () {
             if (Game.start_time > 0) {
                 Game.start_time--;
-                console.log(Game.start_time);
+                // console.log(Game.start_time);
                 self.remainingTime(Game);
             }
             else {
@@ -46,6 +42,36 @@ var self = module.exports = {
         }
     },
 
+    calculate_winner: function (Game) {
+        var radius;
+        var player1 = {};
+        var player2 = {};
+        var temp = 0;
+        for (var i in Game.Game_list) {
+            var player = Game.Game_list[i];
+
+            if (temp ==0) {
+                player1.username = player.location.id;
+                player1.rad = player.location.rad;
+                temp++;
+            }
+            else {
+                player2.username = player.location.id;
+                player2.rad= player.location.rad;
+            }
+        }
+        if(player1.rad>player2.rad){
+            Game.winner =  player1.username;
+        }
+        else if(player1.rad<player2.rad){
+            Game.winner = player2.username;
+        }
+        else{
+            Game.winner = 'match draw';
+        }
+        Game.overstate = true;
+
+    },
     winner: '',
     display_winner: function (Game, lost_player) {
         for (var i in Game.Game_list) {
