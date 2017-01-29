@@ -15,7 +15,7 @@ var loading_planet_angle = 0;
 var filter;
 var sprite;
 var lock_deadlock = true;
-
+var multi_id;
 var stop_movements = false;
 var call_only_once = true;
 //var fireball_x_coord;
@@ -26,7 +26,8 @@ var GameState = {};
 GameState.start = {
     preload: function () {
         game.load.image('backstart', './images/spacetile.jpg');
-        game.load.image('buttonimage', './images/start_button.png');
+        game.load.image('singleplayer', './images/singleplayerai.png');
+        game.load.image('multiplayer', './images/multiplayer.jpg');
         game.load.image('matter', './images/earth.png');
         game.load.image('peopleplanet', './images/peopleplanet.png');
         game.load.image('antimatter', './images/mars.png');
@@ -43,11 +44,14 @@ GameState.start = {
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.add.tileSprite(0, 0, winwidth, winheight, 'backstart');
         //game.add.sprite(winwidth/2,winheight/2,'buttonimage');
-        startbutton = game.add.button(winwidth / 2, winheight / 2, 'buttonimage', actionOnClick, this, 2, 1, 0);
-        startbutton.scale.setTo(0.5, 0.5);
+        singleplayerbutton = game.add.button(winwidth / 2, winheight / 2.8, 'singleplayer', botsattack, this, 2, 1, 0);
+        singleplayerbutton.scale.setTo(1, 1);
+        singleplayerbutton.anchor.setTo(0.5, 0.5);
+        startbutton = game.add.button(winwidth / 2, winheight / 1.8, 'multiplayer', actionOnClick, this, 2, 1, 0);
+        startbutton.scale.setTo(0.25, 0.25);
         startbutton.anchor.setTo(0.5, 0.5);
-        var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
-        var text = game.add.text(winwidth / 2, winheight / 3, "Planetsorb", style);
+        var style = { font: "65px Arial", fill: "#ffffff", align: "center" };
+        var text = game.add.text(winwidth / 2, winheight / 6, "Planetsorb", style);
         text.anchor.setTo(0.5, 0.5);
     }
 }
@@ -64,12 +68,22 @@ GameState.end = {
 
 GameState.main = {
     player: null,
+
     create: function () {
         game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
         stop_movements = false;
         call_only_once = true;
         socket = io();
+        var multi_id = 4;
+        socket.on('send_socket_id', function (data) {
+            //console.log(data);
+            multi_id = data;
+            socket.emit('multi_player_mission', multi_id);
+            console.log(multi_id);
+        });
+        //console.log(multi_id);
+
 
         //create a group
         myGroup = game.add.group();
@@ -83,46 +97,33 @@ GameState.main = {
 
         //filter background
         var fragmentSrc = [
-
             "precision mediump float;",
-
             "uniform float     time;",
             "uniform vec2      resolution;",
             "uniform vec2      mouse;",
-
             "#define MAX_ITER 4",
-
             "void main( void )",
             "{",
             "vec2 v_texCoord = gl_FragCoord.xy / resolution;",
-
             "vec2 p =  v_texCoord * 8.0 - vec2(20.0);",
             "vec2 i = p;",
             "float c = 1.0;",
             "float inten = .05;",
-
             "for (int n = 0; n < MAX_ITER; n++)",
             "{",
             "float t = time * (1.0 - (3.0 / float(n+1)));",
-
             "i = p + vec2(cos(t - i.x) + sin(t + i.y),",
             "sin(t - i.y) + cos(t + i.x));",
-
             "c += 1.0/length(vec2(p.x / (sin(i.x+t)/inten),",
             "p.y / (cos(i.y+t)/inten)));",
             "}",
-
             "c /= float(MAX_ITER);",
             "c = 1.5 - sqrt(c);",
-
             "vec4 texColor = vec4(0.0, 0.01, 0.015, 1.0);",
-
             "texColor.rgb *= (1.0 / (1.0 - (c + 0.05)));",
-
             "gl_FragColor = texColor;",
             "}"
         ];
-
         filter = new Phaser.Filter(game, null, fragmentSrc);
         filter.setResolution(winwidth, winheight);
         sprite = game.add.sprite();
@@ -130,7 +131,6 @@ GameState.main = {
         sprite.height = winheight;
         sprite.filters = [filter];
         myGroup.add(sprite);
-
 
         //loading planet
         loading_planet = game.add.sprite(winwidth / 2, winheight / 2, 'peopleplanet');
@@ -145,9 +145,6 @@ GameState.main = {
         var wait_text = game.add.text(500, 600, "Waiting for another player to Join", style);
         startgroup.add(wait_text);
 
-        //text.anchor.set(0.5);
-
-
         socket.on('message', function (data) {
 
             startgroup.destroy();
@@ -158,9 +155,7 @@ GameState.main = {
                 myGroup.destroy();
                 myGroup = game.add.group();
 
-
                 for (var i = 0; i < data.greenPlanet.length; i++) {
-
                     var matter = game.add.sprite(data.greenPlanet[i].x, data.greenPlanet[i].y, 'matter');
                     matter.anchor.setTo(0.5, 0.5);
                     matter.angle = greenplanetangle();
@@ -178,7 +173,6 @@ GameState.main = {
                     antimatter_scale = radius;
                     antimatter.scale.setTo(antimatter_scale, antimatter_scale);
                     myGroup.add(antimatter);
-
                 }
 
                 for (var i = 0; i < data.player.length; i++) {
@@ -199,16 +193,13 @@ GameState.main = {
                 /*game.add.text(380, 28, 'Absorb : ' + data.player1.type, style);*/
                 mytext = game.add.text(385, 48, 'Score : ' + data.player1.score, style);
                 myGroup.add(mytext);
-
                 mytext = game.add.text(870, 10, data.player2.username, style);
                 myGroup.add(mytext);
                 /*game.add.text(1050, 28, 'Absorb : ' + data.player2.type, style);*/
                 mytext = game.add.text(1050, 48, 'Score : ' + data.player2.score, style);
                 myGroup.add(mytext);
-
                 mytext = game.add.text(720, 15, 'Time : ' + data.gmtime, { fontSize: '16px', fill: '#000' });
                 myGroup.add(mytext);
-
                 finalwinner = data.winner;
 
                 // drawing the fireball image on screen
@@ -220,10 +211,6 @@ GameState.main = {
                     myGroup.add(fireball_meteor);
                 }
 
-                //game.physics.enable(fireball_meteor, Phaser.Physics.ARCADE);
-                // fireball_meteor.body.velocity.y = -50;
-                //fireball_x_coord = game.rnd.integerInRange(0,window.screen.availWidth);
-
                 if (data.gmtime == 0) {
 
                     lock_deadlock = false;
@@ -233,7 +220,6 @@ GameState.main = {
                     }
                     lock_deadlock = true;
                 }
-
                 if (data.overstate) {
                     if (lock_deadlock) {
                         myGroup.destroy();
@@ -241,15 +227,12 @@ GameState.main = {
                         socket.emit('player_lost', { gameid: data.gameid });
                         game.state.start('end');
                     }
-
                 }
-
             }
             else {
                 startgroup = game.add.group();
                 start_text = game.add.text(600, 25, "Game Status : Your game will begin in " + data.start_time, { font: "17px Arial", fill: "#000000", align: "center" });
                 startgroup.add(start_text);
-
             }
 
         });
@@ -259,9 +242,7 @@ GameState.main = {
                 // console.log("hii");
                 finalwinner = data.username;
                 game.state.start('end');
-
             }
-
         });
     },
 
@@ -293,9 +274,91 @@ GameState.main = {
             filter.update(game.input.activePointer);
     }
 }
+
+//for bots - play a single player mission
+GameState.bots = {
+    preload: function () {
+
+    },
+    create: function () {
+        console.log("I am ready!");
+        socket = io();
+        var single_id;
+        socket.on('send_socket_id', function (data) {
+            single_id = data;
+            socket.emit('single_player_mission', single_id);
+        });
+        myGroup = game.add.group();
+        socket.on('bot_game', function (data) {
+            //console.log("hiii");
+            //console.log(data);
+            myGroup.destroy();
+            myGroup = game.add.group();
+            for (var i = 0; i < data.player.length; i++) {
+                if (data.player[i].rad > 1) {
+                    //console.log(data.player[i].y);
+                    player = game.add.sprite(data.player[i].x, data.player[i].y, 'blackhole');
+                    //player.scale.setTo(0.2, 0.2);
+                    player.anchor.setTo(0.5, 0.5);
+                    var radius = data.player[i].rad / 380;
+                    player_scale = radius;
+                    player.scale.setTo(player_scale, player_scale);
+                    player.angle = calangle();
+                    myGroup.add(player);
+                }
+            }
+            for (var i = 0; i < data.bot.length; i++) {
+                if (data.bot[i].rad > 1) {
+                    bot = game.add.sprite(data.bot[i].x, data.bot[i].y, 'blackhole');
+                    //player.scale.setTo(0.2, 0.2);
+                    bot.anchor.setTo(0.5, 0.5);
+                    var radius = data.bot[i].rad / 380;
+                    player_scale = radius;
+                    bot.scale.setTo(player_scale, player_scale);
+                    bot.angle = calangle();
+                    myGroup.add(bot);
+                }
+            }
+        });
+
+
+
+
+    },
+    update: function () {
+        document.onkeydown = function (event) {
+                if (event.keyCode === 68)//d
+                    socket.emit('keyPress', { InputId: 'right', state: true });
+                else if (event.keyCode === 83)//s
+                    socket.emit('keyPress', { InputId: 'down', state: true });
+                else if (event.keyCode === 65)//a
+                    socket.emit('keyPress', { InputId: 'left', state: true });
+                else if (event.keyCode === 87)//w
+                    socket.emit('keyPress', { InputId: 'up', state: true });
+            }
+            document.onkeyup = function (event) {
+                if (event.keyCode === 68)//d
+                    socket.emit('keyPress', { InputId: 'right', state: false });
+                else if (event.keyCode === 83)//s
+                    socket.emit('keyPress', { InputId: 'down', state: false });
+                else if (event.keyCode === 65)//a
+                    socket.emit('keyPress', { InputId: 'left', state: false });
+                else if (event.keyCode === 87)//w
+                    socket.emit('keyPress', { InputId: 'up', state: false });
+            }
+
+    }
+}
+
+
+
+
+
 game.state.add('main', GameState.main);
 game.state.add('end', GameState.end);
 game.state.add('start', GameState.start);
+game.state.add('bots', GameState.bots);
+
 game.state.start('start');
 
 function actionOnClick() {
@@ -315,4 +378,7 @@ function greenplanetangle() {
 function redplanetangle() {
     red_planet_angle += 0.01;
     return red_planet_angle;
+}
+function botsattack() {
+    game.state.start('bots');
 }

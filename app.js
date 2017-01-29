@@ -16,6 +16,7 @@ var socket_io = require("socket.io");
 var collidePlayer = require('./routes/collidePlayer');
 var collidePlanet = require('./routes/collidePlanet');
 var fireball = require('./routes/fireball');
+var AI = require('./routes/AI');
 var app = express();
 
 // Socket.io
@@ -58,7 +59,7 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-//Few Constants
+//Few Constants for multiplayer game
 var usernames = {};   //contains all username
 var planet_list = {};   //contains all planet
 var socket_list = {};   //contains all sockets
@@ -68,6 +69,9 @@ var room_list = {};   //contains list of lobbys/rooms
 var game_list = {};   //contains list of games that are currently executing
 var ready_list = {};   //contains player that are ready for game
 var active_games = 0;
+
+//few constants for single player game
+bot_game_list = {};
 
 var check_win = function (lobby_name, Game, lost_player_name) {
     for (var i in socket_list) {
@@ -91,81 +95,141 @@ io.on("connection", function (socket) {
     socket.communication = false;
     socket.disconnect = false;
     socket_list[socket.username] = socket;
-    usernames[socket.username] = socket.username;
-    user_list[socket.username] = socket;
-    queue_list[socket.username] = socket;
-    console.log("User with ID " + socket.username + " Connected.");
+    socket.emit('send_socket_id', socket.username);
 
-    var size = Object.keys(queue_list).length;
-    var total_users_online = Object.keys(user_list).length;
-    console.log("Total Users Connected : " + total_users_online);
 
-    if (size >= 2)                                                         // If players in queue are more than 1
-    {
-        var temp = 0;
-        var type = '';
-        var next_player_position = 0;
-        var lobby = uuid.v1();
-        var Game = {};
-        Game.time = 30;
-        Game.generate_fireball = false;
-        Game.start_the_game = false;
-        Game.start_time = 5;
-        Game.overstate = false;
-        Game.winner = '';
-        Game.Game_list = {};
-        Game.green_planet_list = {};
-        Game.red_planet_list = {};
-        id = uuid.v4();
-        Game.id = id;
-        //console.log("Room Created : " + lobby);
-        //console.log("Game Created : " + Game.id);
-        for (var i in queue_list) {
-            if (temp < 2)                                                  // To select first 2 users from list
-            {
-                if (temp == 0) {
-                    type = 'green';
+    socket.on('multi_player_mission', function (data) {
+        //console.log(data);
+        var socket;
+        for (var i in socket_list) {
+            var player_socket = socket_list[i];
+            if (player_socket.username === data) {
+                socket = player_socket;
+                //console.log(socket);
+            }
+        }
+        usernames[socket.username] = socket.username;
+        user_list[socket.username] = socket;
+        queue_list[socket.username] = socket;
+        console.log("User with ID " + socket.username + " Connected.");
+
+        var size = Object.keys(queue_list).length;
+        var total_users_online = Object.keys(user_list).length;
+        console.log("Total Users Connected : " + total_users_online);
+
+        if (size >= 2)                                                         // If players in queue are more than 1
+        {
+            var temp = 0;
+            var type = '';
+            var next_player_position = 0;
+            var lobby = uuid.v1();
+            var Game = {};
+            Game.time = 30;
+            Game.generate_fireball = false;
+            Game.start_the_game = false;
+            Game.start_time = 5;
+            Game.overstate = false;
+            Game.winner = '';
+            Game.Game_list = {};
+            Game.green_planet_list = {};
+            Game.red_planet_list = {};
+            id = uuid.v4();
+            Game.id = id;
+            //console.log("Room Created : " + lobby);
+            //console.log("Game Created : " + Game.id);
+            for (var i in queue_list) {
+                if (temp < 2)                                                  // To select first 2 users from list
+                {
+                    if (temp == 0) {
+                        type = 'green';
+                    }
+                    else {
+                        type = 'red';
+                    }
+                    var socket = queue_list[i];
+                    socket.join(lobby);
+                    socket.lobby = lobby;
+                    Game.lobby = socket.lobby;
+                    socket.game_id = Game.id;
+                    socket.priority = temp;
+                    socket.location = player.Player(socket.username, next_player_position, type);
+                    Game.Game_list[socket.username] = socket;
+                    room_list[lobby] = lobby;
+                    ready_list[socket.username] = socket;
+                    //console.log(socket.username + " Joined Room with Name : " + socket.lobby);
+                    //console.log(socket.username + " Joined Game with Name : " + Game.id);
                 }
                 else {
-                    type = 'red';
+                    break;                                                  // Don't search in the entire list
                 }
-                var socket = queue_list[i];
-                socket.join(lobby);
-                socket.lobby = lobby;
-                Game.lobby = socket.lobby;
-                socket.game_id = Game.id;
-                socket.priority = temp;
-                socket.location = player.Player(socket.username, next_player_position, type);
-                Game.Game_list[socket.username] = socket;
-                room_list[lobby] = lobby;
-                ready_list[socket.username] = socket;
-                //console.log(socket.username + " Joined Room with Name : " + socket.lobby);
-                //console.log(socket.username + " Joined Game with Name : " + Game.id);
+                temp++;
+                next_player_position += 700;
             }
-            else {
-                break;                                                  // Don't search in the entire list
+
+            for (var i in queue_list)                                        // Delete the users from queue list
+            {
+                var remove_user = queue_list[i];
+                var remove_user_name = remove_user.username;
+                delete queue_list[remove_user_name];
             }
-            temp++;
-            next_player_position += 700;
+            Game.planet_list = planet.create_planet(Game);                      // Create Planets
+            game_list[Game.id] = Game;
+            gameover.start_game(game_list[socket.game_id]);
+            gameover.game_over(game_list[socket.game_id]);
+            active_games = Object.keys(game_list).length;
+            console.log("Total Games : " + active_games);
         }
 
-        for (var i in queue_list)                                        // Delete the users from queue list
-        {
-            var remove_user = queue_list[i];
-            var remove_user_name = remove_user.username;
-            delete queue_list[remove_user_name];
+    });
+
+    socket.on('single_player_mission', function (data) {
+
+        var socket;
+        //console.log(data);
+        for (var i in socket_list) {
+            var player_socket = socket_list[i];
+            if (player_socket.username === data) {
+                socket = player_socket;
+            }
         }
-        Game.planet_list = planet.create_planet(Game);                      // Create Planets
-        game_list[Game.id] = Game;
-        gameover.start_game(game_list[socket.game_id]);
-        gameover.game_over(game_list[socket.game_id]);
-        active_games = Object.keys(game_list).length;
-        console.log("Total Games : " + active_games);
-    }
+
+        var bot = AI.create_bot();
+        bot.id = uuid.v1();
+
+        var Game = {};
+        Game.Game_list = {};
+        Game.id = uuid.v1();
+        Game.time = 30;
+        Game.bot = bot;
+        Game.generate_fireball = false;
+        Game.start_the_game = false;
+        Game.overstate = false;
+        Game.winner = '';
+        Game.green_planet_list = {};
+        Game.red_planet_list = {};
+        Game.Game_list[bot.id] = bot;
+
+        var lobby = uuid.v1();
+        socket.location = AI.create_player(socket.username);
+        socket.join(lobby);
+        socket.lobby = lobby;
+        Game.lobby = socket.lobby;
+        socket.game_id = Game.id;
+        Game.player = socket;
+        Game.Game_list[socket.username] = socket;
+
+        bot_game_list[Game.id] = Game;
+
+
+    });
+
+
+
+
 
     socket.on('disconnect', function () {
         console.log("User with ID " + socket.username + " Disconnected");
-        console.log(socket.username + " Left Room with Name : " + socket.lobby);
+        //console.log(socket.username + " Left Room with Name : " + socket.lobby);
         var lobby_name = socket.lobby;
         delete socket.lobby;
         delete usernames[socket.username];
@@ -199,6 +263,10 @@ io.on("connection", function (socket) {
 
     socket.on('communication_lost', function (data) {
         socket.communication = data.communication;
+    });
+
+    socket.on('single_player_mission', function () {
+        //console.log("this function tells about bots and single player");
     });
 
     socket.on('player_lost', function (data) {
@@ -262,13 +330,34 @@ setInterval(function () {
                     gameid: game_list[socket.game_id].id,
                     start_the_game: game_list[socket.game_id].start_the_game,
                     start_time: game_list[socket.game_id].start_time,
-                    fireball : fireball.assignfireballposition(game_list[socket.game_id])
+                    fireball: fireball.assignfireballposition(game_list[socket.game_id])
                 };
             socket.broadcast.to(socket.lobby).emit('message', their_game);
         }
 
 
     }
+
+    for (var i in bot_game_list) {
+        var Game = bot_game_list[i];
+
+        var bot_game = {
+            player: AI.assignPlayerPosition(Game),
+            bot   : AI.assignbotposition(Game)
+        }
+
+       // console.log(bot_game.bot);
+       // console.log(Game.lobby);
+        var socket = Game.player;
+        //console.log(Game.player);
+        //console.log(socket.lobby);
+        socket.emit('bot_game',bot_game);
+        //socket.broadcast.to(socket.lobby).emit('bot_game', bot_game);
+
+
+    }
+
+
 
 }, 30)
 module.exports = app;
