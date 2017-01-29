@@ -14,6 +14,7 @@ var red_planet_angle = 0;
 var loading_planet_angle = 0;
 var filter;
 var sprite;
+var lock_deadlock = true;
 
 var stop_movements = false;
 var call_only_once = true;
@@ -211,31 +212,36 @@ GameState.main = {
                 finalwinner = data.winner;
 
                 // drawing the fireball image on screen
-                for(i=0;i<data.fireball.length;i++)
-            {
-                //console.log(data.fireball[i].x);
-                fireball_meteor = game.add.sprite(data.fireball[i].x, data.fireball[i].y, 'fireball');
-                fireball_meteor.scale.setTo(0.2, 0.2);
-                fireball_meteor.anchor.setTo(0.5,0.5);
-                myGroup.add(fireball_meteor);
-            }
-                
+                for (i = 0; i < data.fireball.length; i++) {
+                    //console.log(data.fireball[i].x);
+                    fireball_meteor = game.add.sprite(data.fireball[i].x, data.fireball[i].y, 'fireball');
+                    fireball_meteor.scale.setTo(0.2, 0.2);
+                    fireball_meteor.anchor.setTo(0.5, 0.5);
+                    myGroup.add(fireball_meteor);
+                }
+
                 //game.physics.enable(fireball_meteor, Phaser.Physics.ARCADE);
                 // fireball_meteor.body.velocity.y = -50;
                 //fireball_x_coord = game.rnd.integerInRange(0,window.screen.availWidth);
-                
+
                 if (data.gmtime == 0) {
+
+                    lock_deadlock = false;
                     if (call_only_once) {
                         call_only_once = false;
                         socket.emit('find_winner', { gameid: data.gameid });
                     }
+                    lock_deadlock = true;
                 }
 
-                else if (data.overstate) {
-                    myGroup.destroy();
-                    socket.emit('communication_lost', { communication: true });
-                    socket.emit('player_lost', { gameid: data.gameid });
-                    game.state.start('end');
+                if (data.overstate) {
+                    if (lock_deadlock) {
+                        myGroup.destroy();
+                        socket.emit('communication_lost', { communication: true });
+                        socket.emit('player_lost', { gameid: data.gameid });
+                        game.state.start('end');
+                    }
+
                 }
 
             }
@@ -245,7 +251,7 @@ GameState.main = {
                 startgroup.add(start_text);
 
             }
-            
+
         });
 
         socket.on('player_disconnected', function (data) {
