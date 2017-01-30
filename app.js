@@ -17,6 +17,7 @@ var collidePlayer = require('./routes/collidePlayer');
 var collidePlanet = require('./routes/collidePlanet');
 var fireball = require('./routes/fireball');
 var AI = require('./routes/AI');
+var AI_collision_detection = require('./routes/AI_collision_detection');
 var app = express();
 
 // Socket.io
@@ -205,10 +206,10 @@ io.on("connection", function (socket) {
         Game.start_the_game = false;
         Game.overstate = false;
         Game.winner = '';
-        Game.green_planet_list = {};
-        Game.red_planet_list = {};
+        Game.planetlist = {},
         Game.Game_list[bot.id] = bot;
-
+        Game.planetlist = AI.create_planet();
+        //console.log(Game.planetlist);
         var lobby = uuid.v1();
         socket.location = AI.create_player(socket.username);
         socket.join(lobby);
@@ -265,9 +266,6 @@ io.on("connection", function (socket) {
         socket.communication = data.communication;
     });
 
-    socket.on('single_player_mission', function () {
-        //console.log("this function tells about bots and single player");
-    });
 
     socket.on('player_lost', function (data) {
         for (var i in game_list) {
@@ -340,21 +338,15 @@ setInterval(function () {
 
     for (var i in bot_game_list) {
         var Game = bot_game_list[i];
-
+        AI_collision_detection.detect_collision_player(Game);
+        AI_collision_detection.detect_collision_bot(Game);
         var bot_game = {
             player: AI.assignPlayerPosition(Game),
-            bot   : AI.assignbotposition(Game)
+            bot: AI.assignbotposition(Game),
+            planet : AI.assignplanetposition(Game)
         }
-
-       // console.log(bot_game.bot);
-       // console.log(Game.lobby);
         var socket = Game.player;
-        //console.log(Game.player);
-        //console.log(socket.lobby);
-        socket.emit('bot_game',bot_game);
-        //socket.broadcast.to(socket.lobby).emit('bot_game', bot_game);
-
-
+        socket.emit('bot_game', bot_game);
     }
 
 
