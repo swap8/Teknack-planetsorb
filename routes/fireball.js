@@ -1,4 +1,5 @@
 
+var SIDE=1;
 var display = require('./display');
 var self = module.exports = {
 
@@ -7,10 +8,14 @@ var self = module.exports = {
     createfireball: function () {
         var fireball = {};
         //fireball.x = Math.floor(Math.random() * 100 + 100);
-        fireball.x=Math.floor(Math.random()*(1491)) + 500;
+        var direction = Math.floor(Math.random()*(1500)) + 10;
+        fireball.x= direction;
         // fireball.x=750;
         // fireball.y =Math.floor(Math.random()*790)+20;
         fireball.y=800;
+
+        (direction <= 750)? SIDE =1 : SIDE=0;
+
         return fireball;
     },
 
@@ -22,31 +27,22 @@ var self = module.exports = {
         console.log("A:"+ a + "B: " + b);
         if(((Math.hypot(a,b))<c)&& a>0 && b>0)
         {
-            self.move_fireball(Game);
+            self.move_fireball(Game,a,b);
             
         }
     },
 
-    move_fireball: function (Game)
+    move_fireball: function (Game,a,b)
     {
          
          
-             if((Game.fireball.x>750)&&(Game.fireball.y<400))
+           
+            if(SIDE)
             {
-             Game.fireball.x++;
-             Game.fireball.y--;
+            Game.fireball.x++;
+            Game.fireball.y--;
             }
-            else if((Game.fireball.x>750)&&(Game.fireball.y>400))
-            {
-             Game.fireball.x++;
-            Game.fireball.y++;
-            }
-            else if((Game.fireball.x<750)&&(Game.fireball.y>400))
-            {
-            Game.fireball.x--;
-            Game.fireball.y++;
-            }
-            else if ((Game.fireball.x<750)&&(Game.fireball.y<400))
+            else//if (a>=750 && a<1500)
             {
             Game.fireball.x--;
             Game.fireball.y--;
