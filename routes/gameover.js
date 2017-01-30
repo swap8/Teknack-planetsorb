@@ -10,7 +10,7 @@ var self = module.exports = {
                 //console.log(Game.time);
                 Game.time--;
                 self.check(Game);
-                if(Game.time==15)
+                if(Game.time==22)
                 {
                     Game.generate_fireball = true;
                     var locate_fireball  = fireball.createfireball();
