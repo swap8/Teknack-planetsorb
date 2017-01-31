@@ -125,7 +125,7 @@ io.on("connection", function (socket) {
             var next_player_position = 0;
             var lobby = uuid.v1();
             var Game = {};
-            Game.time = 30;
+            Game.time = 90;
             Game.generate_fireball = false;
             Game.start_the_game = false;
             Game.start_time = 5;
@@ -200,7 +200,7 @@ io.on("connection", function (socket) {
         var Game = {};
         Game.Game_list = {};
         Game.id = uuid.v1();
-        Game.time = 30;
+        Game.time = 90;
         Game.bot = bot;
         Game.bot_name = bot.name;
         Game.generate_fireball = false;
@@ -252,7 +252,7 @@ io.on("connection", function (socket) {
         for(var i in bot_game_list)
         {
             var Game = bot_game_list[i];
-            if(game_id = Game.id){
+            if(game_id === Game.id){
                 delete bot_game_list[Game.id];
             }
         }

@@ -42,16 +42,16 @@ var self = module.exports = {
         }
         //console.log(nearest_planet);
         if (Game.bot.x < nearest_planet.planet.x) {
-            Game.bot.x += 1.2;
+            Game.bot.x += 3;
         }
         else if (Game.bot.x > nearest_planet.planet.x) {
-            Game.bot.x -= 1.2;
+            Game.bot.x -= 3;
         }
         if (Game.bot.y < nearest_planet.planet.y) {
-            Game.bot.y += 1.2;
+            Game.bot.y += 3;
         }
         else if (Game.bot.y > nearest_planet.planet.y) {
-            Game.bot.y -= 1.2;
+            Game.bot.y -= 3;
         }
 
 
