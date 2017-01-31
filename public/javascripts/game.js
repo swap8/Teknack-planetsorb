@@ -35,6 +35,7 @@ GameState.start = {
         game.load.image('playagain', './images/playagain.png');
         game.load.image('blackhole', './images/blackhole2.png');
         game.load.image('fireball', './images/fireball.png');
+        game.load.image('asteroid', './images/asteroid.png');
 
 
     },
@@ -453,6 +454,20 @@ GameState.bots = {
                     bot.angle = calangle();
                     myGroup.add(bot);
                 }
+            }
+
+            for (var i = 0; i < data.asteroid.length; i++) {
+
+                    console.log(data.asteroid);
+                    asteroid = game.add.sprite(data.asteroid[i].x, data.asteroid[i].y, 'asteroid');
+                    //player.scale.setTo(0.2, 0.2);
+                    asteroid.anchor.setTo(0.5, 0.5);
+                    var radius = data.asteroid[i].rad / 380;
+                    asteroid_scale = radius;
+                    asteroid.scale.setTo(asteroid_scale, asteroid_scale);
+                    asteroid.angle = calangle();
+                    myGroup.add(asteroid);
+                
             }
 
             style = { fontSize: '15px', fill: '#ffffff' }

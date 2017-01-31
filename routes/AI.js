@@ -5,7 +5,7 @@ var self = module.exports = {
     create_bot: function () {
 
         var bot = {
-            name:'Artificial Intelligence',
+            name: 'Artificial Intelligence',
             x: 1100,
             y: 350,
             rad: 18
@@ -21,7 +21,7 @@ var self = module.exports = {
             y: 350,
             rad: 18,
             id: id,
-            score : 0,
+            score: 0,
             maxSpeed: 2,
             pressingRight: false,
             pressingLeft: false,
@@ -140,27 +140,48 @@ var self = module.exports = {
             pack.push({
                 x: planet.x,
                 y: planet.y,
-                rad:planet.rad
-        })
+                rad: planet.rad
+            })
 
         }
         return pack;
 
 
     },
-    
-    find_size_of_gamelist:function(Game){
+
+    find_size_of_gamelist: function (Game) {
         var size = Object.keys(Game.planetlist).length;
         var templist;
-        if(size <15)
-        {
+        if (size < 15) {
             templist = self.create_planet();
-            for(var i in templist)
-            {
+            for (var i in templist) {
                 var planet = templist[i];
                 Game.planetlist[planet.id] = planet;
             }
         }
+    },
+
+
+    create_asteroid: function () {
+        var asteroid = {
+            x: 400,
+            y: 400,
+            radius: 18
+        };
+        return asteroid;
+
+    },
+
+    asteroid_assign_position: function (Game) {
+        //console.log("hi");
+        var pack = [];
+        pack.push({
+            x: Game.asteroid_add.x,
+            y: Game.asteroid_add.y,
+            rad: Game.asteroid_add.radius,
+
+        })
+        return pack;
     }
 
 

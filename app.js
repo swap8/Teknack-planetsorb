@@ -182,6 +182,7 @@ io.on("connection", function (socket) {
         }
 
     });
+//-------------------------------- single player starts here -------------------------------------
 
     socket.on('single_player_mission', function (data) {
 
@@ -203,6 +204,11 @@ io.on("connection", function (socket) {
         Game.time = 90;
         Game.bot = bot;
         Game.bot_name = bot.name;
+        Game.asteroid = false;
+        asteroid = AI.create_asteroid();
+        console.log("x:" + asteroid.x + "y:" + asteroid.y);
+        Game.asteroid_add=asteroid;
+
         Game.generate_fireball = false;
         Game.start_the_game = false;
         Game.overstate = false;
@@ -357,7 +363,8 @@ setInterval(function () {
             bot: AI.assignbotposition(Game),
             planet : AI.assignplanetposition(Game),
             player_name : Game.player_name,
-            bot_name: Game.bot_name
+            bot_name: Game.bot_name,
+            asteroid: AI.asteroid_assign_position(Game)
         }
         var socket = Game.player;
         socket.emit('bot_game', bot_game);
