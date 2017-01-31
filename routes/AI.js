@@ -9,7 +9,8 @@ var self = module.exports = {
             x: 1100,
             y: 350,
             rad: 18,
-            status: ''
+            status: '',
+            score: 0
         };
 
         return bot;
@@ -144,7 +145,7 @@ var self = module.exports = {
                 x: planet.x,
                 y: planet.y,
                 rad: planet.rad,
-                fade:planet.fade
+                fade: planet.fade
             })
 
         }

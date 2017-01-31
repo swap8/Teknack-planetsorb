@@ -17,6 +17,7 @@ var collidePlayer = require('./routes/collidePlayer');
 var collidePlanet = require('./routes/collidePlanet');
 var fireball = require('./routes/fireball');
 var AI = require('./routes/AI');
+var AI_game_time = require('./routes/AI_game_time');
 var AI_collision_detection = require('./routes/AI_collision_detection');
 var app = express();
 
@@ -182,7 +183,7 @@ io.on("connection", function (socket) {
         }
 
     });
-//-------------------------------- single player starts here -------------------------------------
+    //-------------------------------- single player starts here -------------------------------------
 
     socket.on('single_player_mission', function (data) {
 
@@ -201,13 +202,14 @@ io.on("connection", function (socket) {
         var Game = {};
         Game.Game_list = {};
         Game.id = uuid.v1();
-        Game.time = 90;
+        Game.time = 10;
         Game.bot = bot;
         Game.bot.status = 'Attacking';
         Game.bot_name = bot.name;
         Game.asteroid = false;
         asteroid = AI.create_asteroid();
         //console.log("x:" + asteroid.x + "y:" + asteroid.y);
+
         Game.asteroid_add=asteroid;
         
         man = AI.create_man();
@@ -236,6 +238,7 @@ io.on("connection", function (socket) {
 
         bot_game_list[Game.id] = Game;
 
+        AI_game_time.game_over(Game);
 
     });
 
@@ -262,14 +265,13 @@ io.on("connection", function (socket) {
                 }
             }
         }
-        for(var i in bot_game_list)
-        {
+        for (var i in bot_game_list) {
             var Game = bot_game_list[i];
-            if(game_id === Game.id){
+            if (game_id === Game.id) {
                 delete bot_game_list[Game.id];
             }
         }
-                                                         // If one player left the lobby, Declare Win for other
+        // If one player left the lobby, Declare Win for other
     });
 
     //-----keyboard movements--------------------------------
@@ -327,8 +329,30 @@ io.on("connection", function (socket) {
                 gameover.calculate_winner(Game);
             }
         }
-        gameover.calculate_winner(Game);
+        //gameover.calculate_winner(Game);
     });
+
+    socket.on('single_player_find_winner', function (data) {
+        for (var i in bot_game_list) {
+            var Game = bot_game_list[i];
+            if (data.gameid === Game.id) {
+                AI_game_time.calculate_winner(Game);
+            }
+        }
+
+    });
+
+    socket.on('single_player_lost',function(data){
+          for (var i in bot_game_list) {
+            var Game = bot_game_list[i];
+            if (data.gameid === Game.id) {
+                Game.overstate = true;
+                //console.log("hii");
+                delete bot_game_list[Game.id];
+            }
+        }
+    });
+
 });
 
 setInterval(function () {
@@ -368,13 +392,20 @@ setInterval(function () {
         var bot_game = {
             player: AI.assignPlayerPosition(Game),
             bot: AI.assignbotposition(Game),
-            planet : AI.assignplanetposition(Game),
-            player_name : Game.player_name,
+            planet: AI.assignplanetposition(Game),
+            player_name: Game.player_name,
             bot_name: Game.bot_name,
             asteroid: AI.asteroid_assign_position(Game),
             man: AI.man_assign_position(Game),
             ship: AI.ship_assign_position(Game),
-            bot_status : Game.bot.status
+            bot_status: Game.bot.status,
+            gmtime: Game.time,
+            bot_score: Game.bot.score,
+            player_score: Game.player.location.score,
+            gameid: Game.id,
+            winner: Game.winner,
+            overstate: Game.overstate
+
         }
         var socket = Game.player;
         socket.emit('bot_game', bot_game);

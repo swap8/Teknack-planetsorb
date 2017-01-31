@@ -17,8 +17,11 @@ var sprite;
 var astroid_angle = 0;
 var lock_deadlock = true;
 var multi_id;
+var lock_deadlock_single_player = true;
 var stop_movements = false;
 var call_only_once = true;
+var call_only_once_single_player = true;
+var single_player_final_winner;
 //var fireball_x_coord;
 var game = new Phaser.Game(winwidth, winheight, Phaser.AUTO);
 
@@ -70,6 +73,16 @@ GameState.end = {
     }
 }
 
+GameState.bot_end = {
+    create: function () {
+        game.add.sprite(0, 0, 'over');
+        winner = game.add.text(300, 40, 'Winner : ' + gamewinner, { fontSize: '25px', fill: '#fff' });
+        replay = game.add.button(winwidth / 3, winheight / 1.5, 'playagain', play_again, this, 2, 1, 0);
+        replay.scale.setTo(0.2, 0.2);
+        replay.scale.setTo(0.5, 0.5);
+    }
+}
+
 GameState.main = {
     player: null,
 
@@ -84,7 +97,7 @@ GameState.main = {
             //console.log(data);
             multi_id = data;
             socket.emit('multi_player_mission', multi_id);
-            console.log(multi_id);
+            // console.log(multi_id);
         });
         //console.log(multi_id);
 
@@ -165,8 +178,7 @@ GameState.main = {
                     matter.angle = greenplanetangle();
                     var radius = data.greenPlanet[i].rad / 140;
                     matter_scale = radius;
-                    if(!data.greenPlanet[i].fade)
-                    {
+                    if (!data.greenPlanet[i].fade) {
                         matter.alpha = 0.5;
                     }
                     matter.scale.setTo(matter_scale, matter_scale);
@@ -179,8 +191,7 @@ GameState.main = {
                     antimatter.angle = redplanetangle();
                     var radius = data.redPlanet[i].rad / 140;
                     antimatter_scale = radius;
-                    if(!data.redPlanet[i].fade)
-                    {
+                    if (!data.redPlanet[i].fade) {
                         antimatter.alpha = 0.7;
                     }
                     antimatter.scale.setTo(antimatter_scale, antimatter_scale);
@@ -297,6 +308,7 @@ GameState.bots = {
         myGroup = game.add.group();
         socket = io();
         var single_id;
+        call_only_once_single_player = true;
         graphics = game.add.graphics(0, 0);
         graphics.beginFill(0x6A5E76, 1);
         graphics.moveTo(340, 0);
@@ -441,8 +453,7 @@ GameState.bots = {
                 planet.angle = redplanetangle();
                 var radius = data.planet[i].rad / 140;
                 planet_scale = radius;
-                if(data.planet[i].fade)
-                {
+                if (!data.planet[i].fade) {
                     planet.alpha = 0.7;
                 }
                 planet.scale.setTo(planet_scale, planet_scale);
@@ -521,14 +532,47 @@ for (var i = 0; i < data.ship.length; i++) {
             }
 
             style = { fontSize: '15px', fill: '#ffffff' }
-            mytext = game.add.text(370, 10, data.player_name, style);
+            mytext = game.add.text(385, 10, data.player_name, style);
+            myGroup.add(mytext);
+
+            mytext = game.add.text(385, 30, "Absorb : Everything", style);
             myGroup.add(mytext);
 
             mytext = game.add.text(950, 10, data.bot_name, style);
             myGroup.add(mytext);
 
-            mytext = game.add.text(950, 28, "Staus : " + data.bot_status, { fontSize: '14px', fill: '#ffffff' });
+            mytext = game.add.text(950, 30, "Staus : " + data.bot_status, { fontSize: '14px', fill: '#ffffff' });
             myGroup.add(mytext);
+
+            mytext = game.add.text(720, 12, 'Time : ' + data.gmtime, { fontSize: '16px', fill: '#ffffff' });
+            myGroup.add(mytext);
+
+            mytext = game.add.text(385, 48, 'Score : ' + data.player_score, style);
+            myGroup.add(mytext);
+
+            mytext = game.add.text(950, 48, 'Score : ' + data.bot_score, style);
+            myGroup.add(mytext);
+
+
+            if (data.gmtime == 0) {
+                lock_deadlock_single_player = false;
+                if (call_only_once_single_player) {
+                    call_only_once_single_player = false;
+                    socket.emit('single_player_find_winner', { gameid: data.gameid });
+                }
+                gamewinner = data.winner;
+                lock_deadlock_single_player = true;
+                // game.state.start('bot_end');
+            }
+
+            if (data.overstate) {
+                if (lock_deadlock_single_player) {
+                    myGroup.destroy();
+                    socket.emit('single_player_lost', { gameid: data.gameid });
+                    game.state.start('bot_end');
+                }
+
+            }
         });
 
 
@@ -566,14 +610,14 @@ game.state.add('main', GameState.main);
 game.state.add('end', GameState.end);
 game.state.add('start', GameState.start);
 game.state.add('bots', GameState.bots);
-
+game.state.add('bot_end', GameState.bot_end);
 game.state.start('start');
 
 function actionOnClick() {
     game.state.start('main');
 }
 function play_again() {
-    game.state.start('main');
+    game.state.start('start');
 }
 function calangle() {
     angle += 1;
