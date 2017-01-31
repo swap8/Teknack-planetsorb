@@ -7,11 +7,10 @@ var self = module.exports = {
 
     createfireball: function () {
         var fireball = {};
-        //fireball.x = Math.floor(Math.random() * 100 + 100);
-        var direction = Math.floor(Math.random()*(1500)) + 10;
+        var direction = Math.floor(Math.random()*1510);
         fireball.x= direction;
-        // fireball.x=750;
-        // fireball.y =Math.floor(Math.random()*790)+20;
+        
+        
         fireball.y=800;
 
         (direction <= 750)? SIDE =1 : SIDE=0;
@@ -19,20 +18,9 @@ var self = module.exports = {
         return fireball;
     },
 
-    allow_boundary_for_fireball: function(Game)
-    {
-        var a = Game.fireball.x;
-        var b = Game.fireball.y;
-        var c = Math.hypot(1500,800);
-        console.log("A:"+ a + "B: " + b);
-        if(((Math.hypot(a,b))<c)&& a>0 && b>0)
-        {
-            self.move_fireball(Game,a,b);
-            
-        }
-    },
+    
 
-    move_fireball: function (Game,a,b)
+    move_fireball: function (Game)
     {
          
          
@@ -42,7 +30,7 @@ var self = module.exports = {
             Game.fireball.x++;
             Game.fireball.y--;
             }
-            else//if (a>=750 && a<1500)
+            else
             {
             Game.fireball.x--;
             Game.fireball.y--;
@@ -56,10 +44,9 @@ var self = module.exports = {
         if (Game.generate_fireball) {
             var fireball_pack = [];
             if (Game.fireball.y > 0 ) {
-            //    Game.fireball.x;
-            // Game.fireball.y;
-                self.allow_boundary_for_fireball(Game);
-                console.log("X coord: " + Game.fireball.x + "** Y coord: " + Game.fireball.y);
+           
+                self.move_fireball(Game);
+           
                 
                 fireball_pack.push({
                     x:Game.fireball.x,

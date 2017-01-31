@@ -296,7 +296,7 @@ GameState.bots = {
             "// modified by @hintz",
 
             "// from http://glsl.heroku.com/e#5248.0",
-            "#define BLADES 3.0",
+            "#define BLADES 4.0",
             "#define BIAS 0.0001",
             "#define SHARPNESS 3.0",
 
@@ -311,7 +311,7 @@ GameState.bots = {
 
             "color = color * 0.2;",
 
-            "float blade = pow(sin(atan(position.y,position.x )*BLADES)+BIAS, SHARPNESS);",
+            "float blade = clamp(pow(sin(atan(position.y,position.x )*BLADES)+BIAS, SHARPNESS), 0.0 , 1.0);",
 
             "color += mix(vec3(-0.34, -0.5, -1.0), vec3(0.0, -0.5, -1.0), (position.y + 1.0) * 0.25);",
             "color += (vec3(0.95, 0.65, 0.30) * 1.0 / distance(vec2(0.0), position) * 0.075);",
@@ -351,7 +351,7 @@ GameState.bots = {
             "const float SPEED  = 0.002;",
             "const float SCALE  = 5.0;",
             "const float DENSITY    = 0.005;",
-            "const float BRIGHTNESS = 0.5;",
+            "const float BRIGHTNESS = 0.1;",
             "vec2 ORIGIN    = resolution.xy*.5;",
 
             "float rand(vec2 co){ return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453); }",
