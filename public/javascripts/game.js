@@ -285,6 +285,13 @@ GameState.bots = {
         myGroup = game.add.group();
         socket = io();
         var single_id;
+        graphics = game.add.graphics(0, 0);
+        graphics.beginFill(0x6A5E76, 1);
+        graphics.moveTo(340, 0);
+        graphics.lineTo(1180, 0);
+        graphics.lineTo(1140, 70);
+        graphics.lineTo(380, 70);
+        graphics.endFill();
         var fragmentSrc = [
 
             "precision mediump float;",
@@ -348,9 +355,9 @@ GameState.bots = {
             "}",
 
             "const float LAYERS = 3.0;",
-            "const float SPEED  = 0.002;",
+            "const float SPEED  = 0.005;",
             "const float SCALE  = 5.0;",
-            "const float DENSITY    = 0.005;",
+            "const float DENSITY    = 0.004;",
             "const float BRIGHTNESS = 0.1;",
             "vec2 ORIGIN    = resolution.xy*.5;",
 
@@ -447,6 +454,14 @@ GameState.bots = {
                     myGroup.add(bot);
                 }
             }
+
+            style = { fontSize: '15px', fill: '#ffffff' }
+            mytext = game.add.text(370, 10, data.player_name, style);
+            myGroup.add(mytext);
+
+            style = { fontSize: '15px', fill: '#ffffff' }
+            mytext = game.add.text(950, 10, data.bot_name, style);
+            myGroup.add(mytext);
         });
 
 

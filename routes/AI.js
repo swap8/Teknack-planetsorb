@@ -5,6 +5,7 @@ var self = module.exports = {
     create_bot: function () {
 
         var bot = {
+            name:'Artificial Intelligence',
             x: 1100,
             y: 350,
             rad: 18
@@ -20,6 +21,7 @@ var self = module.exports = {
             y: 350,
             rad: 18,
             id: id,
+            score : 0,
             maxSpeed: 2,
             pressingRight: false,
             pressingLeft: false,
@@ -109,7 +111,7 @@ var self = module.exports = {
         for (i = 0; i < no_of_planets; i++) {
             var x = Math.floor(Math.random() * 1520);
             var y = Math.floor(Math.random() * 700);
-            var radious = Math.floor(Math.random() * 20 + 2);
+            var radius = Math.floor(Math.random() * 20 + 2);
             var id = Math.random().toString(36).substring(7);
 
 
@@ -121,7 +123,7 @@ var self = module.exports = {
 
             }
             else {
-                var planet = self.assing_planet_location(id, x, y, radious);
+                var planet = self.assing_planet_location(id, x, y, radius);
 
                 planet_list[id] = planet;
             }
@@ -145,6 +147,20 @@ var self = module.exports = {
         return pack;
 
 
+    },
+    
+    find_size_of_gamelist:function(Game){
+        var size = Object.keys(Game.planetlist).length;
+        var templist;
+        if(size <15)
+        {
+            templist = self.create_planet();
+            for(var i in templist)
+            {
+                var planet = templist[i];
+                Game.planetlist[planet.id] = planet;
+            }
+        }
     }
 
 

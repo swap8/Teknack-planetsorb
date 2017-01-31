@@ -202,6 +202,7 @@ io.on("connection", function (socket) {
         Game.id = uuid.v1();
         Game.time = 30;
         Game.bot = bot;
+        Game.bot_name = bot.name;
         Game.generate_fireball = false;
         Game.start_the_game = false;
         Game.overstate = false;
@@ -217,6 +218,7 @@ io.on("connection", function (socket) {
         Game.lobby = socket.lobby;
         socket.game_id = Game.id;
         Game.player = socket;
+        Game.player_name = socket.username;
         Game.Game_list[socket.username] = socket;
 
         bot_game_list[Game.id] = Game;
@@ -232,6 +234,7 @@ io.on("connection", function (socket) {
         console.log("User with ID " + socket.username + " Disconnected");
         //console.log(socket.username + " Left Room with Name : " + socket.lobby);
         var lobby_name = socket.lobby;
+        var game_id = socket.game_id;
         delete socket.lobby;
         delete usernames[socket.username];
         delete socket_list[socket.username];
@@ -245,7 +248,15 @@ io.on("connection", function (socket) {
                     check_win(lobby_name, Game, socket.username);
                 }
             }
-        }                                                 // If one player left the lobby, Declare Win for other
+        }
+        for(var i in bot_game_list)
+        {
+            var Game = bot_game_list[i];
+            if(game_id = Game.id){
+                delete bot_game_list[Game.id];
+            }
+        }
+                                                         // If one player left the lobby, Declare Win for other
     });
 
     //-----keyboard movements--------------------------------
@@ -338,12 +349,15 @@ setInterval(function () {
 
     for (var i in bot_game_list) {
         var Game = bot_game_list[i];
+        AI.find_size_of_gamelist(Game);
         AI_collision_detection.detect_collision_player(Game);
         AI_collision_detection.detect_collision_bot(Game);
         var bot_game = {
             player: AI.assignPlayerPosition(Game),
             bot: AI.assignbotposition(Game),
-            planet : AI.assignplanetposition(Game)
+            planet : AI.assignplanetposition(Game),
+            player_name : Game.player_name,
+            bot_name: Game.bot_name
         }
         var socket = Game.player;
         socket.emit('bot_game', bot_game);
