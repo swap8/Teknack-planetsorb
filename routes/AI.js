@@ -165,7 +165,7 @@ var self = module.exports = {
         }
     },
 
-
+//--------------- asteroid creation -----------
     create_asteroid: function () {
         var asteroid = {
             x: 200,
@@ -186,7 +186,48 @@ var self = module.exports = {
 
         })
         return pack;
-    }
+    },
 
+// ----------------- astronaut creation ----------
+    create_man: function(){
+        //console.log("plz");
+        var man = {
+            x: 900,
+            y: 300,
+            radius: 20
+        };
+        return man;
+    },
+
+    man_assign_position: function(Game){
+        var pack = [];
+        pack.push({
+            x: Game.man_add.x,
+            y: Game.man_add.y,
+            rad: Game.man_add.radius
+        })
+        return pack;
+    },
+
+// ----------------- spaceship creation ----------
+    create_ship: function(){
+        //console.log("plz");
+        var ship = {
+            x: 450,
+            y: 300,
+            radius: 60
+        };
+        return ship;
+    },
+
+    ship_assign_position: function(Game){
+        var pack = [];
+        pack.push({
+            x: Game.ship_add.x,
+            y: Game.ship_add.y,
+            rad: Game.ship_add.radius
+        })
+        return pack;
+    },
 
 }

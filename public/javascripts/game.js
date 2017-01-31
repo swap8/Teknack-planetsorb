@@ -37,6 +37,8 @@ GameState.start = {
         game.load.image('blackhole', './images/blackhole2.png');
         game.load.image('fireball', './images/fireball.png');
         game.load.image('asteroid', './images/asteroid.png');
+        game.load.image('man','./images/astronaut.png');
+        game.load.image('ship','./images/shuttle.png');
 
 
     },
@@ -471,7 +473,7 @@ GameState.bots = {
                     myGroup.add(bot);
                 }
             }
-
+// --------------- asteroid ------------------
             for (var i = 0; i < data.asteroid.length; i++) {
 
                 //console.log(data.asteroid);
@@ -486,6 +488,36 @@ GameState.bots = {
                 asteroid.angle = astangle();
                 myGroup.add(asteroid);
 
+            }
+
+// ----------------------man --------------------------------
+for (var i = 0; i < data.man.length; i++) {
+
+                    //console.log(data.man);
+                    man = game.add.sprite(data.man[i].x, data.man[i].y, 'man');
+                    //player.scale.setTo(0.2, 0.2);
+                    man.anchor.setTo(0.5, 0.5);
+                    var radius = data.man[i].rad / 380;
+                    man_scale = radius;
+                    man.scale.setTo(man_scale, man_scale);
+                    man.angle = calangle();
+                    myGroup.add(man);
+                
+            }
+
+// ----------------------ship --------------------------------
+for (var i = 0; i < data.ship.length; i++) {
+
+                    //console.log(data.man);
+                    ship = game.add.sprite(data.ship[i].x, data.ship[i].y, 'ship');
+                    //player.scale.setTo(0.2, 0.2);
+                    ship.anchor.setTo(0.5, 0.5);
+                    var radius = data.ship[i].rad / 380;
+                    ship_scale = radius;
+                    ship.scale.setTo(ship_scale, ship_scale);
+                    ship.angle = calangle();
+                    myGroup.add(ship);
+                
             }
 
             style = { fontSize: '15px', fill: '#ffffff' }

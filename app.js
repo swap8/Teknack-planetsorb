@@ -209,6 +209,12 @@ io.on("connection", function (socket) {
         asteroid = AI.create_asteroid();
         //console.log("x:" + asteroid.x + "y:" + asteroid.y);
         Game.asteroid_add=asteroid;
+        
+        man = AI.create_man();
+        Game.man_add=man;
+        
+        ship = AI.create_ship();
+        Game.ship_add=ship;
 
         Game.generate_fireball = false;
         Game.start_the_game = false;
@@ -366,6 +372,8 @@ setInterval(function () {
             player_name : Game.player_name,
             bot_name: Game.bot_name,
             asteroid: AI.asteroid_assign_position(Game),
+            man: AI.man_assign_position(Game),
+            ship: AI.ship_assign_position(Game),
             bot_status : Game.bot.status
         }
         var socket = Game.player;
