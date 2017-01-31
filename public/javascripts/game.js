@@ -14,6 +14,7 @@ var red_planet_angle = 0;
 var loading_planet_angle = 0;
 var filter;
 var sprite;
+var astroid_angle = 0;
 var lock_deadlock = true;
 var multi_id;
 var stop_movements = false;
@@ -162,6 +163,10 @@ GameState.main = {
                     matter.angle = greenplanetangle();
                     var radius = data.greenPlanet[i].rad / 140;
                     matter_scale = radius;
+                    if(!data.greenPlanet[i].fade)
+                    {
+                        matter.alpha = 0.5;
+                    }
                     matter.scale.setTo(matter_scale, matter_scale);
                     myGroup.add(matter);
                 }
@@ -172,6 +177,10 @@ GameState.main = {
                     antimatter.angle = redplanetangle();
                     var radius = data.redPlanet[i].rad / 140;
                     antimatter_scale = radius;
+                    if(!data.redPlanet[i].fade)
+                    {
+                        antimatter.alpha = 0.7;
+                    }
                     antimatter.scale.setTo(antimatter_scale, antimatter_scale);
                     myGroup.add(antimatter);
                 }
@@ -293,6 +302,8 @@ GameState.bots = {
         graphics.lineTo(1140, 70);
         graphics.lineTo(380, 70);
         graphics.endFill();
+
+
         var fragmentSrc = [
 
             "precision mediump float;",
@@ -422,11 +433,16 @@ GameState.bots = {
             myGroup.destroy();
             myGroup = game.add.group();
             for (var i = 0; i < data.planet.length; i++) {
+                //console.log(data.planet[i].fade);
                 var planet = game.add.sprite(data.planet[i].x, data.planet[i].y, 'antimatter');
                 planet.anchor.setTo(0.5, 0.5);
                 planet.angle = redplanetangle();
                 var radius = data.planet[i].rad / 140;
                 planet_scale = radius;
+                if(data.planet[i].fade)
+                {
+                    planet.alpha = 0.7;
+                }
                 planet.scale.setTo(planet_scale, planet_scale);
                 myGroup.add(planet);
             }
@@ -458,24 +474,28 @@ GameState.bots = {
 
             for (var i = 0; i < data.asteroid.length; i++) {
 
-                    console.log(data.asteroid);
-                    asteroid = game.add.sprite(data.asteroid[i].x, data.asteroid[i].y, 'asteroid');
-                    //player.scale.setTo(0.2, 0.2);
-                    asteroid.anchor.setTo(0.5, 0.5);
-                    var radius = data.asteroid[i].rad / 380;
-                    asteroid_scale = radius;
-                    asteroid.scale.setTo(asteroid_scale, asteroid_scale);
-                    asteroid.angle = calangle();
-                    myGroup.add(asteroid);
-                
+                //console.log(data.asteroid);
+                asteroid = game.add.sprite(data.asteroid[i].x, data.asteroid[i].y, 'asteroid');
+                //player.scale.setTo(0.2, 0.2);
+                asteroid.anchor.setTo(0.5, 0.5);
+                //asteroid.alpha = 0;
+                //game.add.tween(asteroid).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 0, 1000, true);
+                var radius = data.asteroid[i].rad / 50;
+                asteroid_scale = radius;
+                asteroid.scale.setTo(asteroid_scale, asteroid_scale);
+                asteroid.angle = astangle();
+                myGroup.add(asteroid);
+
             }
 
             style = { fontSize: '15px', fill: '#ffffff' }
             mytext = game.add.text(370, 10, data.player_name, style);
             myGroup.add(mytext);
 
-            style = { fontSize: '15px', fill: '#ffffff' }
             mytext = game.add.text(950, 10, data.bot_name, style);
+            myGroup.add(mytext);
+
+            mytext = game.add.text(950, 28, "Staus : " + data.bot_status, { fontSize: '14px', fill: '#ffffff' });
             myGroup.add(mytext);
         });
 
@@ -534,6 +554,10 @@ function greenplanetangle() {
 function redplanetangle() {
     red_planet_angle += 0.01;
     return red_planet_angle;
+}
+function astangle() {
+    astroid_angle -= 1;
+    return astroid_angle;
 }
 function botsattack() {
     game.state.start('bots');

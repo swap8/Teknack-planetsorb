@@ -4,6 +4,8 @@ var self = module.exports = {
 
 
         var temp_planet_list = {};
+        var planet_exist_for_bot;
+        var stop_bot = false;
         var distance_planet_list = {};
         // Game.bot.x--;
         //findout the most nearest planets who has radious lower then him
@@ -27,32 +29,60 @@ var self = module.exports = {
                 distance_planet_list[planet.id] = planet;
             }
 
+            var player = Game.player;
+            if(planet.rad<player.location.rad){
+                planet.fade = true;
+            }
+
         }
         //find out the planet whose distance is lowest from bot
-
-        var nearest_planet = {
-            min: 5000
+        //First of all is ther any planet who has radious lower than bot
+        //it means you need to find smallest planet in the list
+        var smallest_planet = {
+            rad: 5000
         };
         for (var i in distance_planet_list) {
             var planet = distance_planet_list[i];
-            if (planet.distance < nearest_planet.min) {
-                nearest_planet.planet = planet;
-                nearest_planet.min = planet.distance;
+            if (smallest_planet.rad>planet.rad){
+                smallest_planet.planet = planet;
+                smallest_planet.rad = planet.rad;
             }
         }
-        //console.log(nearest_planet);
-        if (Game.bot.x < nearest_planet.planet.x) {
-            Game.bot.x += 3;
+
+        if(smallest_planet.rad>Game.bot.rad)
+        {
+            stop_bot = true;
+            Game.bot.status = 'Thinking';
         }
-        else if (Game.bot.x > nearest_planet.planet.x) {
-            Game.bot.x -= 3;
+
+        if (!stop_bot) {
+            Game.bot.status = 'Attacking';
+            var nearest_planet = {
+                min: 5000
+            };
+            for (var i in distance_planet_list) {
+                var planet = distance_planet_list[i];
+                if (planet.distance < nearest_planet.min) {
+                    nearest_planet.planet = planet;
+                    nearest_planet.min = planet.distance;
+                }
+            }
+            //console.log(nearest_planet);
+            if (Game.bot.x < nearest_planet.planet.x) {
+                Game.bot.x += 1;
+            }
+            else if (Game.bot.x > nearest_planet.planet.x) {
+                Game.bot.x -= 1;
+            }
+            if (Game.bot.y < nearest_planet.planet.y) {
+                Game.bot.y += 1;
+            }
+            else if (Game.bot.y > nearest_planet.planet.y) {
+                Game.bot.y -= 1;
+            }
+
         }
-        if (Game.bot.y < nearest_planet.planet.y) {
-            Game.bot.y += 3;
-        }
-        else if (Game.bot.y > nearest_planet.planet.y) {
-            Game.bot.y -= 3;
-        }
+
 
 
     }

@@ -8,7 +8,8 @@ var self = module.exports = {
             name: 'Artificial Intelligence',
             x: 1100,
             y: 350,
-            rad: 18
+            rad: 18,
+            status: ''
         };
 
         return bot;
@@ -75,6 +76,7 @@ var self = module.exports = {
             id: id,
             x: x,
             y: y,
+            fade: false,
             rad: rad
         }
         return planet;
@@ -111,7 +113,7 @@ var self = module.exports = {
         for (i = 0; i < no_of_planets; i++) {
             var x = Math.floor(Math.random() * 1520);
             var y = Math.floor(Math.random() * 700);
-            var radius = Math.floor(Math.random() * 20 + 2);
+            var radius = Math.floor(Math.random() * 20 + 5);
             var id = Math.random().toString(36).substring(7);
 
 
@@ -137,10 +139,12 @@ var self = module.exports = {
         for (var i in Game.planetlist) {
             var planet = Game.planetlist[i];
             //console.log(planet);
+            //console.log(planet.fade);
             pack.push({
                 x: planet.x,
                 y: planet.y,
-                rad: planet.rad
+                rad: planet.rad,
+                fade:planet.fade
             })
 
         }
@@ -164,8 +168,8 @@ var self = module.exports = {
 
     create_asteroid: function () {
         var asteroid = {
-            x: 400,
-            y: 400,
+            x: 200,
+            y: 250,
             radius: 18
         };
         return asteroid;

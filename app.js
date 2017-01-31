@@ -203,10 +203,11 @@ io.on("connection", function (socket) {
         Game.id = uuid.v1();
         Game.time = 90;
         Game.bot = bot;
+        Game.bot.status = 'Attacking';
         Game.bot_name = bot.name;
         Game.asteroid = false;
         asteroid = AI.create_asteroid();
-        console.log("x:" + asteroid.x + "y:" + asteroid.y);
+        //console.log("x:" + asteroid.x + "y:" + asteroid.y);
         Game.asteroid_add=asteroid;
 
         Game.generate_fireball = false;
@@ -364,7 +365,8 @@ setInterval(function () {
             planet : AI.assignplanetposition(Game),
             player_name : Game.player_name,
             bot_name: Game.bot_name,
-            asteroid: AI.asteroid_assign_position(Game)
+            asteroid: AI.asteroid_assign_position(Game),
+            bot_status : Game.bot.status
         }
         var socket = Game.player;
         socket.emit('bot_game', bot_game);

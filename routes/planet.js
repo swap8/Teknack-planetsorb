@@ -15,6 +15,7 @@ var self = module.exports = {
 			id: id,
 			x: x,
 			y: y,
+			fade:false,
 			rad: radius
 		}
 

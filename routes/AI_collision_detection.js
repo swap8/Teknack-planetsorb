@@ -72,12 +72,12 @@ var self = module.exports = {
                 }
                 else {
 
-                    if (bot.rad > 2) {
+                    if (bot.rad > 8) {
                         planet.rad += bot.rad / 100;
                         bot.rad -= 0.2;
                     }
                     else {
-                        console.log("game over.");
+                        //console.log("game over.");
                     }
                 }
             }
