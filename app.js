@@ -219,6 +219,9 @@ io.on("connection", function (socket) {
         ship = AI.create_ship();
         Game.ship_add=ship;
 
+        saturn = AI.create_saturn();
+        Game.saturn_add = saturn;
+
         Game.generate_fireball = false;
         Game.start_the_game = false;
         Game.overstate = false;
@@ -399,14 +402,16 @@ setInterval(function () {
             asteroid: AI.asteroid_assign_position(Game),
             man: AI.man_assign_position(Game),
             ship: AI.ship_assign_position(Game),
+
             bot_status: Game.bot.status,
             gmtime: Game.time,
             bot_score: Game.bot.score,
             player_score: Game.player.location.score,
             gameid: Game.id,
             winner: Game.winner,
-            overstate: Game.overstate
-
+            overstate: Game.overstate,
+            saturn: AI.saturn_assign_position(Game),
+            
         }
         var socket = Game.player;
         socket.emit('bot_game', bot_game);

@@ -237,7 +237,15 @@ var self = module.exports = {
         return ship;
     },
 
-    ship_assign_position: function (Game) {
+// <<<<<<< Updated upstream
+    // ship_assign_position: function (Game) {
+// =======
+    // move_ship: function(){
+
+    // },
+    
+    ship_assign_position: function(Game){
+// >>>>>>> Stashed changes
         var pack = [];
         pack.push({
             x: Game.ship_add.x,
@@ -246,5 +254,25 @@ var self = module.exports = {
         })
         return pack;
     },
+
+    //-------------- saturn -------------
+    create_saturn: function(){
+        var saturn= {
+            x: 850,
+            y: 650,
+            radius: 80
+        };
+        return saturn;
+    },
+
+    saturn_assign_position: function(Game){
+        var pack = [];
+        pack.push({
+            x: Game.saturn_add.x,
+            y: Game.saturn_add.y,
+            rad: Game.saturn_add.radius
+        })
+        return pack;
+    }
 
 }

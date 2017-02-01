@@ -1,0 +1,16 @@
+General Rules:\n
+A black hole can only absorb those objects who have size smaller than itself\n
+\n
+Winning:\n
+The games ends when another black hole absorbs you or black hole size reduces to \n
+singularity\n
+The Game is also time bound. When time runs out player with larger size wins\n\n
+
+Single Player Rules\n
+1. Out smart the bot black hole to grow larger in size\n
+2. Absorb bonus objects to boost size\n
+\n
+Multiplayer Rules\n
+1. Absorb only your specific colour. contact with enemy black hole\n
+    or opposite colour makes you shrink.\n
+2. Absorb incoming fireballs to grow in size.\n\n

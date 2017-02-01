@@ -20,6 +20,7 @@ var multi_id;
 var lock_deadlock_single_player = true;
 var stop_movements = false;
 var call_only_once = true;
+
 var call_only_once_single_player = true;
 var single_player_final_winner;
 
@@ -43,12 +44,20 @@ GameState.start = {
         game.load.image('blackhole', './images/blackhole2.png');
         game.load.image('fireball', './images/fireball.png');
         game.load.image('asteroid', './images/asteroid.png');
+
         game.load.image('man', './images/spaceman.png');
         game.load.image('ship', './images/spaceship.png');
         game.load.image('spaceportalborder', './images/spaceportalborder.png');
         game.load.image('portal', './images/portal.png');
         game.load.image('ufo', './images/ufo.png');
         game.load.image('nstar','./images/nstar.png');
+
+        game.load.image('saturn', './images/saturn.png');
+        game.load.image('rules', './images/smile.png');
+        game.load.image('rulesbg', './images/rulespg.jpg');
+        game.load.image('storybg', './images/storybg.jpg');
+        game.load.image('storybt', './images/storybt.png');
+        game.load.image('homebt', './images/home.png');
 
 
 
@@ -65,6 +74,14 @@ GameState.start = {
         startbutton = game.add.button(winwidth / 2, winheight / 1.8, 'multiplayer', actionOnClick, this, 2, 1, 0);
         startbutton.scale.setTo(0.25, 0.25);
         startbutton.anchor.setTo(0.5, 0.5);
+
+        rulesbutton = game.add.button(750, 570, 'rules', rulespgclick, this, 2, 1, 0);
+        rulesbutton.scale.setTo(0.3, 0.3);
+        rulesbutton.anchor.setTo(0.5, 0.5);
+
+        storybutton = game.add.button(1050, 270, 'storybt', storyline, this, 2, 1, 0);
+        storybutton.scale.setTo(0.3, 0.3);
+
         var style = { font: "65px Arial", fill: "#ffffff", align: "center" };
         var text = game.add.text(winwidth / 2, winheight / 6, "Planetsorb", style);
         text.anchor.setTo(0.5, 0.5);
@@ -330,6 +347,118 @@ GameState.main = {
     }
 }
 
+//---------------- rules page----------------
+GameState.gamerules = {
+    preload: function () {
+
+
+    },
+
+    create: function () {
+        var rulestext = "General Rules:\nA black hole can only absorb those objects who have size smaller than itself\n\nWinning\nThe games ends when another black hole absorbs you or black hole size reduces to \nsingularity\nThe Game is also time bound. When time runs out player with larger size wins\n\nSingle Player Rules\n1. Out smart the bot black hole to grow larger in size\n2. Absorb bonus objects to boost size\n\nMultiplayer Rules\n1. Absorb only your specific colour. contact with enemy black hole\nor opposite colour makes you shrink.\n2. Absorb incoming fireballs to grow in size.\n\n";
+        game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+        game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+        game.add.tileSprite(0, 0, winwidth, winheight, 'rulesbg');
+
+        game.debug.text(winheight);
+        game.debug.text(winwidth, 23, 43);
+        //--------title----------
+        var title = game.add.text(0, 0, 'RULES AND TIPS', style);
+
+
+        var style = { font: "20px Arial", fill: "#fff", align: "center", wordwrap: true, wordWrapWidth: 300 };
+
+        var text = game.add.text(100, 100, rulestext, style);
+        text.setTextBounds(16, 16, 600, 600);
+        text.anchor.x = 0;
+
+         homebutton = game.add.button(1050, 270, 'homebt', gohome, this, 2, 1, 0);
+        homebutton.scale.setTo(0.3, 0.3);
+
+    },
+
+    update: function () {
+
+    }
+}
+
+GameState.storyline = {
+
+    preload: function () {
+
+
+    },
+
+    create: function () {
+        var line = [];
+        var wordIndex = 0;
+        var lineIndex = 0;
+        var wordDelay = 120;
+        var lineDelay = 400;
+        var storylinetext = [
+            "I am Death the destroyer of Worlds.",
+            "Unknown until it was thought that we were the only sentient life in Universe. Are we?",
+            "Aeons ago when the nascent uiverse saw two beings the 'skemdarvargur'. in the void ",
+            "they took the form of what we call today as supermassive black holes. ",
+            "Devouring all matter in their path ",
+            "they are forever at war with each other."
+        ];
+        game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+        game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+        game.add.tileSprite(0, 0, winwidth, winheight, 'storybg');
+
+        // game.debug.text(winheight);
+        // game.debug.text(winwidth, 23, 43);
+        //--------title----------
+        var style = { font: "20px Arial", fill: "#fab", align: "center" };
+        var title = game.add.text(0, 0, 'STORYLINE', style);
+        title.anchor.setTo(0, 0);
+
+
+        var style1 = { font: "20px Arial", fill: "#fff", align: "center", wordwrap: true, wordWrapWidth: 300 };
+
+        //    var text = game.add.text(100,100, rulestext, style);
+        //    text.setTextBounds(16,16, 600,600);
+        //    text.anchor.x=0;
+        var text = game.add.text(600, 300,'', style1);
+        text.setTextBounds(0,0,300,300);
+        nextLine();1
+
+        function nextLine() {
+            if (lineIndex === storylinetext.length) {
+                return;
+            }
+
+            line = storylinetext[lineIndex].split(' ');
+            wordIndex = 0;
+
+            game.time.events.repeat(wordDelay, line.length, nextWord, this);
+
+            lineIndex++;
+
+        }
+
+        function nextWord() {
+            text.text = text.text.concat(line[wordIndex] + " ");
+            wordIndex++;
+
+            if (wordIndex === line.length) {
+                text.text = text.text.concat("\n");
+
+                game.time.events.add(lineDelay, nextLine, this);
+            }
+        }
+
+        homebutton = game.add.button(1050, 270, 'homebt', gohome, this, 2, 1, 0);
+        homebutton.scale.setTo(0.3, 0.3);
+    },
+
+
+
+    update: function () {
+
+    }
+}
 //for bots - play a single player mission
 GameState.bots = {
     preload: function () {
@@ -512,7 +641,9 @@ GameState.bots = {
                 planet.angle = redplanetangle();
                 var radius = data.planet[i].rad / 140;
                 planet_scale = radius;
+
                 if (!data.planet[i].fade) {
+
                     planet.alpha = 0.7;
                 }
                 planet.scale.setTo(planet_scale, planet_scale);
@@ -567,10 +698,12 @@ GameState.bots = {
                 man = game.add.sprite(data.man[i].x, data.man[i].y, 'man');
                 //player.scale.setTo(0.2, 0.2);
                 man.anchor.setTo(0.5, 0.5);
+
                 var radius = data.man[i].rad / 100;
                 man_scale = radius;
                 man.scale.setTo(man_scale, man_scale);
                 man.angle = manangle();
+
                 myGroup.add(man);
 
             }
@@ -585,8 +718,22 @@ GameState.bots = {
                 var radius = data.ship[i].rad / 380;
                 ship_scale = radius;
                 ship.scale.setTo(ship_scale, ship_scale);
+
                 ship.angle = spaceshipangle();
                 myGroup.add(ship);
+
+
+            }
+
+            //--------------------saturn--------------
+            for (var i = 0; i < data.saturn.length; i++) {
+                saturn = game.add.sprite(data.saturn[i].x, data.saturn[i].y, 'saturn');
+                saturn.anchor.setTo(0.5, 0.5);
+                var radius = data.saturn[i].rad / 380;
+                saturn_scale = radius;
+                saturn.scale.setTo(saturn_scale, saturn_scale);
+                saturn.angle = manangle();
+                myGroup.add(saturn);
 
             }
 
@@ -633,10 +780,6 @@ GameState.bots = {
 
             }
         });
-
-
-
-
     },
     update: function () {
 
@@ -675,17 +818,37 @@ game.state.add('main', GameState.main);
 game.state.add('end', GameState.end);
 game.state.add('start', GameState.start);
 game.state.add('bots', GameState.bots);
+
 game.state.add('bot_end', GameState.bot_end);
+
+game.state.add('gamerules', GameState.gamerules);
+game.state.add('storyline', GameState.storyline);
+
+
 game.state.start('start');
 
+//---------------- functions called in game ---------------------
 function actionOnClick() {
     game.state.start('main');
+}
+
+function rulespgclick() {
+    game.state.start('gamerules');
+}
+
+function storyline() {
+    game.state.start('storyline');
 }
 function play_again() {
     game.state.start('start');
 }
 function calangle() {
     angle += 1;
+    return angle;
+}
+
+function manangle() {
+    angle += 0.0001;
     return angle;
 }
 function greenplanetangle() {
@@ -703,6 +866,7 @@ function astangle() {
 function botsattack() {
     game.state.start('bots');
 }
+
 var spaceship_angle = 0;
 function spaceshipangle() {
     spaceship_angle += 0.1;
@@ -712,4 +876,9 @@ man_angle = 0;
 function manangle() {
     man_angle += 0.4;
     return man_angle;
+
+
+function gohome(){
+    game.state.start('start');
+
 }
