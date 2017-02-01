@@ -4,7 +4,6 @@ var self = module.exports = {
         setTimeout(function () {
 
             if (Game.time > 0) {
-                //console.log(Game.time);
                 Game.time--;
                 self.check(Game);
             }

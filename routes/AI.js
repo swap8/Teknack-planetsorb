@@ -1,4 +1,5 @@
 var player = require('./player');
+var boundry = require('./boundry');
 var AI_logic = require('./AI_logic');
 var self = module.exports = {
 
@@ -31,15 +32,30 @@ var self = module.exports = {
             pressingDown: false,
         };
         assignvalues.updatePosition = function () {
-            if (assignvalues.pressingRight)
-                assignvalues.x += assignvalues.maxSpeed;
-            if (assignvalues.pressingLeft)
-                assignvalues.x -= assignvalues.maxSpeed;
-            if (assignvalues.pressingDown)
-                assignvalues.y += assignvalues.maxSpeed;
-            if (assignvalues.pressingUp)
-                assignvalues.y -= assignvalues.maxSpeed;
-
+            if (assignvalues.pressingRight) {
+                var right = boundry.checkboundry_right(assignvalues.x);
+                if (right) {
+                    assignvalues.x += assignvalues.maxSpeed;
+                }
+            }
+            if (assignvalues.pressingLeft) {
+                var left = boundry.checkboundry_left(assignvalues.x);
+                if (left) {
+                    assignvalues.x -= assignvalues.maxSpeed;
+                }
+            }
+            if (assignvalues.pressingDown) {
+                var down = boundry.checkboundry_down(assignvalues.y);
+                if (down) {
+                    assignvalues.y += assignvalues.maxSpeed;
+                }
+            }
+            if (assignvalues.pressingUp) {
+                var up = boundry.checkboundry_up(assignvalues.y);
+                if (up) {
+                    assignvalues.y -= assignvalues.maxSpeed;
+                }
+            }
         }
         return assignvalues;
     },
@@ -166,7 +182,7 @@ var self = module.exports = {
         }
     },
 
-//--------------- asteroid creation -----------
+    //--------------- asteroid creation -----------
     create_asteroid: function () {
         var asteroid = {
             x: 200,
@@ -189,8 +205,8 @@ var self = module.exports = {
         return pack;
     },
 
-// ----------------- astronaut creation ----------
-    create_man: function(){
+    // ----------------- astronaut creation ----------
+    create_man: function () {
         //console.log("plz");
         var man = {
             x: 900,
@@ -200,7 +216,7 @@ var self = module.exports = {
         return man;
     },
 
-    man_assign_position: function(Game){
+    man_assign_position: function (Game) {
         var pack = [];
         pack.push({
             x: Game.man_add.x,
@@ -210,8 +226,8 @@ var self = module.exports = {
         return pack;
     },
 
-// ----------------- spaceship creation ----------
-    create_ship: function(){
+    // ----------------- spaceship creation ----------
+    create_ship: function () {
         //console.log("plz");
         var ship = {
             x: 450,
@@ -221,7 +237,7 @@ var self = module.exports = {
         return ship;
     },
 
-    ship_assign_position: function(Game){
+    ship_assign_position: function (Game) {
         var pack = [];
         pack.push({
             x: Game.ship_add.x,

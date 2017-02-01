@@ -22,6 +22,9 @@ var stop_movements = false;
 var call_only_once = true;
 var call_only_once_single_player = true;
 var single_player_final_winner;
+
+var cursor, wasd;
+
 //var fireball_x_coord;
 var game = new Phaser.Game(winwidth, winheight, Phaser.AUTO);
 
@@ -40,8 +43,13 @@ GameState.start = {
         game.load.image('blackhole', './images/blackhole2.png');
         game.load.image('fireball', './images/fireball.png');
         game.load.image('asteroid', './images/asteroid.png');
-        game.load.image('man','./images/astronaut.png');
-        game.load.image('ship','./images/shuttle.png');
+        game.load.image('man', './images/spaceman.png');
+        game.load.image('ship', './images/spaceship.png');
+        game.load.image('spaceportalborder', './images/spaceportalborder.png');
+        game.load.image('portal', './images/portal.png');
+        game.load.image('ufo', './images/ufo.png');
+        game.load.image('nstar','./images/nstar.png');
+
 
 
     },
@@ -105,13 +113,19 @@ GameState.main = {
         //create a group
         myGroup = game.add.group();
         graphics = game.add.graphics(0, 0);
-        graphics.beginFill(0xFFC900, 1);
+        graphics.beginFill(0x6A5E76, 1);
         graphics.moveTo(340, 0);
         graphics.lineTo(1180, 0);
         graphics.lineTo(1140, 70);
         graphics.lineTo(380, 70);
         graphics.endFill();
-
+        cursors = game.input.keyboard.createCursorKeys();
+        wasd = {
+            up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+            down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+            left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+            right: game.input.keyboard.addKey(Phaser.Keyboard.D),
+        };
         //filter background
         var fragmentSrc = [
             "precision mediump float;",
@@ -155,7 +169,7 @@ GameState.main = {
         loading_planet.scale.setTo(0.4, 0.4);
         myGroup.add(loading_planet);
         startgroup = game.add.group();
-        var start_text = game.add.text(600, 25, "Game Status : ", { font: "17px Arial", fill: "#000000", align: "center" });
+        var start_text = game.add.text(600, 30, "Game Status : ", { font: "17px Arial", fill: "#ffffff", align: "center" });
         startgroup.add(start_text);
         //text
         var style = { font: "35px Arial", fill: "#ffffff", align: "center" };
@@ -210,18 +224,20 @@ GameState.main = {
                         myGroup.add(player);
                     }
                 }
-                style = { fontSize: '14px', fill: '#000' }
+                style = { fontSize: '14px', fill: '#ffffff' }
                 mytext = game.add.text(370, 10, data.player1.username, style);
                 myGroup.add(mytext);
-                /*game.add.text(380, 28, 'Absorb : ' + data.player1.type, style);*/
+                mytext = game.add.text(380, 28, 'Absorb : ' + data.player1.type, style);
+                myGroup.add(mytext);
                 mytext = game.add.text(385, 48, 'Score : ' + data.player1.score, style);
                 myGroup.add(mytext);
                 mytext = game.add.text(870, 10, data.player2.username, style);
                 myGroup.add(mytext);
-                /*game.add.text(1050, 28, 'Absorb : ' + data.player2.type, style);*/
+                mytext = game.add.text(1050, 28, 'Absorb : ' + data.player2.type, style);
+                myGroup.add(mytext);
                 mytext = game.add.text(1050, 48, 'Score : ' + data.player2.score, style);
                 myGroup.add(mytext);
-                mytext = game.add.text(720, 15, 'Time : ' + data.gmtime, { fontSize: '16px', fill: '#000' });
+                mytext = game.add.text(720, 15, 'Time : ' + data.gmtime, { fontSize: '16px', fill: '#ffffff' });
                 myGroup.add(mytext);
                 finalwinner = data.winner;
 
@@ -254,7 +270,20 @@ GameState.main = {
             }
             else {
                 startgroup = game.add.group();
-                start_text = game.add.text(600, 25, "Game Status : Your game will begin in " + data.start_time, { font: "17px Arial", fill: "#000000", align: "center" });
+                style = { fontSize: '14px', fill: '#ffffff' }
+                mytext = game.add.text(370, 10, data.player1.username, style);
+                startgroup.add(mytext);
+
+                mytext = game.add.text(870, 10, data.player2.username, style);
+                startgroup.add(mytext);
+
+                mytext = game.add.text(1050, 28, 'Absorb : ' + data.player2.type, style);
+                startgroup.add(mytext);
+
+                mytext = game.add.text(380, 28, 'Absorb : ' + data.player1.type, style);
+                startgroup.add(mytext);
+
+                start_text = game.add.text(600, 30, "Game Status : Your game will begin in " + data.start_time, { font: "16px Arial", fill: "#ffffff", align: "center" });
                 startgroup.add(start_text);
             }
 
@@ -270,28 +299,31 @@ GameState.main = {
     },
 
     update: function () {
-        if (stop_movements) {
-            document.onkeydown = function (event) {
-                if (event.keyCode === 68)//d
-                    socket.emit('keyPress', { InputId: 'right', state: true });
-                else if (event.keyCode === 83)//s
-                    socket.emit('keyPress', { InputId: 'down', state: true });
-                else if (event.keyCode === 65)//a
-                    socket.emit('keyPress', { InputId: 'left', state: true });
-                else if (event.keyCode === 87)//w
-                    socket.emit('keyPress', { InputId: 'up', state: true });
-            }
-            document.onkeyup = function (event) {
-                if (event.keyCode === 68)//d
-                    socket.emit('keyPress', { InputId: 'right', state: false });
-                else if (event.keyCode === 83)//s
-                    socket.emit('keyPress', { InputId: 'down', state: false });
-                else if (event.keyCode === 65)//a
-                    socket.emit('keyPress', { InputId: 'left', state: false });
-                else if (event.keyCode === 87)//w
-                    socket.emit('keyPress', { InputId: 'up', state: false });
-            }
+        if (cursors.left.isDown || wasd.left.isDown) {
+            socket.emit('keyPress', { InputId: 'left', state: true });
         }
+        else {
+            socket.emit('keyPress', { InputId: 'left', state: false });
+        }
+        if (cursors.right.isDown || wasd.right.isDown) {
+            socket.emit('keyPress', { InputId: 'right', state: true });
+        }
+        else {
+            socket.emit('keyPress', { InputId: 'right', state: false });
+        }
+        if (cursors.up.isDown || wasd.up.isDown) {
+            socket.emit('keyPress', { InputId: 'up', state: true });
+        }
+        else {
+            socket.emit('keyPress', { InputId: 'up', state: false });
+        }
+        if (cursors.down.isDown || wasd.down.isDown) {
+            socket.emit('keyPress', { InputId: 'down', state: true });
+        }
+        else {
+            socket.emit('keyPress', { InputId: 'down', state: false });
+        }
+
         loading_planet.angle += 0.1;
         if (!stop_movements)
             filter.update(game.input.activePointer);
@@ -318,6 +350,13 @@ GameState.bots = {
         graphics.endFill();
 
 
+        cursors = game.input.keyboard.createCursorKeys();
+        wasd = {
+            up: game.input.keyboard.addKey(Phaser.Keyboard.W),
+            down: game.input.keyboard.addKey(Phaser.Keyboard.S),
+            left: game.input.keyboard.addKey(Phaser.Keyboard.A),
+            right: game.input.keyboard.addKey(Phaser.Keyboard.D),
+        };
         var fragmentSrc = [
 
             "precision mediump float;",
@@ -436,6 +475,22 @@ GameState.bots = {
         sprite.filters = [filter];
         myGroup.add(sprite);
 
+
+        portal_border = game.add.sprite(winwidth / 2, winheight / 2, 'spaceportalborder');
+        portal_border.anchor.setTo(0.5, 0.5);
+        portal_border.scale.setTo(0.25, 0.25);
+
+        portal = game.add.sprite(winwidth / 2, winheight / 2, 'portal');
+        portal.anchor.setTo(0.5, 0.5);
+        portal.scale.setTo(0.24, 0.24);
+
+        nstar = game.add.sprite(winwidth / 1.5, winheight / 2, 'nstar');
+        nstar.anchor.setTo(0.5, 0.5);
+        nstar.scale.setTo(0.15, 0.15);
+        nstar.alpha = 0;
+
+    game.add.tween(nstar).to( { alpha: 1 }, 500, Phaser.Easing.Linear.None, true, 0, 1000, true);
+
         socket.on('send_socket_id', function (data) {
             single_id = data;
             socket.emit('single_player_mission', single_id);
@@ -446,6 +501,10 @@ GameState.bots = {
             // console.log(data.planet);
             myGroup.destroy();
             myGroup = game.add.group();
+
+            //var portal_border = game.add.sprite(500, 500, 'portal');
+
+
             for (var i = 0; i < data.planet.length; i++) {
                 //console.log(data.planet[i].fade);
                 var planet = game.add.sprite(data.planet[i].x, data.planet[i].y, 'antimatter');
@@ -484,7 +543,7 @@ GameState.bots = {
                     myGroup.add(bot);
                 }
             }
-// --------------- asteroid ------------------
+            // --------------- asteroid ------------------
             for (var i = 0; i < data.asteroid.length; i++) {
 
                 //console.log(data.asteroid);
@@ -501,34 +560,34 @@ GameState.bots = {
 
             }
 
-// ----------------------man --------------------------------
-for (var i = 0; i < data.man.length; i++) {
+            // ----------------------man --------------------------------
+            for (var i = 0; i < data.man.length; i++) {
 
-                    //console.log(data.man);
-                    man = game.add.sprite(data.man[i].x, data.man[i].y, 'man');
-                    //player.scale.setTo(0.2, 0.2);
-                    man.anchor.setTo(0.5, 0.5);
-                    var radius = data.man[i].rad / 380;
-                    man_scale = radius;
-                    man.scale.setTo(man_scale, man_scale);
-                    man.angle = calangle();
-                    myGroup.add(man);
-                
+                //console.log(data.man);
+                man = game.add.sprite(data.man[i].x, data.man[i].y, 'man');
+                //player.scale.setTo(0.2, 0.2);
+                man.anchor.setTo(0.5, 0.5);
+                var radius = data.man[i].rad / 100;
+                man_scale = radius;
+                man.scale.setTo(man_scale, man_scale);
+                man.angle = manangle();
+                myGroup.add(man);
+
             }
 
-// ----------------------ship --------------------------------
-for (var i = 0; i < data.ship.length; i++) {
+            // ----------------------ship --------------------------------
+            for (var i = 0; i < data.ship.length; i++) {
 
-                    //console.log(data.man);
-                    ship = game.add.sprite(data.ship[i].x, data.ship[i].y, 'ship');
-                    //player.scale.setTo(0.2, 0.2);
-                    ship.anchor.setTo(0.5, 0.5);
-                    var radius = data.ship[i].rad / 380;
-                    ship_scale = radius;
-                    ship.scale.setTo(ship_scale, ship_scale);
-                    ship.angle = calangle();
-                    myGroup.add(ship);
-                
+                //console.log(data.man);
+                ship = game.add.sprite(data.ship[i].x, data.ship[i].y, 'ship');
+                //player.scale.setTo(0.2, 0.2);
+                ship.anchor.setTo(0.5, 0.5);
+                var radius = data.ship[i].rad / 380;
+                ship_scale = radius;
+                ship.scale.setTo(ship_scale, ship_scale);
+                ship.angle = spaceshipangle();
+                myGroup.add(ship);
+
             }
 
             style = { fontSize: '15px', fill: '#ffffff' }
@@ -580,29 +639,35 @@ for (var i = 0; i < data.ship.length; i++) {
 
     },
     update: function () {
-        document.onkeydown = function (event) {
-            if (event.keyCode === 68)//d
-                socket.emit('keyPress', { InputId: 'right', state: true });
-            else if (event.keyCode === 83)//s
-                socket.emit('keyPress', { InputId: 'down', state: true });
-            else if (event.keyCode === 65)//a
-                socket.emit('keyPress', { InputId: 'left', state: true });
-            else if (event.keyCode === 87)//w
-                socket.emit('keyPress', { InputId: 'up', state: true });
+
+        if (cursors.left.isDown || wasd.left.isDown) {
+            socket.emit('keyPress', { InputId: 'left', state: true });
         }
-        document.onkeyup = function (event) {
-            if (event.keyCode === 68)//d
-                socket.emit('keyPress', { InputId: 'right', state: false });
-            else if (event.keyCode === 83)//s
-                socket.emit('keyPress', { InputId: 'down', state: false });
-            else if (event.keyCode === 65)//a
-                socket.emit('keyPress', { InputId: 'left', state: false });
-            else if (event.keyCode === 87)//w
-                socket.emit('keyPress', { InputId: 'up', state: false });
+        else {
+            socket.emit('keyPress', { InputId: 'left', state: false });
+        }
+        if (cursors.right.isDown || wasd.right.isDown) {
+            socket.emit('keyPress', { InputId: 'right', state: true });
+        }
+        else {
+            socket.emit('keyPress', { InputId: 'right', state: false });
+        }
+        if (cursors.up.isDown || wasd.up.isDown) {
+            socket.emit('keyPress', { InputId: 'up', state: true });
+        }
+        else {
+            socket.emit('keyPress', { InputId: 'up', state: false });
+        }
+        if (cursors.down.isDown || wasd.down.isDown) {
+            socket.emit('keyPress', { InputId: 'down', state: true });
+        }
+        else {
+            socket.emit('keyPress', { InputId: 'down', state: false });
         }
 
         filter.update(game.input.mousePointer);
-
+        portal.angle += 0.5;
+        nstar.angle += 0.5; 
     }
 }
 
@@ -637,4 +702,14 @@ function astangle() {
 }
 function botsattack() {
     game.state.start('bots');
+}
+var spaceship_angle = 0;
+function spaceshipangle() {
+    spaceship_angle += 0.1;
+    return spaceship_angle;
+}
+man_angle = 0;
+function manangle() {
+    man_angle += 0.4;
+    return man_angle;
 }

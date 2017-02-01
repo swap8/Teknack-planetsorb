@@ -1,3 +1,5 @@
+
+var boundry = require('./boundry');
 var self = module.exports = {
 
 	xpos: 400,
@@ -5,7 +7,7 @@ var self = module.exports = {
 	radius: 18,
 
 	//-----------------Create a Player---------------------
-	Player: function (id, next_player_location,type) {
+	Player: function (id, next_player_location, type) {
 
 		var assignvalues = {
 
@@ -13,7 +15,7 @@ var self = module.exports = {
 			y: self.ypos,
 			id: id,
 			rad: self.radius,
-			type:type,
+			type: type,
 			score: 0,
 			pressingRight: false,
 			pressingLeft: false,
@@ -24,17 +26,32 @@ var self = module.exports = {
 			maxSpeed: 1.2,
 
 		}
-assignvalues.updatePosition = function(){
-		if(assignvalues.pressingRight)
-			assignvalues.x+=assignvalues.maxSpeed;
-		if(assignvalues.pressingLeft)
-			assignvalues.x-=assignvalues.maxSpeed;
-		if(assignvalues.pressingDown)
-			assignvalues.y+=assignvalues.maxSpeed;
-		if(assignvalues.pressingUp)
-			assignvalues.y-=assignvalues.maxSpeed;
-		
-	} 
+		assignvalues.updatePosition = function () {
+			if (assignvalues.pressingRight) {
+				var right = boundry.checkboundry_right(assignvalues.x);
+				if (right) {
+					assignvalues.x += assignvalues.maxSpeed;
+				}
+			}
+			if (assignvalues.pressingLeft) {
+				var left = boundry.checkboundry_left(assignvalues.x);
+				if (left) {
+					assignvalues.x -= assignvalues.maxSpeed;
+				}
+			}
+			if (assignvalues.pressingDown) {
+				var down = boundry.checkboundry_down(assignvalues.y);
+				if (down) {
+					assignvalues.y += assignvalues.maxSpeed;
+				}
+			}
+			if (assignvalues.pressingUp) {
+				var up = boundry.checkboundry_up(assignvalues.y);
+				if (up) {
+					assignvalues.y -= assignvalues.maxSpeed;
+				}
+			}
+		}
 		return assignvalues;
 	},
 
@@ -55,25 +72,25 @@ assignvalues.updatePosition = function(){
 	},
 
 	identify_player_first: function (Game) {
-		var temp={};
+		var temp = {};
 		for (var i in Game.Game_list) {
 			var player = Game.Game_list[i];
 			if (player.priority == 0) {
 				temp.username = player.username;
-				temp.type     = player.location.type;
-				temp.score	  = player.location.score;
+				temp.type = player.location.type;
+				temp.score = player.location.score;
 				return temp;
 			}
 		}
 	},
 	identify_player_second: function (Game) {
-		var temp={};
+		var temp = {};
 		for (var i in Game.Game_list) {
 			var player = Game.Game_list[i];
 			if (player.priority == 1) {
 				temp.username = player.username;
-				temp.type     = player.location.type;
-				temp.score	  = player.location.score;
+				temp.type = player.location.type;
+				temp.score = player.location.score;
 				return temp;
 			}
 		}

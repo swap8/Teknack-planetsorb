@@ -127,9 +127,10 @@ io.on("connection", function (socket) {
             var lobby = uuid.v1();
             var Game = {};
             Game.time = 90;
-            Game.generate_fireball = false;
+            Game.fireball_list ={};
+            //Game.generate_fireball = false;
             Game.start_the_game = false;
-            Game.start_time = 5;
+            Game.start_time = 2;
             Game.overstate = false;
             Game.winner = '';
             Game.Game_list = {};
@@ -202,7 +203,7 @@ io.on("connection", function (socket) {
         var Game = {};
         Game.Game_list = {};
         Game.id = uuid.v1();
-        Game.time = 10;
+        Game.time = 40;
         Game.bot = bot;
         Game.bot.status = 'Attacking';
         Game.bot_name = bot.name;
