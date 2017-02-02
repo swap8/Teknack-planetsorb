@@ -876,7 +876,7 @@ man_angle = 0;
 function manangle() {
     man_angle += 0.4;
     return man_angle;
-
+}
 
 function gohome(){
     game.state.start('start');
