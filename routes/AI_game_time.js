@@ -21,10 +21,8 @@ var self = module.exports = {
                 self.check(Game,bot_game_list);
             }
             else {
-                setTimeout(function () {
                     delete bot_game_list[Game.id];
-                    console.log("Game deleted with id : " + Game.id);
-                }, 5000);
+                    //console.log("Game deleted with id : " + Game.id);
             }
         }, 1000)
 

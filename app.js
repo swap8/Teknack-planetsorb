@@ -179,7 +179,7 @@ io.on("connection", function (socket) {
             Game.planet_list = planet.create_planet(Game);                      // Create Planets
             game_list[Game.id] = Game;
             gameover.start_game(game_list[socket.game_id]);
-            gameover.game_over(game_list[socket.game_id],game_list);
+            gameover.game_over(game_list[socket.game_id],game_list,ready_list);
             active_games = Object.keys(game_list).length;
             console.log("Total Games : " + active_games);
         }

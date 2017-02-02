@@ -3,17 +3,16 @@ var fireball = require('./fireball');
 var self = module.exports = {
 
 
-    game_over: function (Game,game_list) {
+    game_over: function (Game, game_list, ready_list) {
         setTimeout(function () {
 
             if (Game.time > 0) {
                 //console.log(Game.time);
                 Game.time--;
-                self.check(Game,game_list);
-                if(Game.time%6 === 0)
-                {
+                self.check(Game, game_list, ready_list);
+                if (Game.time % 6 === 0) {
                     //Game.generate_fireball = true;
-                    var locate_fireball  = fireball.createfireball();
+                    var locate_fireball = fireball.createfireball();
                     //console.log(locate_fireball.id);
                     Game.fireball_list[locate_fireball.id] = locate_fireball;
                     //console.log(Game.fireball_list);
@@ -21,16 +20,39 @@ var self = module.exports = {
                 }
 
             }
-            else{
-                delete game_list[Game.id];
+            else {
+                //console.log("hii i am in game end over part which is hacked by me");
+                for (var i in game_list) {
+                    var undeleted_game = game_list[i];
+                    if (Game.id === undeleted_game.id) {
+                       //console.log(Game.id);
+                        var temp1, temp2;
+                        var check = true;
+                        for (var i in Game.Game_list) {
+                            var player = Game.Game_list[i];
+                            if (check) {
+                                temp1 = player.location.id;
+                                check = false;
+                            }
+                            else {
+                                temp2 = player.location.id;
+                            }
+                        }
+                        //console.log(temp1);
+                        delete ready_list[temp1];
+                        delete ready_list[temp2];
+                        delete game_list[Game.id];
+                    }
+                }
+
                 //console.log("Game deleted");
             }
         }, 1000)
 
     },
-    check: function (Game,game_list) {
+    check: function (Game, game_list, ready_list) {
         if (Game.time >= 0) {
-            self.game_over(Game,game_list);
+            self.game_over(Game, game_list, ready_list);
         }
 
     },
@@ -63,23 +85,23 @@ var self = module.exports = {
         for (var i in Game.Game_list) {
             var player = Game.Game_list[i];
 
-            if (temp ==0) {
+            if (temp == 0) {
                 player1.username = player.location.id;
                 player1.rad = player.location.rad;
                 temp++;
             }
             else {
                 player2.username = player.location.id;
-                player2.rad= player.location.rad;
+                player2.rad = player.location.rad;
             }
         }
-        if(player1.rad>player2.rad){
-            Game.winner =  player1.username;
+        if (player1.rad > player2.rad) {
+            Game.winner = player1.username;
         }
-        else if(player1.rad<player2.rad){
+        else if (player1.rad < player2.rad) {
             Game.winner = player2.username;
         }
-        else{
+        else {
             Game.winner = 'match draw';
         }
         Game.overstate = true;
