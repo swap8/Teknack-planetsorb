@@ -127,7 +127,7 @@ io.on("connection", function (socket) {
             var next_player_position = 0;
             var lobby = uuid.v1();
             var Game = {};
-            Game.time = 90;
+            Game.time = 40;
             Game.fireball_list ={};
             //Game.generate_fireball = false;
             Game.start_the_game = false;
@@ -179,7 +179,7 @@ io.on("connection", function (socket) {
             Game.planet_list = planet.create_planet(Game);                      // Create Planets
             game_list[Game.id] = Game;
             gameover.start_game(game_list[socket.game_id]);
-            gameover.game_over(game_list[socket.game_id]);
+            gameover.game_over(game_list[socket.game_id],game_list);
             active_games = Object.keys(game_list).length;
             console.log("Total Games : " + active_games);
         }
@@ -242,7 +242,7 @@ io.on("connection", function (socket) {
 
         bot_game_list[Game.id] = Game;
 
-        AI_game_time.game_over(Game);
+        AI_game_time.game_over(Game,bot_game_list);
 
     });
 
@@ -421,3 +421,4 @@ setInterval(function () {
 
 }, 30)
 module.exports = app;
+

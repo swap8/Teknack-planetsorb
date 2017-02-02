@@ -2,7 +2,7 @@
 var superstar = require('./superstar');
 var self = module.exports = {
 
-    game_over: function (Game) {
+    game_over: function (Game,bot_game_list) {
         setTimeout(function () {
 
             if (Game.time > 0) {
@@ -18,14 +18,20 @@ var self = module.exports = {
                         nstar.count_time--;
                     }
                 }
-                self.check(Game);
+                self.check(Game,bot_game_list);
+            }
+            else {
+                setTimeout(function () {
+                    delete bot_game_list[Game.id];
+                    console.log("Game deleted with id : " + Game.id);
+                }, 5000);
             }
         }, 1000)
 
     },
-    check: function (Game) {
+    check: function (Game,bot_game_list) {
         if (Game.time >= 0) {
-            self.game_over(Game);
+            self.game_over(Game,bot_game_list);
         }
 
     },

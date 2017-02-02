@@ -3,13 +3,13 @@ var fireball = require('./fireball');
 var self = module.exports = {
 
 
-    game_over: function (Game) {
+    game_over: function (Game,game_list) {
         setTimeout(function () {
 
             if (Game.time > 0) {
                 //console.log(Game.time);
                 Game.time--;
-                self.check(Game);
+                self.check(Game,game_list);
                 if(Game.time%6 === 0)
                 {
                     //Game.generate_fireball = true;
@@ -21,12 +21,16 @@ var self = module.exports = {
                 }
 
             }
+            else{
+                delete game_list[Game.id];
+                //console.log("Game deleted");
+            }
         }, 1000)
 
     },
-    check: function (Game) {
+    check: function (Game,game_list) {
         if (Game.time >= 0) {
-            self.game_over(Game);
+            self.game_over(Game,game_list);
         }
 
     },
