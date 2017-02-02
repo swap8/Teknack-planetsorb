@@ -17,6 +17,7 @@ var collidePlayer = require('./routes/collidePlayer');
 var collidePlanet = require('./routes/collidePlanet');
 var fireball = require('./routes/fireball');
 var AI = require('./routes/AI');
+var superstar = require('./routes/superstar');
 var AI_game_time = require('./routes/AI_game_time');
 var AI_collision_detection = require('./routes/AI_collision_detection');
 var app = express();
@@ -205,14 +206,13 @@ io.on("connection", function (socket) {
         Game.id = uuid.v1();
         Game.time = 40;
         Game.bot = bot;
+        Game.change_object = false;
         Game.bot.status = 'Attacking';
         Game.bot_name = bot.name;
         Game.asteroid = false;
         asteroid = AI.create_asteroid();
-        //console.log("x:" + asteroid.x + "y:" + asteroid.y);
-
         Game.asteroid_add=asteroid;
-        
+        Game.nstar_list = {};
         man = AI.create_man();
         Game.man_add=man;
         
@@ -402,7 +402,6 @@ setInterval(function () {
             asteroid: AI.asteroid_assign_position(Game),
             man: AI.man_assign_position(Game),
             ship: AI.ship_assign_position(Game),
-
             bot_status: Game.bot.status,
             gmtime: Game.time,
             bot_score: Game.bot.score,
@@ -411,6 +410,7 @@ setInterval(function () {
             winner: Game.winner,
             overstate: Game.overstate,
             saturn: AI.saturn_assign_position(Game),
+            nstar : superstar.assign_nstar_position(Game)
             
         }
         var socket = Game.player;

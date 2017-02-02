@@ -1,3 +1,5 @@
+
+var superstar = require('./superstar');
 var self = module.exports = {
 
     game_over: function (Game) {
@@ -5,6 +7,17 @@ var self = module.exports = {
 
             if (Game.time > 0) {
                 Game.time--;
+
+                if (Game.time % 10 === 0) {
+                    var nstar = superstar.generate_nstar();
+                    Game.nstar_list[nstar.id] = nstar;
+                }
+                if (Game.nstar_list != null) {
+                    for (var i in Game.nstar_list) {
+                        var nstar = Game.nstar_list[i];
+                        nstar.count_time--;
+                    }
+                }
                 self.check(Game);
             }
         }, 1000)
@@ -29,7 +42,7 @@ var self = module.exports = {
         if (Game.bot.score === Game.player.location.score) {
             Game.winner = 'Match Draw';
         }
-        
+
         Game.overstate = true;
     }
 }

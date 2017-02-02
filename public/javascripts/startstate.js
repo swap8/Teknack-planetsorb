@@ -25,6 +25,7 @@ GameState.start = {
         game.load.image('storybg', './images/storybg.jpg');
         game.load.image('storybt', './images/storybt.png');
         game.load.image('homebt', './images/home.png');
+        game.load.image('smallstar', './images/large_star.png');
 
 
 

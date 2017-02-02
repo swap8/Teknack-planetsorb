@@ -25,7 +25,7 @@ var self = module.exports = {
             rad: 18,
             id: id,
             score: 0,
-            maxSpeed: 2,
+            maxSpeed: 3,
             pressingRight: false,
             pressingLeft: false,
             pressingUp: false,

@@ -26,6 +26,29 @@ var single_player_final_winner;
 
 var cursor, wasd;
 
+//  Path data table
+var tab = [ 0, 0, -4, 25, 250, 2, 1, -4, 25, 100, 3, 1, -2, 25, 100, 4, 2, 2, 25, 100, -4, 2, 2, 10, 100, 0, 0, -2, 25, 250, 0, 2, 0, 25, 200, 0, 2, 2, 25, 100, 0, 0, 2, 25, 100, 2, 0, 2, 25, 200, 0, 2, 2, 25, 200, 2, 0, 2, 25, 200, 0, 4, 2, 25, 200 ];
+
+var ppDist = 800;
+var speedx = 0;
+var speedy = 0;
+var speedz = 0;
+var speedx2 = 0;
+var speedy2 = 0;
+var speedz2 = 0;
+var max = 164;
+var balls = [];
+var xx = [];
+var yy = [];
+var zz = [];
+var bx = 0;
+var tabb = 0;
+var del = tab[tabb + 4];
+var delx = tab[tabb + 3];
+var spx = 1;
+var spy = 1;
+var spz = 1;
+
 var game = new Phaser.Game(winwidth, winheight, Phaser.AUTO);
 
 

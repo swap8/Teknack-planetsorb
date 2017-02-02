@@ -23,7 +23,7 @@ var self = module.exports = {
 			pressingDown: false,
 			acceleration_x: 0,
 			acceleration_y: 0,
-			maxSpeed: 1.2,
+			maxSpeed: 1.5,
 
 		}
 		assignvalues.updatePosition = function () {
