@@ -116,6 +116,7 @@ function manangle() {
 }
 
 function gohome(){
+    game.world.scale.setTo(1);
     game.state.start('start');
 
 }

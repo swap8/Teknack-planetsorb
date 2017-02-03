@@ -4,10 +4,10 @@ var self = module.exports = {
     generate_portal: function (Game) {
 
         var portal = {
-            //x: Math.floor(Math.random() * 1200 + 100),
-            //y: Math.floor(Math.random() * 500 + 100)
-            x: 500,
-            y:500
+            x: Math.floor(Math.random() * 1200 + 100),
+            y: Math.floor(Math.random() * 500 + 100)
+            //x: 500,
+            //y:500
         };
 
         var asteroid = AI.create_asteroid(portal.x, portal.y);

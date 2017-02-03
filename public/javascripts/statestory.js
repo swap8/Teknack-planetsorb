@@ -25,23 +25,44 @@ GameState.storyline = {
         backg = game.add.tileSprite(0,0, window.innerWidth,window.innerHeight, 'storybg');
 
         homebutton = game.add.button(1080, 470, 'homebt', gohome, this, 2, 1, 0);
-        homebutton.scale.setTo(0.1, 0.1);
-       game.world.setBounds(0, 0, 4000, 4000);
+        homebutton.scale.setTo(0.01, 0.01);
+        homebutton.fixedToCamera = true;
+        homebutton.cameraOffset.setTo(1400,600);
+       game.world.setBounds(0, 0, 1920, 1080);
 
+       //----------eye--------
+       eye = game.add.sprite(350,350,'eye');
+        eye.anchor.setTo(0.5,0.5);
+        eye.scale.setTo(0.2,0.2);
+        eye.fixedToCamera = true;
+        game.camera.x = (eye.x);
+        game.camera.y = (eye.y);
+        cursors = game.input.keyboard.createCursorKeys();
+
+       setTimeout(function() {
+           startstory();
+       }, 2000);
 
        function startstory(){
            
-       }
-        earth = game.add.sprite(250,350, 'earth');
+           earth = game.add.sprite(250,350, 'earth');
+
         earth.anchor.setTo(0.5, 0.5);
         earth.scale.setTo(0.2, 0.2);
-        
-
         var title = game.add.text(earth.x+100,earth.y, "ARE WE THE ONLY SENTIENT BEINGS IN THE COSMOS?????", { font: "32px Arial", fill: "#f26c4f", align: "center" });
         title.anchor.setTo(0,0);
         title.scale.setTo(0.5,0.5);
-        console.log(title.x,title.y);
-        //---------render earth-----------
+        title.alpha =0;          
+        game.add.tween(title).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 1500, 0, false);
+       }
+        
+       function movecam(){
+           
+       }
+
+        
+       
+       
         
         //---------render blkhole pic -------------
         // blkhole = game.add.sprite(50, 50, 'blkhole');
@@ -52,13 +73,7 @@ GameState.storyline = {
         // destroyer.anchor.setTo(0.5, 0.5);
         // destroyer.scale.setTo(0.5, 0.5);
 
-        eye = game.add.sprite(350,350,'eye');
-        eye.anchor.setTo(0.5,0.5);
-        eye.scale.setTo(0.2,0.2);
-        eye.fixedToCamera = true;
-        game.camera.x = (eye.x);
-        game.camera.y = (eye.y);
-        cursors = game.input.keyboard.createCursorKeys();
+        
 
         var t = game.add.text(0, 0, "this text is fixed to the camera", { font: "32px Arial", fill: "#ffffff", align: "center" });
         t.fixedToCamera = true;
