@@ -8,10 +8,11 @@ GameState.main = {
         call_only_once = true;
         socket = io();
         var multi_id = 4;
+        var person = prompt("Please enter your name", "Harry Potter");
         socket.on('send_socket_id', function (data) {
             //console.log(data);
             multi_id = data;
-            socket.emit('multi_player_mission', multi_id);
+            socket.emit('multi_player_mission', {multi_id : multi_id, person : person});
             // console.log(multi_id);
         });
         //console.log(multi_id);

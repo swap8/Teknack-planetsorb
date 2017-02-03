@@ -107,8 +107,9 @@ io.on("connection", function (socket) {
         var socket;
         for (var i in socket_list) {
             var player_socket = socket_list[i];
-            if (player_socket.username === data) {
+            if (player_socket.username === data.multi_id) {
                 socket = player_socket;
+                socket.username = data.person;
                 //console.log(socket);
             }
         }
@@ -128,7 +129,7 @@ io.on("connection", function (socket) {
             var next_player_position = 0;
             var lobby = uuid.v1();
             var Game = {};
-            Game.time = 40;
+            Game.time = 60;
             Game.fireball_list = {};
             //Game.generate_fireball = false;
             Game.start_the_game = false;
