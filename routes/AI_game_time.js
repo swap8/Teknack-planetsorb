@@ -1,5 +1,6 @@
 
 var superstar = require('./superstar');
+var portal_function = require('./portal');
 var self = module.exports = {
 
     game_over: function (Game,bot_game_list) {
@@ -11,6 +12,12 @@ var self = module.exports = {
                 if (Game.time % 10 === 0) {
                     var nstar = superstar.generate_nstar();
                     Game.nstar_list[nstar.id] = nstar;
+                }
+                if(Game.time === 10){
+                    var generate_portal = portal_function.generate_portal(Game);
+                    Game.portal = generate_portal;
+                    Game.appear_portal = true;
+                    self.decrement_time(Game);
                 }
                 if (Game.nstar_list != null) {
                     for (var i in Game.nstar_list) {
@@ -48,5 +55,11 @@ var self = module.exports = {
         }
 
         Game.overstate = true;
+    },
+
+    decrement_time: function(Game){
+        setTimeout(function(){
+            Game.appear_portal = false;
+        },4000);
     }
 }

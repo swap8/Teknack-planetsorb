@@ -73,16 +73,16 @@ var self = module.exports = {
                    // console.log(distance);
                     if (Game.bot.x < nstar.x) {
                         //console.log("move");
-                    Game.bot.x += 2;
+                    Game.bot.x += 2.5;
                 }
                 else if (Game.bot.x > nstar.x) {
-                    Game.bot.x -= 2;
+                    Game.bot.x -= 2.5;
                 }
                 if (Game.bot.y < nstar.y) {
-                    Game.bot.y += 2;
+                    Game.bot.y += 2.5;
                 }
                 else if (Game.bot.y > nstar.y) {
-                    Game.bot.y -= 2;
+                    Game.bot.y -= 2.5;
                 }
                 }
                 else{
@@ -110,16 +110,16 @@ var self = module.exports = {
                 }
                 //console.log(nearest_planet);
                 if (Game.bot.x < nearest_planet.planet.x) {
-                    Game.bot.x += 2;
+                    Game.bot.x += 2.5;
                 }
                 else if (Game.bot.x > nearest_planet.planet.x) {
-                    Game.bot.x -= 2;
+                    Game.bot.x -= 2.5;
                 }
                 if (Game.bot.y < nearest_planet.planet.y) {
-                    Game.bot.y += 2;
+                    Game.bot.y += 2.5;
                 }
                 else if (Game.bot.y > nearest_planet.planet.y) {
-                    Game.bot.y -= 2;
+                    Game.bot.y -= 2.5;
                 }
 
             }

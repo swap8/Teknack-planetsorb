@@ -6,7 +6,7 @@ GameState.bots = {
     },
     create: function () {
         //console.log("I am ready!");
-
+         flash_once = true;
         if (game.renderType === Phaser.WEBGL) {
             max = 2000;
         }
@@ -58,15 +58,6 @@ GameState.bots = {
             right: game.input.keyboard.addKey(Phaser.Keyboard.D),
         };
 
-        portal_border = game.add.sprite(winwidth / 2, winheight / 2, 'spaceportalborder');
-        portal_border.anchor.setTo(0.5, 0.5);
-        portal_border.scale.setTo(0.25, 0.25);
-
-        portal = game.add.sprite(winwidth / 2, winheight / 2, 'portal');
-        portal.anchor.setTo(0.5, 0.5);
-        portal.scale.setTo(0.24, 0.24);
-
-       
         socket.on('send_socket_id', function (data) {
             single_id = data;
             socket.emit('single_player_mission', single_id);
@@ -88,14 +79,30 @@ GameState.bots = {
                 planet.angle = redplanetangle();
                 var radius = data.planet[i].rad / 140;
                 planet_scale = radius;
-
                 if (!data.planet[i].fade) {
-
                     planet.alpha = 0.7;
                 }
                 planet.scale.setTo(planet_scale, planet_scale);
                 myGroup.add(planet);
             }
+            
+                  // ----------------------portal --------------------------------
+            for (var i = 0; i < data.portal.length; i++) {
+                if(flash_once){
+                    game.camera.flash(0xffffff, 500);
+                    flash_once = false;
+                }
+                portal_border = game.add.sprite(data.portal[i].x, data.portal[i].y, 'spaceportalborder');
+                portal_border.anchor.setTo(0.5, 0.5);
+                portal_border.scale.setTo(0.25, 0.25);
+                myGroup.add(portal_border);
+                portal = game.add.sprite(data.portal[i].x, data.portal[i].y, 'portal');
+                portal.anchor.setTo(0.5, 0.5);
+                portal.scale.setTo(0.24, 0.24);
+                portal.angle = calangle();
+                myGroup.add(portal);
+            }
+            
             for (var i = 0; i < data.player.length; i++) {
                 if (data.player[i].rad > 1) {
                     //console.log(data.player[i].y);
@@ -124,6 +131,7 @@ GameState.bots = {
                     myGroup.add(bot);
                 }
             }
+
             // --------------- asteroid ------------------
             for (var i = 0; i < data.asteroid.length; i++) {
 
@@ -192,11 +200,13 @@ GameState.bots = {
                 nstar_scale = radius;
                 nstar.scale.setTo(nstar_scale, nstar_scale);
                 nstar.angle = manangle();
-                if(data.nstar[i].shake){
-                     game.camera.shake(0.05, 500);
+                if (data.nstar[i].shake) {
+                    game.camera.shake(0.05, 500);
                 }
                 myGroup.add(nstar);
             }
+
+         
 
             style = { fontSize: '15px', fill: '#ffffff' }
             mytext = game.add.text(385, 10, data.player_name, style);
@@ -281,7 +291,7 @@ GameState.bots = {
             socket.emit('keyPress', { InputId: 'down', state: false });
         }
 
-        portal.angle += 0.5;
+
 
         delx--;
 

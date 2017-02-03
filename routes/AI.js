@@ -4,7 +4,6 @@ var AI_logic = require('./AI_logic');
 var self = module.exports = {
 
     create_bot: function () {
-
         var bot = {
             name: 'Artificial Intelligence',
             x: 1100,
@@ -13,7 +12,6 @@ var self = module.exports = {
             status: '',
             score: 0
         };
-
         return bot;
     },
 
@@ -62,29 +60,23 @@ var self = module.exports = {
 
     assignPlayerPosition: function (Game) {
         var pack = [];
-
         Game.player.location.updatePosition();
-
         pack.push({
             x: Game.player.location.x,
             y: Game.player.location.y,
             rad: Game.player.location.rad
         })
-
         return pack;
     },
 
     assignbotposition: function (Game) {
         var pack = [];
-
         AI_logic.modify_bot_position(Game);
         pack.push({
             x: Game.bot.x,
             y: Game.bot.y,
             rad: Game.bot.rad
-
         })
-
         return pack;
     },
 
@@ -136,14 +128,12 @@ var self = module.exports = {
 
             if (((x > lower_limit_player_position_x && x < higher_limit_player_position_x) && (y > lower_limit_player_position_y && y < higher_limit_player_position_y)) || ((x > lower_limit_next_player_position_x && x < higher_limit_next_player_position_x) && (y > lower_limit_next_player_position_y && y < higher_limit_next_player_position_y))) {
                 //these means in the earlier point the planets and players are colliding keep them away from you
-
             }
             else if ((x > lowerx && x < higherx) && (y > lowery && y < highery)) {
 
             }
             else {
                 var planet = self.assing_planet_location(id, x, y, radius);
-
                 planet_list[id] = planet;
             }
         }
@@ -151,7 +141,6 @@ var self = module.exports = {
     },
 
     assignplanetposition: function (Game) {
-
         var pack = [];
         for (var i in Game.planetlist) {
             var planet = Game.planetlist[i];
@@ -163,11 +152,8 @@ var self = module.exports = {
                 rad: planet.rad,
                 fade: planet.fade
             })
-
         }
         return pack;
-
-
     },
 
     find_size_of_gamelist: function (Game) {
@@ -183,78 +169,37 @@ var self = module.exports = {
     },
 
     //--------------- asteroid creation -----------
-    create_asteroid: function () {
+    create_asteroid: function (x,y) {
         var asteroid = {
-            x: 200,
-            y: 250,
+            x: x,
+            y: y,
             radius: 18
         };
         return asteroid;
 
     },
 
-    asteroid_assign_position: function (Game) {
-        //console.log("hi");
-        var pack = [];
-        pack.push({
-            x: Game.asteroid_add.x,
-            y: Game.asteroid_add.y,
-            rad: Game.asteroid_add.radius,
-
-        })
-        return pack;
-    },
-
     // ----------------- astronaut creation ----------
-    create_man: function () {
+    create_man: function (x,y) {
         //console.log("plz");
         var man = {
-            x: 900,
-            y: 300,
+            x: x,
+            y: y,
             radius: 20
         };
         return man;
     },
 
-    man_assign_position: function (Game) {
-        var pack = [];
-        pack.push({
-            x: Game.man_add.x,
-            y: Game.man_add.y,
-            rad: Game.man_add.radius
-        })
-        return pack;
-    },
-
     // ----------------- spaceship creation ----------
-    create_ship: function () {
+    create_ship: function (x,y) {
         //console.log("plz");
         var ship = {
-            x: 450,
-            y: 300,
-            radius: 60
+            x: x,
+            y: y,
+            radius: 20
         };
         return ship;
     },
-
-// <<<<<<< Updated upstream
-    // ship_assign_position: function (Game) {
-// =======
-    // move_ship: function(){
-
-    // },
-    
-    ship_assign_position: function(Game){
-// >>>>>>> Stashed changes
-        var pack = [];
-        pack.push({
-            x: Game.ship_add.x,
-            y: Game.ship_add.y,
-            rad: Game.ship_add.radius
-        })
-        return pack;
-    },
-
     //-------------- saturn -------------
     create_saturn: function(){
         var saturn= {
@@ -274,5 +219,4 @@ var self = module.exports = {
         })
         return pack;
     }
-
 }

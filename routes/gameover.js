@@ -25,6 +25,7 @@ var self = module.exports = {
                 for (var i in game_list) {
                     var undeleted_game = game_list[i];
                     if (Game.id === undeleted_game.id) {
+                       // console.log("hi i am there");
                        //console.log(Game.id);
                         var temp1, temp2;
                         var check = true;

@@ -20,10 +20,10 @@ var multi_id;
 var lock_deadlock_single_player = true;
 var stop_movements = false;
 var call_only_once = true;
-
+var flash_once = true;
 var call_only_once_single_player = true;
 var single_player_final_winner;
-
+var winnnertype = '';
 var cursor, wasd;
 
 //  Path data table

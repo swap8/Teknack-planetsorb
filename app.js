@@ -19,6 +19,7 @@ var fireball = require('./routes/fireball');
 var AI = require('./routes/AI');
 var superstar = require('./routes/superstar');
 var AI_game_time = require('./routes/AI_game_time');
+var portal_function = require('./routes/portal');
 var AI_collision_detection = require('./routes/AI_collision_detection');
 var app = express();
 
@@ -80,7 +81,7 @@ var check_win = function (lobby_name, Game, lost_player_name) {
     for (var i in socket_list) {
         var socket = socket_list[i];
         if (socket.lobby == lobby_name) {
-            console.log("hi i am here");
+            //console.log("hi i am here");
             socket.disconnect = true;
             socket.emit('player_disconnected', { username: socket.username, disconnect: socket.disconnect });
             delete ready_list[lost_player_name];
@@ -128,7 +129,7 @@ io.on("connection", function (socket) {
             var lobby = uuid.v1();
             var Game = {};
             Game.time = 40;
-            Game.fireball_list ={};
+            Game.fireball_list = {};
             //Game.generate_fireball = false;
             Game.start_the_game = false;
             Game.start_time = 2;
@@ -179,7 +180,7 @@ io.on("connection", function (socket) {
             Game.planet_list = planet.create_planet(Game);                      // Create Planets
             game_list[Game.id] = Game;
             gameover.start_game(game_list[socket.game_id]);
-            gameover.game_over(game_list[socket.game_id],game_list,ready_list);
+            gameover.game_over(game_list[socket.game_id], game_list, ready_list);
             active_games = Object.keys(game_list).length;
             console.log("Total Games : " + active_games);
         }
@@ -210,14 +211,10 @@ io.on("connection", function (socket) {
         Game.bot.status = 'Attacking';
         Game.bot_name = bot.name;
         Game.asteroid = false;
-        asteroid = AI.create_asteroid();
-        Game.asteroid_add=asteroid;
+
         Game.nstar_list = {};
-        man = AI.create_man();
-        Game.man_add=man;
-        
-        ship = AI.create_ship();
-        Game.ship_add=ship;
+        Game.appear_portal = false;
+
 
         saturn = AI.create_saturn();
         Game.saturn_add = saturn;
@@ -227,7 +224,7 @@ io.on("connection", function (socket) {
         Game.overstate = false;
         Game.winner = '';
         Game.planetlist = {},
-        Game.Game_list[bot.id] = bot;
+            Game.Game_list[bot.id] = bot;
         Game.planetlist = AI.create_planet();
         //console.log(Game.planetlist);
         var lobby = uuid.v1();
@@ -242,7 +239,7 @@ io.on("connection", function (socket) {
 
         bot_game_list[Game.id] = Game;
 
-        AI_game_time.game_over(Game,bot_game_list);
+        AI_game_time.game_over(Game, bot_game_list);
 
     });
 
@@ -346,8 +343,8 @@ io.on("connection", function (socket) {
 
     });
 
-    socket.on('single_player_lost',function(data){
-          for (var i in bot_game_list) {
+    socket.on('single_player_lost', function (data) {
+        for (var i in bot_game_list) {
             var Game = bot_game_list[i];
             if (data.gameid === Game.id) {
                 Game.overstate = true;
@@ -399,9 +396,6 @@ setInterval(function () {
             planet: AI.assignplanetposition(Game),
             player_name: Game.player_name,
             bot_name: Game.bot_name,
-            asteroid: AI.asteroid_assign_position(Game),
-            man: AI.man_assign_position(Game),
-            ship: AI.ship_assign_position(Game),
             bot_status: Game.bot.status,
             gmtime: Game.time,
             bot_score: Game.bot.score,
@@ -410,8 +404,12 @@ setInterval(function () {
             winner: Game.winner,
             overstate: Game.overstate,
             saturn: AI.saturn_assign_position(Game),
-            nstar : superstar.assign_nstar_position(Game)
-            
+            asteroid: portal_function.asteroid_assign_position(Game),
+            man: portal_function.man_assign_position(Game),
+            ship: portal_function.ship_assign_position(Game),
+            portal: portal_function.assignportalposition(Game),
+            nstar: superstar.assign_nstar_position(Game),
+
         }
         var socket = Game.player;
         socket.emit('bot_game', bot_game);
