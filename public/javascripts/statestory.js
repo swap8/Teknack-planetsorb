@@ -17,6 +17,7 @@ GameState.storyline = {
         game.load.image('blkhole', './images/blkhole 2.jpg');
         game.load.image('earth', './images/earth_2.png');
         game.load.image('eye', './images/eye.png');
+        game.load.image('blkst','./images/blkstory.png');
     },
     
     create: function () {
@@ -39,7 +40,7 @@ GameState.storyline = {
         game.camera.y = (eye.y);
         cursors = game.input.keyboard.createCursorKeys();
 
-       setTimeout(function() {
+       setTimeout(function() {//
            startstory();
        }, 2000);
 
@@ -53,11 +54,22 @@ GameState.storyline = {
         title.anchor.setTo(0,0);
         title.scale.setTo(0.5,0.5);
         title.alpha =0;          
-        game.add.tween(title).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 1500, 0, false);
+        var change = game.add.tween(title).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 1500, 0, false);
+        // title = game.add.text(earth.x+100,earth.y+100, "SURELY THERE ARE MORE !!\n THIS GOES WAY TO THE BEGINNING...", { font: "32px Arial", fill: "#f26c4f", align: "center" });
+        // title.anchor.setTo(0,0);
+        // title.scale.setTo(0.5,0.5);
+        // title.alpha =0;
+        // change.onComplete.add(game.add.tween(title).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 1500, 0, false));
        }
         
-       function movecam(){
+       function universe(){
            
+       }
+
+       function blkholes2(){
+           var blkst = game.add.sprite(300,300,'blkst');
+           game.physics.en
+
        }
 
         
