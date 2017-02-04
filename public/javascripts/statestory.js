@@ -6,6 +6,7 @@ var flag = 0;
 var atom;
 var bang;
 var backg, earth, destroyer, blkhole;
+var blkst1,blkst2,supnov;
 GameState.storyline = {
 
     preload: function () {
@@ -19,8 +20,9 @@ GameState.storyline = {
         game.load.image('earth', './images/earth_2.png');
         game.load.image('eye', './images/eye.png');
         game.load.image('blkst','./images/blkstory.png');
-
         game.load.image('player', './images/mars.png');
+        game.load.image('supnov', './images/supernova.png');
+        
 
     },
 
@@ -68,10 +70,10 @@ GameState.storyline = {
             title.scale.setTo(0.5, 0.5);
             title.alpha = 0;
             game.add.tween(title).to({ alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 500, 0, false);
-            setTimeout(function () {
-                console.log("move funct called");
-                movecam();
-            }, 200);
+            // setTimeout(function () {
+            //     console.log("move funct called");
+            //     movecam();
+            // }, 200);
         }
 
         function movecam() {
@@ -82,7 +84,23 @@ GameState.storyline = {
             // game.add.tween(player).to({x:500,y:500},6000,Phaser.Easing.Linear.None, true, 0,0,false);
         }
 
+            supnov = game.add.sprite(600,500,'supnov');
+            supnov.anchor.setTo(0.5,0.5);
+            supnov.scale.setTo(0.08,0.08);
+            
+            blkst1 = game.add.sprite(300,300,'blkst');
+            blkst1.anchor.setTo(0.5,0.5);
+            blkst1.scale.setTo(0.1,0.1);
+            blkst1.pivot.y = 550;
+            game.add.tween(blkst1).to( { y: 400 }, 2000, Phaser.Easing.Back.InOut, true, 0, 2000, true);
+            
+            blkst2 = game.add.sprite(300,300,'blkst');
+            blkst2.anchor.setTo(0.5,0.5);
+            blkst2.scale.setTo(0.1,0.1);
+            blkst2.pivot.x=500;
 
+            game.add.tween(eye).to
+            
 
 
 
@@ -190,6 +208,8 @@ GameState.storyline = {
         // game.debug.text(eye.body.velocity.x + "**" + eye.body.velocity.y + "///" + eye.angle, 250, 42);
         game.debug.spriteInfo(eye, 32, 62);
 
+        blkst1.rotation-=0.5;
+        blkst2.rotation+=0.5;
         eye.body.velocity.setTo(0,0);
         player.body.velocity.setTo(0,0);
         // // eye.body.angularVelocity = 0;
