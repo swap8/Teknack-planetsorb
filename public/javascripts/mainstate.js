@@ -12,7 +12,7 @@ GameState.main = {
         socket.on('send_socket_id', function (data) {
             //console.log(data);
             multi_id = data;
-            socket.emit('multi_player_mission', {multi_id : multi_id, person : person});
+            socket.emit('multi_player_mission', { multi_id: multi_id, person: person });
             // console.log(multi_id);
         });
         //console.log(multi_id);
@@ -207,33 +207,36 @@ GameState.main = {
     },
 
     update: function () {
-        if (cursors.left.isDown || wasd.left.isDown) {
-            socket.emit('keyPress', { InputId: 'left', state: true });
-        }
-        else {
-            socket.emit('keyPress', { InputId: 'left', state: false });
-        }
-        if (cursors.right.isDown || wasd.right.isDown) {
-            socket.emit('keyPress', { InputId: 'right', state: true });
-        }
-        else {
-            socket.emit('keyPress', { InputId: 'right', state: false });
-        }
-        if (cursors.up.isDown || wasd.up.isDown) {
-            socket.emit('keyPress', { InputId: 'up', state: true });
-        }
-        else {
-            socket.emit('keyPress', { InputId: 'up', state: false });
-        }
-        if (cursors.down.isDown || wasd.down.isDown) {
-            socket.emit('keyPress', { InputId: 'down', state: true });
-        }
-        else {
-            socket.emit('keyPress', { InputId: 'down', state: false });
+
+        if (stop_movements) {
+            if (cursors.left.isDown || wasd.left.isDown) {
+                socket.emit('keyPress', { InputId: 'left', state: true });
+            }
+            else {
+                socket.emit('keyPress', { InputId: 'left', state: false });
+            }
+            if (cursors.right.isDown || wasd.right.isDown) {
+                socket.emit('keyPress', { InputId: 'right', state: true });
+            }
+            else {
+                socket.emit('keyPress', { InputId: 'right', state: false });
+            }
+            if (cursors.up.isDown || wasd.up.isDown) {
+                socket.emit('keyPress', { InputId: 'up', state: true });
+            }
+            else {
+                socket.emit('keyPress', { InputId: 'up', state: false });
+            }
+            if (cursors.down.isDown || wasd.down.isDown) {
+                socket.emit('keyPress', { InputId: 'down', state: true });
+            }
+            else {
+                socket.emit('keyPress', { InputId: 'down', state: false });
+            }
         }
 
+
         loading_planet.angle += 0.1;
-        if (!stop_movements)
-            filter.update(game.input.activePointer);
+        filter.update(game.input.activePointer);
     }
 }

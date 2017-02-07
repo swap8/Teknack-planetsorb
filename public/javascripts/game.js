@@ -27,7 +27,7 @@ var winnnertype = '';
 var cursor, wasd;
 
 //  Path data table
-var tab = [ 0, 0, -4, 25, 250, 2, 1, -4, 25, 100, 3, 1, -2, 25, 100, 4, 2, 2, 25, 100, -4, 2, 2, 10, 100, 0, 0, -2, 25, 250, 0, 2, 0, 25, 200, 0, 2, 2, 25, 100, 0, 0, 2, 25, 100, 2, 0, 2, 25, 200, 0, 2, 2, 25, 200, 2, 0, 2, 25, 200, 0, 4, 2, 25, 200 ];
+var tab = [0, 0, -4, 25, 250, 2, 1, -4, 25, 100, 3, 1, -2, 25, 100, 4, 2, 2, 25, 100, -4, 2, 2, 10, 100, 0, 0, -2, 25, 250, 0, 2, 0, 25, 200, 0, 2, 2, 25, 100, 0, 0, 2, 25, 100, 2, 0, 2, 25, 200, 0, 2, 2, 25, 200, 2, 0, 2, 25, 200, 0, 4, 2, 25, 200];
 
 var ppDist = 800;
 var speedx = 0;
@@ -50,7 +50,7 @@ var spy = 1;
 var spz = 1;
 
 var game = new Phaser.Game(winwidth, winheight, Phaser.AUTO);
-
+//game.stage.canvas.id = 'something';
 
 
 game.state.add('main', GameState.main);
@@ -60,7 +60,9 @@ game.state.add('bots', GameState.bots);
 game.state.add('bot_end', GameState.bot_end);
 game.state.add('gamerules', GameState.gamerules);
 game.state.add('storyline', GameState.storyline);
-
+game.state.add('accept_request',GameState.accept_request);
+game.state.add('profilestate',GameState.profilestate);
+game.state.add('access_friends',GameState.access_friends);
 
 game.state.start('start');
 
@@ -104,6 +106,10 @@ function botsattack() {
     game.state.start('bots');
 }
 
+function friends(){
+    game.state.start('access_friends');
+}
+
 var spaceship_angle = 0;
 function spaceshipangle() {
     spaceship_angle += 0.1;
@@ -115,8 +121,61 @@ function manangle() {
     return man_angle;
 }
 
-function gohome(){
+function gohome() {
     game.world.scale.setTo(1);
     game.state.start('start');
 
+}
+
+function see_request() {
+    game.state.start('accept_request');
+}
+
+function see_profile(){
+    game.state.start('profilestate');
+}
+
+
+function findfriend() {
+    //var person = prompt("Please enter your name", "Harry Potter");
+    swal({
+        title: "Add a Friend!",
+        text: "Enter the name of your Friend :",
+        type: "input",
+        showCancelButton: true,
+        closeOnConfirm: false,
+        animation: "slide-from-top",
+        inputPlaceholder: "eg. bill"
+    },
+        function (inputValue) {
+            if (inputValue === false) return false;
+
+            if (inputValue === "") {
+                swal.showInputError("You need to write something!");
+                return false
+            }
+            var username = inputValue;
+
+            $.ajax({
+                type: 'POST',
+                url: '/add_friend',
+                data: { username: username },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.msg === "success") {
+                        console.log("hiii");
+                        swal("Great!", "A Friend request has been sent succesfully.", "success");
+                    }
+                    else {
+                        swal("Sorry!", "No username exist");
+                        $('#error-msg').html('');
+                        $('#error-msg').append('<span>Login Failed!</span>');
+                    }
+                    if (response.msg === "yourself") {
+                        swal("Sorry!", "Please don't send Friend Request to Yourself");
+                    }
+                }
+            });
+
+        });
 }

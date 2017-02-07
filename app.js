@@ -20,8 +20,13 @@ var AI = require('./routes/AI');
 var superstar = require('./routes/superstar');
 var AI_game_time = require('./routes/AI_game_time');
 var portal_function = require('./routes/portal');
+var update_score = require('./routes/updatescore');
+var single_player_updatescore = require('./routes/single_player_updatescore');
 var AI_collision_detection = require('./routes/AI_collision_detection');
 var app = express();
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/users');
+var session = require('express-session');
 
 // Socket.io
 var io = socket_io();
@@ -41,7 +46,16 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')));
+
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session ({
+	secret: "hjdsahfkjshdjhskjdfhisuhsefhshfsihdiuhfs",	// key used for encryption
+	resave: false,	//forces session to be saved when unmodified
+	saveUninitialized: true	//forces session to start uninitialized, no login info should be saved at the start of session
+}));
 
 app.use('/', index);
 
@@ -117,7 +131,7 @@ io.on("connection", function (socket) {
         user_list[socket.username] = socket;
         queue_list[socket.username] = socket;
         console.log("User with ID " + socket.username + " Connected.");
-
+        update_score.check_exist_in_database(socket.username);
         var size = Object.keys(queue_list).length;
         var total_users_online = Object.keys(user_list).length;
         console.log("Total Users Connected : " + total_users_online);
@@ -134,6 +148,7 @@ io.on("connection", function (socket) {
             //Game.generate_fireball = false;
             Game.start_the_game = false;
             Game.start_time = 2;
+            Game.lockscore = false;
             Game.overstate = false;
             Game.winner = '';
             Game.Game_list = {};
@@ -199,7 +214,7 @@ io.on("connection", function (socket) {
                 socket = player_socket;
             }
         }
-
+        single_player_updatescore.check_exist_in_database(socket.username);
         var bot = AI.create_bot();
         bot.id = uuid.v1();
 
@@ -225,7 +240,7 @@ io.on("connection", function (socket) {
         Game.overstate = false;
         Game.winner = '';
         Game.planetlist = {},
-            Game.Game_list[bot.id] = bot;
+        Game.Game_list[bot.id] = bot;
         Game.planetlist = AI.create_planet();
         //console.log(Game.planetlist);
         var lobby = uuid.v1();
@@ -307,6 +322,7 @@ io.on("connection", function (socket) {
                             var temp_player = Game.Game_list[k];
                             if (temp != temp_player.username) {
                                 if (temp_player.communication) {
+                                    update_score.updatescore(Game);
                                     delete ready_list[temp_player.location.id];
                                     delete ready_list[temp];
                                     delete game_list[Game.id];
@@ -348,6 +364,7 @@ io.on("connection", function (socket) {
         for (var i in bot_game_list) {
             var Game = bot_game_list[i];
             if (data.gameid === Game.id) {
+                single_player_updatescore.updatescore(Game);
                 Game.overstate = true;
                 //console.log("hii");
                 delete bot_game_list[Game.id];
