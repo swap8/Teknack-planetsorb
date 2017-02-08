@@ -143,11 +143,11 @@ io.on("connection", function (socket) {
             var next_player_position = 0;
             var lobby = uuid.v1();
             var Game = {};
-            Game.time = 60;
+            Game.time = 30;
             Game.fireball_list = {};
             //Game.generate_fireball = false;
             Game.start_the_game = false;
-            Game.start_time = 2;
+            Game.start_time = 0;
             Game.lockscore = false;
             Game.overstate = false;
             Game.winner = '';
