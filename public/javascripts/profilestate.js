@@ -7,7 +7,7 @@ GameState.profilestate = {
 
 
 
-        var spaceback = game.add.sprite(0, 0, 'spaceback');
+        var spaceback = game.add.sprite(0, 0, 'connect');
         spaceback.scale.setTo(0.8, 0.7);
 
         myGroup = game.add.group();
@@ -25,6 +25,9 @@ GameState.profilestate = {
         var profile = game.add.sprite(100, 90, 'profile');
         profile.scale.setTo(0.6, 0.6);
 
+        newbutton = game.add.button(1370, 30, 'homebt', gohome, this, 2, 1, 0);
+        newbutton.scale.setTo(0.05, 0.05);
+        myGroup.add(newbutton);
 
         $.ajax({
             type: 'POST',

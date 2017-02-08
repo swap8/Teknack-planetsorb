@@ -1,14 +1,14 @@
 
 GameState.start = {
     preload: function () {
-        game.load.image('backstart', './images/spacetile.jpg');
+        game.load.image('backstart', './images/startbackground.png');
         game.load.image('singleplayer', './images/singleplayerai.png');
         game.load.image('multiplayer', './images/multiplayer.jpg');
         game.load.image('matter', './images/earth.png');
         game.load.image('peopleplanet', './images/peopleplanet.png');
         game.load.image('antimatter', './images/mars.png');
-        game.load.image('over', './images/over1.jpg');
-        game.load.image('playagain', './images/playagain.png');
+        game.load.image('over', './images/endmaterial.jpg');
+        game.load.image('playagain', './images/overearth.png');
         game.load.image('blackhole', './images/blackhole2.png');
         game.load.image('fireball', './images/fireball.png');
         game.load.image('asteroid', './images/asteroid.png');
@@ -22,7 +22,6 @@ GameState.start = {
 
         game.load.image('saturn', './images/saturn.png');
         game.load.image('rules', './images/howtoplay.png');
-        game.load.image('rulesbg', './images/rulespg.jpg');
         game.load.image('storybg', './images/storybg.jpg');
         game.load.image('storybt', './images/storybt.png');
         game.load.image('homebt', './images/home.png');
@@ -32,7 +31,23 @@ GameState.start = {
         game.load.image('profile', './images/profile.png');
         game.load.image('connect', './images/connect.jpg');
         game.load.image('next', './images/next.png');
-        game.load.image('htp','./images/howtoplayinside.png');
+        game.load.image('htp', './images/howtoplayinside.png');
+        game.load.image('endgame', './images/endgame.png');
+        game.load.image('accepticon','./images/accepticon.png');
+
+
+        //----------- Its music time -------------
+        game.load.audio('boden', './music/syncloading.mp3');
+        game.load.audio('multiplayermusic', './music/multiplayermusic.mp3');
+
+        //--start planets ----------
+        game.load.image('moon', './images/moon.png');
+        game.load.image('psaturn', './images/saturn1.png');
+        game.load.image('urenus', './images/urenus.png');
+        game.load.image('pluto', './images/pluto.png');
+        game.load.image('venus', '/images/venus.png');
+        game.load.image('mercury', './images/mercury.png');
+        game.load.image('steps', './images/steps.png');
 
 
     },
@@ -40,150 +55,146 @@ GameState.start = {
 
         game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+<<<<<<< HEAD
         var backst =game.add.tileSprite(0, 0, winwidth, winheight, 'backstart');
         
+=======
+        var backstart = game.add.sprite(-50, -50, 'backstart');
+        backstart.scale.setTo(0.5, 0.5);
+
+        // steps
+       
+        multiple_add = 50;
+        multiple = 45;
+        space = 20;
+        for (var i = 0; i < 9; i++) {
+            multiple_add += 60;
+            var step = game.add.sprite(multiple + multiple_add + space, 70, 'steps');
+            step.scale.setTo(0.2, 0.2);
+        }
+
+        space = 90;
+        var morespace = 15;
+        for (var i = 0; i < 5; i++) {
+            morespace += 10;
+            var step = game.add.sprite(50 + morespace, 100 + space, 'steps');
+            step.scale.setTo(0.2, 0.2);
+            space += 63;
+        }
+
+        space = 90;
+        for (var i = 0; i < 5; i++) {
+            var step = game.add.sprite(700 + space, 525, 'steps');
+            step.scale.setTo(0.2, 0.2);
+            space += 63;
+        }
+
+        space = 90;
+        for (var i = 0; i < 7; i++) {
+            var step = game.add.sprite(140 + space, 525, 'steps');
+            step.scale.setTo(0.2, 0.2);
+            space += 63;
+        }
+
+        space = 90;
+        morespace = 5;
+        for (var i = 0; i < 7; i++) {
+            var step = game.add.sprite(355 + space, 320 - morespace, 'steps');
+            step.scale.setTo(0.2, 0.2);
+            space += 63;
+            morespace += 5;
+        }
+
+
+        space = 90;
+        vary = 10;
+        for (var i = 0; i < 3; i++) {
+            var step = game.add.sprite(740 + space, 90 + vary, 'steps');
+            step.scale.setTo(0.2, 0.2);
+            space += 63;
+            vary += 10;
+        }
+
+        space = 90;
+        vary = 10;
+        for (var i = 0; i < 3; i++) {
+            var step = game.add.sprite(1050 + space, 130 + vary, 'steps');
+            step.scale.setTo(0.2, 0.2);
+            space += 63;
+            vary += 50;
+        }
+
+        space = 90;
+        vary = 10;
+        for (var i = 0; i < 3; i++) {
+            var step = game.add.sprite(1050 + space, 480 + vary, 'steps');
+            step.scale.setTo(0.2, 0.2);
+            space += 63;
+            vary -= 50;
+        }
+
+        //game.add.tileSprite(0, 0, winwidth, winheight, 'backstart');
+>>>>>>> df9cb5c156a1ce2fd7c86945c6f4c1e7c59488ce
         //game.add.sprite(winwidth/2,winheight/2,'buttonimage');
-        singleplayerbutton = game.add.button(winwidth / 2, winheight / 2.8, 'singleplayer', botsattack, this, 2, 1, 0);
-        singleplayerbutton.scale.setTo(1, 1);
+
+        // start
+        replay = game.add.sprite(-20, -40, 'playagain');
+        replay.scale.setTo(0.15, 0.15);
+        play = game.add.text(80, 165, 'Start', { fontSize: '20px', fill: '#fff' });
+
+        //single player
+        singleplayerbutton = game.add.button(winwidth / 2, winheight / 7, 'mercury', botsattack, this, 2, 1, 0);
+        singleplayerbutton.scale.setTo(1, 0.95);
         singleplayerbutton.anchor.setTo(0.5, 0.5);
-        startbutton = game.add.button(winwidth / 2, winheight / 1.8, 'multiplayer', actionOnClick, this, 2, 1, 0);
-        startbutton.scale.setTo(0.25, 0.25);
+        play = game.add.text(700, 180, 'Single Player', { fontSize: '20px', fill: '#fff' });
+
+        //story
+        startbutton = game.add.button(winwidth / 1.6, winheight / 2.2, 'nstar', storyline, this, 2, 1, 0);
+        startbutton.scale.setTo(0.2, 0.2);
         startbutton.anchor.setTo(0.5, 0.5);
+        play = game.add.text(930, 400, 'story', { fontSize: '20px', fill: '#fff' });
 
-        rulesbutton = game.add.button(750, 570, 'rules', rulespgclick, this, 2, 1, 0);
-        rulesbutton.scale.setTo(1,1);
+        //how to play
+        rulesbutton = game.add.button(750, 550, 'pluto', rulespgclick, this, 2, 1, 0);
+        rulesbutton.scale.setTo(1, 0.98);
         rulesbutton.anchor.setTo(0.5, 0.5);
+        play = game.add.text(690, 630, 'How To Play', { fontSize: '20px', fill: '#fff' });
 
-        storybutton = game.add.button(1050, 270, 'storybt', storyline, this, 2, 1, 0);
-        storybutton.scale.setTo(0.3, 0.3);
+        //multiplayer
+        storybutton = game.add.button(1250, 270, 'antimatter', actionOnClick, this, 2, 1, 0);
+        storybutton.scale.setTo(0.5, 0.49);
+        play = game.add.text(1280, 420, 'MultiPlayer', { fontSize: '20px', fill: '#fff' });
 
-        friend = game.add.button(300, 270, 'storybt', findfriend, this, 2, 1, 0);
-        friend.scale.setTo(0.3, 0.3);
+        //search friend
+        friend = game.add.button(290, 260, 'moon', findfriend, this, 2, 1, 0);
+        friend.scale.setTo(0.9, 0.9);
+        play = game.add.text(330, 425, 'Add a Friend', { fontSize: '20px', fill: '#fff' });
 
-        newbutton = game.add.button(1000, 70, 'storybt', see_request, this, 2, 1, 0);
-        newbutton.scale.setTo(0.3, 0.3);
+        // accept friend request 
+        newbutton = game.add.button(1000, 70, 'venus', see_request, this, 2, 1, 0);
+        newbutton.scale.setTo(1, 0.95);
+        play = game.add.text(1180, 150, 'Friend Requests', { fontSize: '20px', fill: '#fff' });
 
-        newbutton = game.add.button(1000, 500, 'storybt', see_profile, this, 2, 1, 0);
-        newbutton.scale.setTo(0.3, 0.3);
+        // profile
+        newbutton = game.add.button(1000, 500, 'psaturn', see_profile, this, 2, 1, 0);
+        newbutton.scale.setTo(0.7, 0.7);
+        newbutton.angle = -15;
+        play = game.add.text(1110, 615, 'Profile', { fontSize: '20px', fill: '#fff' });
 
-        newbutton = game.add.button(100, 500, 'storybt', friends, this, 2, 1, 0);
-        newbutton.scale.setTo(0.3, 0.3);
+        // My friends
+        newbutton = game.add.button(50, 470, 'urenus', friends, this, 2, 1, 0);
+        newbutton.scale.setTo(0.8, 0.8);
+        newbutton.angle = 5;
+        play = game.add.text(140, 625, 'Friends', { fontSize: '20px', fill: '#fff' });
 
+        // PLANETSORB
         var style = { font: "65px Arial", fill: "#ffffff", align: "center" };
-        var text = game.add.text(winwidth / 2, winheight / 6, "Planetsorb", style);
+        var text = game.add.text(650, 270, "Planetsorb", { fontSize: '45px', fill: '#fff' });
         text.anchor.setTo(0.5, 0.5);
 
 
+        
 
-        //game.add.image(432, 487, 'logo');
 
-        // THREE.JS variables
-        // var globalW = 600,
-        //     globalH = 600,
-        //     fov = 45,
-        //     far = 1000,
-        //     container = document.getElementById('mything'),
-        //     renderer = new THREE.WebGLRenderer(),
-        //     scene = new THREE.Scene(),
-        //     cam = new THREE.PerspectiveCamera(fov, globalW / globalH, 1, far),
-        //     mainLight = new THREE.PointLight(0xd29553),
-        //     ambLight = new THREE.AmbientLight(0x2A4159);
-        // baseMat = new THREE.MeshLambertMaterial({
-        //     color: 0xa7897d,
-        //     shading: THREE.FlatShading
-        // }),
-        //     secondMat = new THREE.MeshPhongMaterial({ /* credit goes to Mombasa */
-        //         color: new THREE.Color("rgb(216,25,203)"),
-        //         emissive: new THREE.Color("rgb(255,78,14)"),
-        //         specular: new THREE.Color("rgb(235,135,235)"),
-        //         shininess: 10,
-        //         shading: THREE.FlatShading,
-        //         transparent: 1,
-        //         opacity: .7
-        //     }),
-        //     mainSphere = new THREE.Mesh(new THREE.IcosahedronGeometry(100, 2), baseMat),
-        //     group = new THREE.Object3D();
-
-        // // Initialize THREE.js system
-        // (function initTHREE() {
-        //     renderer.setSize(globalW, globalH);
-        //     container.appendChild(renderer.domElement);
-        //     scene.add(cam);
-        //     scene.add(mainLight);
-        //     scene.add(ambLight);
-
-        //     group.add(mainSphere);
-
-        //     scene.add(group);
-
-        //     cam.position.z = 600;
-
-        //     mainLight.position.z = 400;
-        //     mainLight.position.y = 200;
-        //     mainLight.position.x = 50;
-        //     mainLight.target = mainSphere;
-
-        //     // For every single face on the sphere, create a new, smaller sphere
-        //     // This makes 112 spheres, on a 16x8 sphere
-        //     for (var i = 1, j = mainSphere.geometry.faces.length; i < j; i++) {
-        //         var newSphere = new THREE.Mesh(new THREE.IcosahedronGeometry(20, 1), secondMat);
-
-        //         // Calculate average centroid of the two triangles
-        //         newSphere.position = mainSphere.geometry.faces[i].centroid;
-
-        //         // Animation based values
-        //         newSphere.target = new THREE.Vector3(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100);
-        //         newSphere.base = new THREE.Vector3(newSphere.position.x, newSphere.position.y, newSphere.position.z);
-
-        //         // Add to render group
-        //         group.add(newSphere);
-        //     }
-
-        //     renderer.render(scene, cam);
-        // })();
-
-        // // Animation-based variables
-        // var t = 0,
-        //     decell = false,
-        //     lastP = 0;
-
-        // (function tick() {
-        //     t++;
-        //     var progress = Math.sin(t / 13) / 2 + 0.5;
-
-        //     // Scale main sphere
-        //     group.children[0].scale.x = 1 + (progress / 5);
-        //     group.children[0].scale.y = 1 + (progress / 5);
-        //     group.children[0].scale.z = 1 + (progress / 5);
-
-        //     // Loop through every small sphere
-        //     for (var i = 1, j = group.children.length; i < j; i++) {
-        //         var sphere = group.children[i];
-
-        //         // Animate to target
-        //         sphere.position.x = sphere.base.x + (sphere.target.x * progress);
-        //         sphere.position.y = sphere.base.y + (sphere.target.y * progress);
-        //         sphere.position.z = sphere.base.z + (sphere.target.z * progress);
-        //     }
-
-        //     if (progress < lastP && !decell) { decell = true; }
-        //     if (progress > lastP && decell) {
-        //         // Generate new random targets
-        //         for (var i = 1, j = group.children.length; i < j; i++) {
-        //             group.children[i].target = new THREE.Vector3(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100);
-        //         }
-        //         decell = false;
-        //     }
-        //     lastP = progress;
-
-        //     group.rotation.y += rotDeg(1.5);
-        //     renderer.render(scene, cam);
-        //     requestAnimationFrame(tick);
-        // })();
-
-        // // Utility functions
-        // function rotDeg(deg) {
-        //     return deg * (Math.PI / 180);
-        // }
     }
 }

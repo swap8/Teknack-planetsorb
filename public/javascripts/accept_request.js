@@ -7,7 +7,7 @@ GameState.accept_request = {
 
     create: function () {
 
-        var spaceback = game.add.sprite(0, 0, 'spaceback');
+        var spaceback = game.add.sprite(0, 0, 'connect');
         spaceback.scale.setTo(0.92, 0.75);
 
         myGroup = game.add.group();
@@ -19,13 +19,17 @@ GameState.accept_request = {
         graphics.lineTo(380, 70);
         graphics.endFill();
 
-        newbutton = game.add.button(1300, 500, 'storybt', accept_request, this, 2, 1, 0);
-        newbutton.scale.setTo(0.3, 0.3);
+        newbutton = game.add.button(1350, 530, 'accepticon', accept_request, this, 2, 1, 0);
+        newbutton.scale.setTo(0.5, 0.45);
+        myGroup.add(newbutton);
+
+        newbutton = game.add.button(1370, 30, 'homebt', gohome, this, 2, 1, 0);
+        newbutton.scale.setTo(0.05, 0.05);
         myGroup.add(newbutton);
 
         style = { fontSize: '20px', fill: '#ffffff' };
 
-        mytext = game.add.text(480, 22, "Friends Request Panel : To Watch Friends Game Activity", style);
+        mytext = game.add.text(480, 22, "Friends Request Panel :  Watch Out", style);
         //myGroup.add(mytext);
 
 

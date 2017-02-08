@@ -28,9 +28,14 @@ GameState.access_friends = {
 
 
         style = { fontSize: '19px', fill: '#ffffff' };
-        mytext = game.add.text(630, 22, "Friends Panel  :  Watch Out", style);
+        mytext = game.add.text(630, 22, "Friends Panel  : To Watch Friends Game Activity", style);
 
 
+        myGroup = game.add.group();
+
+        newbutton = game.add.button(1370, 30, 'homebt', gohome, this, 2, 1, 0);
+        newbutton.scale.setTo(0.05, 0.05);
+        myGroup.add(newbutton);
 
         // var profile = game.add.sprite(30 + shift_profile_pic, 130, 'profile');
         // profile.scale.setTo(0.5, 0.5);
@@ -151,7 +156,7 @@ GameState.access_friends = {
                 var more = something.level;
 
                 // console.log(parseInt(more)+20);
-                shift_level_position+=380;
+                shift_level_position += 380;
                 var set_level = (parseInt(more) + 10) / 100;
                 border.scale.setTo(set_level, 0.04);
                 myGroup.add(mytext);
@@ -178,11 +183,16 @@ GameState.access_friends = {
                 graphics.lineTo(380, 70);
                 graphics.endFill();
 
+                myGroup = game.add.group();
+                newbutton = game.add.button(1370, 30, 'homebt', gohome, this, 2, 1, 0);
+                newbutton.scale.setTo(0.05, 0.05);
+                myGroup.add(newbutton);
 
                 style = { fontSize: '19px', fill: '#ffffff' };
                 mytext = game.add.text(630, 22, "Friends Panel  :  Watch Out", style);
                 shift_profile_pic = 0;
                 shift_level_position = 0;
+
                 console.log("stop counter : " + stop_counter);
                 if (stop_counter > 0) {
                     for (i = 0; i < stop_counter; i++) {
