@@ -17,7 +17,7 @@ GameState.gamerules = {
         //var title = game.add.text(0, 0, 'RULES AND TIPS', style);
 
 
-        var style = { font: "20px Arial", fill: "#fff", align: "center", wordwrap: true, wordWrapWidth: 300 };
+        var style = { font: "20px Arial", fill: "#fff", align: "left", wordwrap: true, wordWrapWidth: 300 };
 
         var text = game.add.text(100, 100, rulestext, style);
         text.setTextBounds(16, 16, 600, 600);
