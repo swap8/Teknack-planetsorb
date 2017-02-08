@@ -1,28 +1,15 @@
 
 var eye, cursors, count = 1;
-var style = { font: "50px Impact", fill: "#f26c4f", align: "left", style: "italics" };
+var style = { font: "50px Impact", fill: "yellow", align: "left"};
 var vert, horz;
 var worldScale = 2;
-var next, words, txtlng;
+var creation, words, txtlng;
 var flag = 0;
 var atom, plnt, plnt1, plnt2, plnt3;
 var trig, trig1, trig2, trig3, trig4, sigi;
 var bang;
-var backg, earth, destroyer, blkhole;
+var backg, earth, destroyer;
 var blkst1, blkst2, supnov;
-
-WebFontConfig = {
-
-    //  'active' means all requested fonts have finished loading
-    //  We set a 1 second delay before calling 'createText'.
-    //  For some reason if we don't the browser cannot render the text the first time it's created.
-    // active: function() { game.time.events.add(Phaser.Timer.SECOND, createText, this); },
-
-    //  The Google Fonts we want to load (specify as many as you like in the array)
-    google: {
-      families: ['Montserrat']
-    }
-}
 
 GameState.storyline = {
 
@@ -30,51 +17,58 @@ GameState.storyline = {
         game.stage.backgroundColor = '#000';
         game.load.image('bigbang', './images/bigbang.png');
         game.load.image('atom', './images/atom.png');
-        game.load.image('galxy', './images/galxy.jpg');
+        game.load.image('creation', './images/creation.jpg');
         game.load.image('storybg', './images/storybg.jpg');
         game.load.image('destroyer', './images/blackholeedit.png');
-        game.load.image('blkhole', './images/blkhole 2.jpg');
+        
         game.load.image('earth', './images/earth_2.png');
         game.load.image('eye', './images/eye.png');
         game.load.image('blkst', './images/blkstory.png');
-        game.load.image('player', './images/mars.png');
+        // game.load.image('player', './images/mars.png');
         game.load.image('plnt', './images/mars.png');
         game.load.image('supnov', './images/supernova.png');
         game.load.image('planets','./images/plants.jpg');
-        game.load.script('webfont', '//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js');
+        game.load.image('quest','./images/quest.png');
+
 
     },
 
+    createText: function() {
+
+    text = game.add.text(game.world.centerX, game.world.centerY, "- phaser -\nrocking with\ngoogle web fonts");
+    text.anchor.setTo(0.5);
+
+    text.font = 'Revalia';
+    text.fontSize = 60;
+    },
     create: function () {
+    //   var   grd = title.context.createLinearGradient(0, 0, 0, text.canvas.height);
+    // grd.addColorStop(0, '#8ED6FF');   
+    // grd.addColorStop(1, '#004CB3');
+    
 
-
-        // game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
-        // game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+        game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+        game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
         sigi = new Phaser.Signal();
         sigi.addOnce(atomfade, this);
 
-        var style1 = { font: "20px Montserrat", fill: "#fff", align: "left", wordwrap: true, wordWrapWidth: 300 };
-        text = game.add.text(200,200, "- phaser -\nrocking with\ngoogle web fonts",style1);
-    text.anchor.setTo(0.5);
-
-    // text.font = 'Montserrat';
-    // text.fontSize = 60;
         //------------animations var-------
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        backg = game.add.tileSprite(0, 0, window.innerWidth, window.innerHeight, 'storybg');
-        homebutton = game.add.button(1080, 470, 'homebt', gohome, this, 2, 1, 0);
-        homebutton.scale.setTo(0.01, 0.01);
+        backg = game.add.tileSprite(0, 0, 1920,1080, 'storybg');
+        // homebutton = game.add.button(1080, 470, 'homebt', gohome, this, 2, 1, 0);
+        // homebutton.scale.setTo(0.01, 0.01);
         // homebutton.fixedToCamera = true;
         // homebutton.cameraOffset.setTo(1400, 600);
-        game.world.setBounds(0, 0, 10000, 1200);
+        game.world.setBounds(0, 0, 2000, 1200);
 
-        player = game.add.sprite(350, 350, 'player');
-        player.anchor.setTo(0.5, 0.5);
-        player.scale.setTo(0.2, 0.2);
+        // player = game.add.sprite(350, 350, 'player');
+        // player.anchor.setTo(0.5, 0.5);
+        // player.scale.setTo(0.2, 0.2);
         //----------eye--------
         eye = game.add.sprite(230, 220, 'eye');
         eye.anchor.setTo(0.5, 0.5);
         eye.scale.setTo(0.2, 0.2);
+        eye.alpha = 0;
         // game.camera.follow(eye, Phaser.Camera.FOLLOW_LOCKON);
         // game.physics.enable(eye, Phaser.Physics.ARCADE);
         game.camera.x = (eye.x);
@@ -105,18 +99,24 @@ GameState.storyline = {
 
         function startstory() {
             // flag =1;
-            earth = game.add.sprite(230, 230, 'earth');
+            earth = game.add.sprite(230, 270, 'earth');
             earth.anchor.setTo(0.5, 0.5);
             earth.scale.setTo(0.18, 0.18);
             var title = game.add.text(140, 110, "ARE WE EARTHLINGS,\n THE ONLY SENTIENT BEINGS IN THE COSMOS???\n COULD THERE BE SOMEONE OUT THERE!!", style);
+            // title.setShadow(5, 5, 'rgba(255,255,255,0.5)', 5);
             title.anchor.setTo(0, 0);
             title.scale.setTo(0.5, 0.5);
             title.alpha = 0;
+            var quest = game.add.sprite(330, 270, 'quest');
+                quest.anchor.setTo(0.5,0.5);
+                quest.scale.setTo(0.5,0.5);
+                quest.alpha=0;
+               game.add.tween(quest).to({ alpha: 1 }, 100, Phaser.Easing.Linear.None, true, 1000, 0, false);
 
-
-            trig = game.add.tween(title).to({ alpha: 1 }, 1000, Phaser.Easing.Linear.None, true, 500, 0, false);
+            trig = game.add.tween(title).to({ alpha: 1 }, 1000, Phaser.Easing.Linear.None, true, 0, 0, false);
             trig.onComplete.add(setTimeout(function () {
                 // flag =2;
+                
                 console.log("flag 2 called");
                 game.add.tween(eye).to({ x: 350, y: 920 }, 1000, Phaser.Easing.Linear.None, true, 0, 0, false); //move down
                 // earth.destroy();
@@ -128,17 +128,21 @@ GameState.storyline = {
 
         }
 
-
-        // setTimeout(function(){
-        //     // game.add.tween(atom).to({ x: 350, y: 920, }, 4000, Phaser.Easing.Linear.None, true, 0, 0, false);
-        //     atomfade();},3000);
-
         function atomfade() {
 
             sigi.remove(atomfade);
             // flag =1;
+            setTimeout(function() {
+                creation =game.add.sprite(450,920,'creation');
+                creation.anchor.setTo(0.7,0.5);
+                creation.scale.setTo(0.5,0.5);
+                creation.alpha=0;
+                game.add.tween(creation).to({alpha:1},1500,Phaser.Easing.Linear.None,true,50,0,true);
+
+            }, 3000);
             game.add.tween(atom).to({ x: 350, y: 920, }, 4000, Phaser.Easing.Linear.None, true, 0, 0, false);
-            var title = game.add.text(120, 830, "AEONS AGO THE NASCENT UNIVERSE \n SAW TWO PRIMORDIAL BEINGS\n THE 'SKEMDARVARGUR'\nTHE DESTROYER OF WORLDS", style);
+            var title = game.add.text(120, 810, "AEONS AGO THE NASCENT UNIVERSE \n SAW TWO PRIMORDIAL BEINGS\n THE 'SKEMDARVARGUR'\nTHE DESTROYER OF WORLDS", style);
+            // title.setShadow(5, 5, 'rgba(255,255,255,0.5)', 5);
             title.anchor.setTo(0, 0);
             title.scale.setTo(0.5, 0.5);
             title.alpha = 0;
@@ -159,6 +163,7 @@ GameState.storyline = {
             setTimeout(function () {
                 // flag =1;
                 game.add.tween(eye).to({ x: 1610, y: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 0, false);
+                creation.destroy();
                 twoblk();
             }, 3000);
         }
@@ -170,6 +175,7 @@ GameState.storyline = {
             // game.add.tween(eye).to({x:1610,y:200},2000,Phaser.Easing.Linear.None, true, 0,0,false);
             game.camera.flash(0xffff00, 100);
             var title = game.add.text(1400, 100, "IN THE VOID \n THEY TOOK THE FORM OF WHAT WE CALL TODAY\n 'SUPERMASSIVE BLACKHOLES'", style);
+            // title.setShadow(5, 5, 'rgba(255,255,255,0.5)', 5);
             title.anchor.setTo(0, 0);
             title.scale.setTo(0.5, 0.5);
             game.add.tween(title).to({ alpha: 1 }, 1000, Phaser.Easing.Linear.None, true, 550, 0, false);
@@ -192,6 +198,7 @@ GameState.storyline = {
                 destroyer.scale.setTo(0.8,0.8);
                 destroyer.alpha = 0;
             var title = game.add.text(1350, 550, "DEVOURING ALL MATTER IN THEIR PATH\n THEY ARE FOREVER AT WAR\n WITH EACH OTHER...", style);
+            // title.setShadow(5, 5, 'rgba(255,255,255,0.5)', 5);
             title.anchor.setTo(0, 0);
             title.scale.setTo(0.5, 0.5);
             game.add.tween(title).to({ alpha: 1 }, 1000, Phaser.Easing.Linear.None, true, 550, 0, false);
@@ -252,8 +259,7 @@ GameState.storyline = {
 
 
     update: function () {
-        // game.world.pivot.x=game.camera.x=eye.x;
-        // game.world.pivot.ys=game.camera.y=eye.y;
+       
         game.camera.x = eye.x;
         game.camera.y = eye.y;
         game.camera.follow(eye, Phaser.Camera.FOLLOW_LOCKON);
@@ -276,11 +282,11 @@ GameState.storyline = {
 
 
 
-        if (game.input.keyboard.isDown(Phaser.Keyboard.W)) { player.y -= 10; }
-        else if (game.input.keyboard.isDown(Phaser.Keyboard.A)) { player.x -= 10; }
-        else if (game.input.keyboard.isDown(Phaser.Keyboard.S)) { player.y += 10; }
-        else if (game.input.keyboard.isDown(Phaser.Keyboard.D)) { player.x += 10; }
-        game.debug.text("p.x" + player.x + "\np.y" + player.y, 32, 42);
+        // if (game.input.keyboard.isDown(Phaser.Keyboard.W)) { player.y -= 10; }
+        // else if (game.input.keyboard.isDown(Phaser.Keyboard.A)) { player.x -= 10; }
+        // else if (game.input.keyboard.isDown(Phaser.Keyboard.S)) { player.y += 10; }
+        // else if (game.input.keyboard.isDown(Phaser.Keyboard.D)) { player.x += 10; }
+        // game.debug.text("p.x" + player.x + "\np.y" + player.y, 32, 42);
 
         game.debug.spriteInfo(eye, 32, 62);
 

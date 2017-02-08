@@ -40,7 +40,8 @@ GameState.start = {
 
         game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
-        game.add.tileSprite(0, 0, winwidth, winheight, 'backstart');
+        var backst =game.add.tileSprite(0, 0, winwidth, winheight, 'backstart');
+        
         //game.add.sprite(winwidth/2,winheight/2,'buttonimage');
         singleplayerbutton = game.add.button(winwidth / 2, winheight / 2.8, 'singleplayer', botsattack, this, 2, 1, 0);
         singleplayerbutton.scale.setTo(1, 1);
