@@ -2,13 +2,15 @@
 var self = module.exports = {
     fire_aurora_beam: function (x, y, game_id, game_list, username) {
 
-        var Game, aurora_target_x, aurora_target_y;
+        var Game, aurora_target_x, aurora_target_y, planet;
         var pass_name, playerx_location, playery_location;
         for (var i in game_list) {
             var game = game_list[i];
             if (game_id === game.id) {
                 //console.log("game found")
                 Game = game;
+                
+                
             }
         }
         if (Game != null) {
@@ -22,7 +24,8 @@ var self = module.exports = {
             }
             aurora_target_x = x;
             aurora_target_y = y;
-            // self.check_position(x, y, Game);
+            planet = self.check_position(x, y, Game);
+            console.log(planet);
             self.create_aurora(Game, playerx_location, playery_location, aurora_target_x, aurora_target_y);
         }
 
@@ -30,8 +33,8 @@ var self = module.exports = {
     },
 
 
-    /*check_position: function (x, y, Game) {
-
+    check_position: function (x, y, Game) {
+        var send_planet;
         for (var i in Game.green_planet_list) {
             var green_planet = Game.green_planet_list[i];
 
@@ -39,11 +42,26 @@ var self = module.exports = {
             var dy = y - green_planet.y;
             var distance = Math.sqrt((dx * dx) + (dy * dy));
 
-            if (distance < (x + 20 + green_planet.rad)) {
-                console.log("colliding");
+            if (distance < (10 + green_planet.rad)) {
+                //console.log("colliding");
+                send_planet = green_planet;
             }
         }
-    },*/
+        for (var i in Game.red_planet_list) {
+            var red_planet = Game.red_planet_list[i];
+
+            var dx = x - red_planet.x;
+            var dy = y - red_planet.y;
+            var distance = Math.sqrt((dx * dx) + (dy * dy));
+
+            if (distance < (10 + red_planet.rad)) {
+                //console.log("colliding");
+                send_planet = red_planet;
+            }
+        }
+        return send_planet;
+
+    },
 
 
     /* assignshootlocation: function (Game) {
@@ -85,18 +103,20 @@ var self = module.exports = {
             start_y: y,
             end_x: end_x,
             end_y: end_y,
-            rad: 20
+            rad: 10
         };
         Game.aurora_list[aurora.id] = aurora;
     },
 
 
     update_aurora_position: function (aurora_list) {
+        
         for (var i in aurora_list) {
             var aurora = aurora_list[i];
             aurora.x = aurora.start_x + (aurora.end_x - aurora.start_x) * aurora.t;
             aurora.y = aurora.start_y + (aurora.end_y - aurora.start_y) * aurora.t;
             aurora.t += 0.01;
+            //self.check_collision(aurora,);
             // x = x1 + (x2-x1)t;
             // y = y1 + (y2-y1)t;
 
@@ -108,6 +128,7 @@ var self = module.exports = {
         var pack = [];
 
         self.update_aurora_position(Game.aurora_list);
+        //self.check_collision(Game);
         for (var i in Game.aurora_list) {
             var aurora = Game.aurora_list[i];
             pack.push({
