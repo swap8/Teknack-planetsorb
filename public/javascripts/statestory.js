@@ -141,7 +141,7 @@ GameState.storyline = {
             title.alpha = 0;
             game.add.tween(title).to({ alpha: 1 }, 1000, Phaser.Easing.Linear.None, true, 550, 0, false);
 
-            var trig1 = game.add.tween(atom).to({ alpha: 0 }, 3000, Phaser.Easing.Linear.None, true, 000, 0, false);
+            var trig1 = game.add.tween(atom).to({ alpha: 0 }, 3000, Phaser.Easing.Linear.None, true, 2000, 0, false);
             trig1.onComplete.add(blast);
         }
         function blast() {
@@ -150,13 +150,13 @@ GameState.storyline = {
             bang.scale.setTo(0.2, 0.2);
             setTimeout(function () {
                 bang.destroy();
-            }, 500);
+            }, 1500);
             setTimeout(function () {
                 // flag =1;
                 game.add.tween(eye).to({ x: 1610, y: 200 }, 2000, Phaser.Easing.Linear.None, true, 0, 0, false);
                 creation.destroy();
                 twoblk();
-            }, 3000);
+            }, 5500);
         }
 
         function twoblk() {
