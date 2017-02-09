@@ -288,7 +288,7 @@ GameState.main = {
                     aurora.anchor.setTo(0.5, 0.5);
                     //var radius = data.player[i].rad / 380;
                     //player_scale = radius;
-                    aurora.scale.setTo(0.5, 0.5);
+                    aurora.scale.setTo(0.35, 0.35);
 
                     myGroup.add(aurora);
 
@@ -369,7 +369,7 @@ GameState.main = {
     },
 
     update: function () {
-
+        sendcount = 1;
         if (stop_movements) {
             if (cursors.left.isDown || wasd.left.isDown) {
                 socket.emit('keyPress', { InputId: 'left', state: true });
@@ -406,11 +406,13 @@ GameState.main = {
             }
 
             game.input.mouse.capture = true;
+            if(sendcount)
             if (game.input.activePointer.leftButton.isDown) {
                 // console.log(game.input.mousePointer.x);
                 // console.log(game.input.mousePointer.y);
                 //socket.emit('click', { InputId: 'down', state: true });
                 socket.emit('click', { InputId: 'clickme', x: game.input.mousePointer.x, y: game.input.mousePointer.y, state: true });
+                sendcount--;
             }
 
 
