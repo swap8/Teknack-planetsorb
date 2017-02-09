@@ -4,9 +4,9 @@ GameState.start = {
         game.load.image('backstart', './images/startbackground.png');
         game.load.image('singleplayer', './images/singleplayerai.png');
         game.load.image('multiplayer', './images/multiplayer.jpg');
-        game.load.image('matter', './images/earth.png');
+        game.load.image('matter', './images/earth1.png');
         game.load.image('peopleplanet', './images/peopleplanet.png');
-        game.load.image('antimatter', './images/mars.png');
+        game.load.image('antimatter', './images/mars1.png');
         game.load.image('over', './images/endmaterial.jpg');
         game.load.image('playagain', './images/overearth.png');
         game.load.image('blackhole', './images/blackhole2.png');

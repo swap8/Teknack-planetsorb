@@ -262,7 +262,7 @@ GameState.main = {
                     var radius = data.redPlanet[i].rad / 140;
                     antimatter_scale = radius;
                     if (!data.redPlanet[i].fade) {
-                        antimatter.alpha = 0.7;
+                        antimatter.alpha = 0.3;
                     }
                     antimatter.scale.setTo(antimatter_scale, antimatter_scale);
                     myGroup.add(antimatter);

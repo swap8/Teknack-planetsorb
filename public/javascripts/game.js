@@ -68,7 +68,7 @@ game.state.start('start');
 
 //---------------- functions called in game ---------------------
 function actionOnClick() {
-    music.pause();
+    music.destroy();
     game.state.start('main');
 }
 
