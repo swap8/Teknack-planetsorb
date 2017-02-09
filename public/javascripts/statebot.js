@@ -1,10 +1,13 @@
 
+var singlemusic;
 //for bots - play a single player mission
 GameState.bots = {
     preload: function () {
 
     },
     create: function () {
+        singlemusic=game.add.audio('singlemusic');
+        singlemusic.play();
         //console.log("I am ready!");
          flash_once = true;
         if (game.renderType === Phaser.WEBGL) {
@@ -251,8 +254,11 @@ GameState.bots = {
 
             if (data.overstate) {
                 if (lock_deadlock_single_player) {
+
                     myGroup.destroy();
+                    singlemusic.destroy();
                     socket.emit('single_player_lost', { gameid: data.gameid });
+                    music.destroy();
                     game.state.start('bot_end');
                 }
 

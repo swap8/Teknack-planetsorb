@@ -68,6 +68,7 @@ game.state.start('start');
 
 //---------------- functions called in game ---------------------
 function actionOnClick() {
+    music.pause();
     game.state.start('main');
 }
 
@@ -79,6 +80,7 @@ function storyline() {
     game.state.start('storyline');
 }
 function play_again() {
+    endmusic.destroy();
     game.state.start('start');
 }
 function calangle() {
@@ -103,6 +105,7 @@ function astangle() {
     return astroid_angle;
 }
 function botsattack() {
+    music.pause();
     game.state.start('bots');
 }
 

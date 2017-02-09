@@ -1,4 +1,4 @@
-
+var music;
 GameState.start = {
     preload: function () {
         game.load.image('backstart', './images/startbackground.png');
@@ -39,7 +39,9 @@ GameState.start = {
         //----------- Its music time -------------
         game.load.audio('boden', './music/syncloading.mp3');
         game.load.audio('multiplayermusic', './music/multiplayermusic.mp3');
-
+        game.load.audio('maintheme','./music/Treasure_Planet_Soundtrack_-_Track_03_12_Years_Later.mp3');
+        game.load.audio('singlemusic','./music/singleplayer.mp3');
+        game.load.audio('endmusic','./music/end.mp3');
         //--start planets ----------
         game.load.image('moon', './images/moon.png');
         game.load.image('psaturn', './images/saturn1.png');
@@ -55,10 +57,11 @@ GameState.start = {
 
         game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
-<<<<<<< HEAD
-        var backst =game.add.tileSprite(0, 0, winwidth, winheight, 'backstart');
+
+        music = game.add.audio('maintheme');
+        music.loop = true;
+        music.play();
         
-=======
         var backstart = game.add.sprite(-50, -50, 'backstart');
         backstart.scale.setTo(0.5, 0.5);
 
@@ -134,7 +137,7 @@ GameState.start = {
         }
 
         //game.add.tileSprite(0, 0, winwidth, winheight, 'backstart');
->>>>>>> df9cb5c156a1ce2fd7c86945c6f4c1e7c59488ce
+// >>>>>>> df9cb5c156a1ce2fd7c86945c6f4c1e7c59488ce
         //game.add.sprite(winwidth/2,winheight/2,'buttonimage');
 
         // start

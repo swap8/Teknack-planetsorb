@@ -21,10 +21,12 @@ GameState.storyline = {
         game.load.image('storybg', './images/storybg.jpg');
         game.load.image('destroyer', './images/blackholeedit.png');
         
-        game.load.image('earth', './images/earth_2.png');
+        game.load.image('earth', './images/earthstory.png');
         game.load.image('eye', './images/eye.png');
         game.load.image('blkst', './images/blkstory.png');
-        // game.load.image('player', './images/mars.png');
+        game.load.image('pluto','./images/pluto.png');
+        game.load.image('uranus','./images/urenus.png');
+        game.load.image('venus', './images/venus.png');
         game.load.image('plnt', './images/mars.png');
         game.load.image('supnov', './images/supernova.png');
         game.load.image('planets','./images/plants.jpg');
@@ -42,10 +44,7 @@ GameState.storyline = {
     text.fontSize = 60;
     },
     create: function () {
-    //   var   grd = title.context.createLinearGradient(0, 0, 0, text.canvas.height);
-    // grd.addColorStop(0, '#8ED6FF');   
-    // grd.addColorStop(1, '#004CB3');
-    
+       
 
         game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
@@ -55,22 +54,16 @@ GameState.storyline = {
         //------------animations var-------
         game.physics.startSystem(Phaser.Physics.ARCADE);
         backg = game.add.tileSprite(0, 0, 1920,1080, 'storybg');
-        // homebutton = game.add.button(1080, 470, 'homebt', gohome, this, 2, 1, 0);
-        // homebutton.scale.setTo(0.01, 0.01);
-        // homebutton.fixedToCamera = true;
-        // homebutton.cameraOffset.setTo(1400, 600);
+       
         game.world.setBounds(0, 0, 2000, 1200);
 
-        // player = game.add.sprite(350, 350, 'player');
-        // player.anchor.setTo(0.5, 0.5);
-        // player.scale.setTo(0.2, 0.2);
+       
         //----------eye--------
         eye = game.add.sprite(230, 220, 'eye');
         eye.anchor.setTo(0.5, 0.5);
         eye.scale.setTo(0.2, 0.2);
         eye.alpha = 0;
-        // game.camera.follow(eye, Phaser.Camera.FOLLOW_LOCKON);
-        // game.physics.enable(eye, Phaser.Physics.ARCADE);
+       
         game.camera.x = (eye.x);
         game.camera.y = (eye.y);
         cursors = game.input.keyboard.createCursorKeys();
@@ -101,9 +94,9 @@ GameState.storyline = {
             // flag =1;
             earth = game.add.sprite(230, 270, 'earth');
             earth.anchor.setTo(0.5, 0.5);
-            earth.scale.setTo(0.18, 0.18);
+            earth.scale.setTo(0.3, 0.3);
             var title = game.add.text(140, 110, "ARE WE EARTHLINGS,\n THE ONLY SENTIENT BEINGS IN THE COSMOS???\n COULD THERE BE SOMEONE OUT THERE!!", style);
-            // title.setShadow(5, 5, 'rgba(255,255,255,0.5)', 5);
+            title.setShadow(5, 5, 'rgba(255,255,255,0.5)', 5);
             title.anchor.setTo(0, 0);
             title.scale.setTo(0.5, 0.5);
             title.alpha = 0;
@@ -140,7 +133,7 @@ GameState.storyline = {
                 game.add.tween(creation).to({alpha:1},1500,Phaser.Easing.Linear.None,true,50,0,true);
 
             }, 3000);
-            game.add.tween(atom).to({ x: 350, y: 920, }, 4000, Phaser.Easing.Linear.None, true, 0, 0, false);
+            game.add.tween(atom).to({ x: 350, y: 980, }, 4000, Phaser.Easing.Linear.None, true, 0, 0, false);
             var title = game.add.text(120, 810, "AEONS AGO THE NASCENT UNIVERSE \n SAW TWO PRIMORDIAL BEINGS\n THE 'SKEMDARVARGUR'\nTHE DESTROYER OF WORLDS", style);
             // title.setShadow(5, 5, 'rgba(255,255,255,0.5)', 5);
             title.anchor.setTo(0, 0);
@@ -152,8 +145,6 @@ GameState.storyline = {
             trig1.onComplete.add(blast);
         }
         function blast() {
-            // atom.destroy();
-            // flag =2;
             game.camera.flash(0xff0000, 500);
             bang = game.add.sprite(atom.x, atom.y, 'bigbang');
             bang.scale.setTo(0.2, 0.2);
@@ -170,21 +161,19 @@ GameState.storyline = {
 
         function twoblk() {
 
-            // flag =1;
+           
             blkst1.alpha = blkst2.alpha = 1;
-            // game.add.tween(eye).to({x:1610,y:200},2000,Phaser.Easing.Linear.None, true, 0,0,false);
+           
             game.camera.flash(0xffff00, 100);
             var title = game.add.text(1400, 100, "IN THE VOID \n THEY TOOK THE FORM OF WHAT WE CALL TODAY\n 'SUPERMASSIVE BLACKHOLES'", style);
             // title.setShadow(5, 5, 'rgba(255,255,255,0.5)', 5);
             title.anchor.setTo(0, 0);
             title.scale.setTo(0.5, 0.5);
             game.add.tween(title).to({ alpha: 1 }, 1000, Phaser.Easing.Linear.None, true, 550, 0, false);
-            // game.add.tween(blkst1).to( { y: 400 }, 5000, Phaser.Easing.Back.InOut, true, 0, 0, true);
-            //game.add.tween(blkst2).to( { x: 400 }, 2000, Phaser.Easing.Back.InOut, true, 0, 2000, true);
-            // game.add.tween(eye).to({x:1610,y:920},2000,Phaser.Easing.Linear.None, true, 1000,0,false);
+            
             setTimeout(function () {
                
-                // flag =2;
+            
                 game.add.tween(eye).to({ x: 1550, y: 650 }, 2000, Phaser.Easing.Linear.None, true, 1000, 0, false);
                 sorb();
                  blkst1.destroy();blkst2.destroy();
@@ -192,8 +181,7 @@ GameState.storyline = {
         }
 
         function sorb() {
-            // flag = 1;
-             destroyer = game.add.sprite(1550, 650, 'planets');
+                destroyer = game.add.sprite(1550, 650, 'planets');
                 destroyer.anchor.setTo(0.5,0.5);
                 destroyer.scale.setTo(0.8,0.8);
                 destroyer.alpha = 0;
@@ -202,23 +190,23 @@ GameState.storyline = {
             title.anchor.setTo(0, 0);
             title.scale.setTo(0.5, 0.5);
             game.add.tween(title).to({ alpha: 1 }, 1000, Phaser.Easing.Linear.None, true, 550, 0, false);
-            // flag = 2;
            
-            plnt = game.add.sprite(1430, 710, 'player');
+           
+            plnt = game.add.sprite(1430, 710, 'plnt');
             plnt.anchor.setTo(0.5, 0.5);
             plnt.scale.setTo(0.1, 0.1);
 
-            plnt1 = game.add.sprite(1640, 650, 'player');
+            plnt1 = game.add.sprite(1640, 650, 'venus');
             plnt1.anchor.setTo(0.5, 0.5);
-            plnt1.scale.setTo(0.2, 0.2);
+            plnt1.scale.setTo(0.3, 0.3);
 
-            plnt2 = game.add.sprite(1340, 740, 'player');
+            plnt2 = game.add.sprite(1340, 740, 'uranus');
             plnt2.anchor.setTo(0.5, 0.5);
-            plnt2.scale.setTo(0.2, 0.2);
+            plnt2.scale.setTo(0.3, 0.3);
 
-            plnt3 = game.add.sprite(1370, 650, 'player');
+            plnt3 = game.add.sprite(1370, 650, 'pluto');
             plnt3.anchor.setTo(0.5, 0.5);
-            plnt3.scale.setTo(0.12, 0.12);
+            plnt3.scale.setTo(0.3, 0.3);
 
             setTimeout(function () {
                 eat();
@@ -247,7 +235,7 @@ GameState.storyline = {
                 console.log("last");
                 
            game.add.tween(eye).to({x:1070, y:890},500,Phaser.Easing.Linear.None,true,0,0,false);
-        //    gohome();
+           gohome();
             }
         }
 
@@ -263,16 +251,16 @@ GameState.storyline = {
         game.camera.x = eye.x;
         game.camera.y = eye.y;
         game.camera.follow(eye, Phaser.Camera.FOLLOW_LOCKON);
-        if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {//   game.world.pivot.y -= 5;  //   player.y -= 5;
+        if (game.input.keyboard.isDown(Phaser.Keyboard.UP)) {
             eye.y -= 30;
         }
-        else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) {  //   game.world.pivot.y += 5;  //   player.y += 5;
+        else if (game.input.keyboard.isDown(Phaser.Keyboard.DOWN)) { 
             eye.y += 30;
         }
-        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) { //   game.world.pivot.x -= 5; //   player.x -= 5;
+        if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT)) {
             eye.x -= 30;
         }
-        else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) { //   game.world.pivot.x += 5;      //   player.x += 5;
+        else if (game.input.keyboard.isDown(Phaser.Keyboard.RIGHT)) {
             eye.x += 30;
         }
 
@@ -282,14 +270,10 @@ GameState.storyline = {
 
 
 
-        // if (game.input.keyboard.isDown(Phaser.Keyboard.W)) { player.y -= 10; }
-        // else if (game.input.keyboard.isDown(Phaser.Keyboard.A)) { player.x -= 10; }
-        // else if (game.input.keyboard.isDown(Phaser.Keyboard.S)) { player.y += 10; }
-        // else if (game.input.keyboard.isDown(Phaser.Keyboard.D)) { player.x += 10; }
-        // game.debug.text("p.x" + player.x + "\np.y" + player.y, 32, 42);
+       
 
         game.debug.spriteInfo(eye, 32, 62);
-
+        atom.rotation +=0.02;
         blkst1.rotation -= 0.05;
         blkst2.rotation += 0.05;
 
