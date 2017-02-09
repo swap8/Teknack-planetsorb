@@ -18,6 +18,12 @@ var self = module.exports = {
                     //console.log(Game.fireball_list);
                     //fireball.render_fireball(locate_fireball);
                 }
+                if(Game.time==30){
+                    for(var i in Game.Game_list){
+                        var player = Game.Game_list[i];
+                        Game.activate_special_powers = true;
+                    }
+                }
 
             }
             else {

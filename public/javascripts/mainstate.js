@@ -280,6 +280,19 @@ GameState.main = {
                         myGroup.add(player);
                     }
                 }
+                // shoot stuff
+                for (var i = 0; i < data.shoot_stuff.length; i++) {
+
+                    aurora = game.add.sprite(data.shoot_stuff[i].x, data.shoot_stuff[i].y, 'asteroid');
+                    //player.scale.setTo(0.2, 0.2);
+                    aurora.anchor.setTo(0.5, 0.5);
+                    //var radius = data.player[i].rad / 380;
+                    //player_scale = radius;
+                    aurora.scale.setTo(0.5, 0.5);
+
+                    myGroup.add(aurora);
+
+                }
                 style = { fontSize: '14px', fill: '#ffffff' }
                 mytext = game.add.text(370, 10, data.player1.username, style);
                 myGroup.add(mytext);
@@ -382,6 +395,25 @@ GameState.main = {
             else {
                 socket.emit('keyPress', { InputId: 'down', state: false });
             }
+
+            document.onkeydown = function (event) {
+                if (event.keyCode === 69)//e
+                {
+                    console.log("i pressed e");
+                    socket.emit('keyPress', { InputId: 'power', state: true });
+                }
+
+            }
+
+            game.input.mouse.capture = true;
+            if (game.input.activePointer.leftButton.isDown) {
+                // console.log(game.input.mousePointer.x);
+                // console.log(game.input.mousePointer.y);
+                //socket.emit('click', { InputId: 'down', state: true });
+                socket.emit('click', { InputId: 'clickme', x: game.input.mousePointer.x, y: game.input.mousePointer.y, state: true });
+            }
+
+
         }
 
 

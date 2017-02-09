@@ -21,6 +21,7 @@ var superstar = require('./routes/superstar');
 var AI_game_time = require('./routes/AI_game_time');
 var portal_function = require('./routes/portal');
 var update_score = require('./routes/updatescore');
+var aurora = require('./routes/aurora');
 var single_player_updatescore = require('./routes/single_player_updatescore');
 var AI_collision_detection = require('./routes/AI_collision_detection');
 var app = express();
@@ -51,10 +52,10 @@ app.use('/bower_components', express.static(path.join(__dirname, 'bower_componen
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session ({
-	secret: "hjdsahfkjshdjhskjdfhisuhsefhshfsihdiuhfs",	// key used for encryption
-	resave: false,	//forces session to be saved when unmodified
-	saveUninitialized: true	//forces session to start uninitialized, no login info should be saved at the start of session
+app.use(session({
+    secret: "hjdsahfkjshdjhskjdfhisuhsefhshfsihdiuhfs",	// key used for encryption
+    resave: false,	//forces session to be saved when unmodified
+    saveUninitialized: true	//forces session to start uninitialized, no login info should be saved at the start of session
 }));
 
 app.use('/', index);
@@ -143,9 +144,11 @@ io.on("connection", function (socket) {
             var next_player_position = 0;
             var lobby = uuid.v1();
             var Game = {};
-            Game.time = 30;
+            Game.time = 40;
             Game.fireball_list = {};
+            Game.aurora_list = {};
             //Game.generate_fireball = false;
+            Game.activate_special_powers = false;
             Game.start_the_game = false;
             Game.start_time = 0;
             Game.lockscore = false;
@@ -240,7 +243,7 @@ io.on("connection", function (socket) {
         Game.overstate = false;
         Game.winner = '';
         Game.planetlist = {},
-        Game.Game_list[bot.id] = bot;
+            Game.Game_list[bot.id] = bot;
         Game.planetlist = AI.create_planet();
         //console.log(Game.planetlist);
         var lobby = uuid.v1();
@@ -302,7 +305,19 @@ io.on("connection", function (socket) {
                 socket.location.pressingUp = data.state;
             else if (data.InputId === 'down')
                 socket.location.pressingDown = data.state;
+            else if (data.InputId === 'power')
+                socket.location.pressedE = data.state;
         }
+    });
+
+    socket.on('click', function (data) {
+        if (socket.location != undefined) {
+            if (data.InputId === 'clickme') {
+               // console.log("x : " + data.x + "and y : " + data.y);
+               aurora.fire_aurora_beam(data.x,data.y,socket.game_id,game_list,socket.location.id);
+            }
+        }
+
     });
 
     socket.on('communication_lost', function (data) {
@@ -395,7 +410,8 @@ setInterval(function () {
                     gameid: game_list[socket.game_id].id,
                     start_the_game: game_list[socket.game_id].start_the_game,
                     start_time: game_list[socket.game_id].start_time,
-                    fireball: fireball.assignfireballposition(game_list[socket.game_id])
+                    fireball: fireball.assignfireballposition(game_list[socket.game_id]),
+                    shoot_stuff : aurora.show_aurora(game_list[socket.game_id])
                 };
             socket.broadcast.to(socket.lobby).emit('message', their_game);
         }

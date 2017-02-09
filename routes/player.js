@@ -1,5 +1,6 @@
 
 var boundry = require('./boundry');
+var special_power = require('./special_power');
 var self = module.exports = {
 
 	xpos: 400,
@@ -17,10 +18,17 @@ var self = module.exports = {
 			rad: self.radius,
 			type: type,
 			score: 0,
+			special_power : false,
+			power_use_once : false,
+			power_absorb_count : 0,
+			active_shoot : true,
+			total_fire : 20,
+			activate_special_power : false,
 			pressingRight: false,
 			pressingLeft: false,
 			pressingUp: false,
 			pressingDown: false,
+			pressedE : false,
 			acceleration_x: 0,
 			acceleration_y: 0,
 			maxSpeed: 1.5,
@@ -51,6 +59,9 @@ var self = module.exports = {
 					assignvalues.y -= assignvalues.maxSpeed;
 				}
 			}
+			if (assignvalues.pressedE) {
+				assignvalues.special_power = true;
+			}
 		}
 		return assignvalues;
 	},
@@ -58,6 +69,7 @@ var self = module.exports = {
 	//-----------Assign player position--------------------------
 	assignPlayerPosition: function (Game) {
 
+		special_power.special_power_active(Game);
 		var pack = [];
 		for (var i in Game.Game_list) {
 			var player = Game.Game_list[i];

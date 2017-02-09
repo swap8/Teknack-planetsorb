@@ -33,7 +33,7 @@ GameState.start = {
         game.load.image('next', './images/next.png');
         game.load.image('htp', './images/howtoplayinside.png');
         game.load.image('endgame', './images/endgame.png');
-        game.load.image('accepticon','./images/accepticon.png');
+        game.load.image('accepticon', './images/accepticon.png');
 
 
         //----------- Its music time -------------
@@ -65,8 +65,15 @@ GameState.start = {
         var backstart = game.add.sprite(-50, -50, 'backstart');
         backstart.scale.setTo(0.5, 0.5);
 
+
+
+
+
+        // game.input.keyboard.onDownCallback = function (e) {
+        //     console.log(e.keyCode);
+        // }
         // steps
-       
+
         multiple_add = 50;
         multiple = 45;
         space = 20;
@@ -136,9 +143,6 @@ GameState.start = {
             vary -= 50;
         }
 
-        //game.add.tileSprite(0, 0, winwidth, winheight, 'backstart');
-// >>>>>>> df9cb5c156a1ce2fd7c86945c6f4c1e7c59488ce
-        //game.add.sprite(winwidth/2,winheight/2,'buttonimage');
 
         // start
         replay = game.add.sprite(-20, -40, 'playagain');
@@ -194,10 +198,6 @@ GameState.start = {
         var style = { font: "65px Arial", fill: "#ffffff", align: "center" };
         var text = game.add.text(650, 270, "Planetsorb", { fontSize: '45px', fill: '#fff' });
         text.anchor.setTo(0.5, 0.5);
-
-
-        
-
-
     }
+
 }
