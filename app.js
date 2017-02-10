@@ -28,6 +28,8 @@ var app = express();
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/users');
 var session = require('express-session');
+var session2 = require('client-sessions');
+
 
 // Socket.io
 var io = socket_io();
@@ -52,13 +54,33 @@ app.use('/bower_components', express.static(path.join(__dirname, 'bower_componen
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({
-    secret: "hjdsahfkjshdjhskjdfhisuhsefhshfsihdiuhfs",	// key used for encryption
-    resave: false,	//forces session to be saved when unmodified
-    saveUninitialized: true	//forces session to start uninitialized, no login info should be saved at the start of session
+
+// //*****    client-sessions usage  **********//
+// //cookie setup KEEP THIS THE SAME AS BELOW!!
+app.use(session2({                
+	cookieName: "sess",
+	secret: "134klh389dbcbsldvn1mcbj",
+	duration: 30 * 60 * 1000, //30 min session duration
+	activeDuration: 5 * 60 * 1000 //5 min active session
 }));
 
+
+app.use( function (req, res, next) {   //enforce a cookie requirement for all requests starting with '/'
+    //req.sess.username = 'swap'; 
+	if (!req.sess.username) {              //i.e. accessing the server needs session to be set
+		console.log("redirecting cookie not found");
+		//res.redirect("http://teknack.in/"); //this url will be provided later 
+        req.sess.username = 'swap'; 
+		//next();
+	} else {
+		next();
+	}
+});
 app.use('/', index);
+
+app.use('/who', function(req,res) {
+    res.send("var u = '" + req.sess.username + "';");
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -108,6 +130,8 @@ var check_win = function (lobby_name, Game, lost_player_name) {
         }
     }
 }
+
+
 
 io.on("connection", function (socket) {
     socket.username = uuid.v1();

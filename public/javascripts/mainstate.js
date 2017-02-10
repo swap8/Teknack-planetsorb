@@ -1,3 +1,5 @@
+
+function C(k){return(document.cookie.match('(^|; )'+k+'=([^;]*)')||0)[2]};
 GameState.main = {
     player: null,
 
@@ -21,7 +23,7 @@ GameState.main = {
         call_only_once = true;
         socket = io();
         var multi_id = 4;
-        var person = prompt("Please enter your name", "Harry Potter");
+        var person = u;//prompt("Please enter your name", u);
         socket.on('send_socket_id', function (data) {
             //console.log(data);
             multi_id = data;

@@ -9,19 +9,19 @@ var userSchema = new mongoose.Schema({
         type: String
     },
     score: {
-        type: String
+        type: Number
     },
     highest_single_player_score: {
-        type: String
+        type: Number
     },
     highest_multi_player_score: {
-        type: String
+        type: Number
     },
     single_player_rank: {
-        type: String
+        type: Number
     },
     multi_player_rank: {
-        type: String
+        type: Number
     },
     pending_request: {
         type: Array
@@ -30,25 +30,25 @@ var userSchema = new mongoose.Schema({
         type: Array
     },
     total_games_played: {
-        type: String
+        type: Number
     },
     rare_stuff_collected: {
-        type: String
+        type: Number
     },
     xp: {
-        type: String
+        type: Number
     },
     level: {
-        type: String,
+        type: Number,
     },
     total_wins: {
-        type: String
+        type: Number
     },
     total_single_player_game_won: {
-        type: String
+        type: Number
     },
     total_multi_player_game_won: {
-        type: String
+        type: Number
     }
 
 });

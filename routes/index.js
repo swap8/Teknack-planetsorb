@@ -5,71 +5,60 @@ var _ = require('underscore');
 var User = require('../models/User');
 
 
+// /* GET home page. */
+// router.get('/', function (req, res, next) {
+// 	if (req.session.user) {
+// 		res.redirect('/game');
+// 	}
+// 	else {
+// 		res.render('index');
+// 	}
+// });
+
+// /* GET game page */
+// router.get('/game', function (req, res, next) {
+// 	if (!req.session.user) {
+// 		res.redirect('/');
+// 	}
+// 	else {
+// 		res.render('game');
+// 	}
+// });
+
 /* GET home page. */
-router.get('/', function (req, res, next) {
-	if (req.session.user) {
-		res.redirect('/game');
-	}
-	else {
-		res.render('index');
-	}
+router.get('/', function(req, res, next) {
+  res.render('index', { title: 'Express' });
 });
 
-/* GET game page */
-router.get('/game', function (req, res, next) {
-	if (!req.session.user) {
-		res.redirect('/');
-	}
-	else {
-		res.render('game');
-	}
-});
 
+//to take username
+router.post('/send_name', function (req, res, next) {
+	var username = req.session.user;
+	new_user_name_list[username] = username;
+	update_score.check_exist_in_database(username);
+	res.send(JSON.stringify({ 'msg': 'success', data: username }));
+});
 
 
 // to display scoreboard
-router.post('/display_leaderborad', function (req, res, next) {
+router.post('/display_leaderboard', function (req, res, next) {
 	var username = req.session.user;
-	/*User.count({ username: username }, function (error, userCount) {
+	var player_id;
+	var data = [];
+	console.log("hii i am in display");
+	User.find({}).sort({ highest_multi_player_score: -1 }).exec(function (err, docs) {
+		if (err) {
+			console.log(err);
+		}
+		//console.log(docs);
+		for (var i = 0; i < 10; i++) {
+			data[i] = docs[i];
+		}
+		res.send(JSON.stringify({ 'msg': 'success', data: data }));
+	});
 
-		if (error) {
-			console.log(error);
-		}
-		if (userCount > 0) {
-			//console.log("this means user is there in the database just update his score");
-			// To display stuff in the database
-			User.find({ username: username })
-				.then(function (doc) {
-					player_id = doc;
-					//console.log(doc);
-					people_name = doc[0].pending_request;
-					//console.log(people_name);
-					send_id = player_id[0]._id;
-					res.send(JSON.stringify({ 'msg': 'success', data: people_name }));
-				});
-		}
-	});*/
-	console.log("hello i am trying to display the scoreboard");
-	res.send(JSON.stringify({ 'msg': 'success' }));
 	//console.log("i got you man");
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -430,110 +419,6 @@ router.post('/access_friends', function (req, res, next) {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Login Request */
-router.post('/login', function (req, res, next) {
-	var username = req.body.username;
-	var password = req.body.password;
-
-	User.count({ username: username, password: password }, function (error, userCount) {
-
-		if (error) {
-			console.log(error);
-			return res.status(500).send(JSON.stringify({ 'msg': 'servererror' }));
-		}
-		if (userCount > 0) {
-			req.session.user = username;
-			res.send(JSON.stringify({ 'msg': 'success' }));
-		}
-		else {
-			res.send({ msg: "invalid" });
-		}
-
-	});
-});
-
-/* Register Request */
-
-router.get('/register', function (req, res, next) {
-	if (req.session.user) {
-		res.redirect('/game');
-	}
-	else {
-		res.render('register');
-	}
-});
-
-
-/* Register new user */
-
-router.post('/register_user', function (req, res, next) {
-	var username = req.body.username;
-	var password = req.body.password;
-
-	//check for unique username
-	User.count({ username: username }, function (err, userCount) {
-
-		if (err) {
-			console.log(err);
-			return res.status(500).send(JSON.stringify({ 'msg': 'servererror' }));
-		}
-		if (userCount > 0) {
-			req.session.user = username;
-			res.send(JSON.stringify({ 'msg': 'username_exist' }));
-		}
-		else {
-			var new_user = new User();
-			new_user.username = username;
-			new_user.password = password;
-
-			new_user.save(function (err, newuser) {
-				if (err) {
-					console.log(err);
-					return res.status(500).send(JSON.stringify({ 'msg': 'servererror' }));
-				}
-				else {
-					console.log(newuser + ' registered');
-					req.session.user = username;
-					res.send(JSON.stringify({ 'msg': 'success' }));
-				}
-			});
-		}
-	})
-});
-
-/* logout request */
-router.get('/logout', function (req, res, next) {
-	req.session.destroy(function (err) {
-		if (err) {
-			console.log(err);
-			return res.status(500).send(JSON.stringify({ 'msg': 'servererror' }));
-		}
-		res.redirect('/');
-	});
-
-});
 
 
 module.exports = router;
