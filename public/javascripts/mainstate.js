@@ -293,6 +293,7 @@ GameState.main = {
                     myGroup.add(aurora);
 
                 }
+
                 style = { fontSize: '14px', fill: '#ffffff' }
                 mytext = game.add.text(370, 10, data.player1.username, style);
                 myGroup.add(mytext);
@@ -366,6 +367,14 @@ GameState.main = {
                 game.state.start('end');
             }
         });
+
+
+        game.input.onDown.add(function () {
+            socket.emit('click', { InputId: 'clickme', x: game.input.mousePointer.x, y: game.input.mousePointer.y, state: true });
+        }, this);
+
+
+
     },
 
     update: function () {
@@ -405,15 +414,6 @@ GameState.main = {
 
             }
 
-            game.input.mouse.capture = true;
-            if(sendcount)
-            if (game.input.activePointer.leftButton.isDown) {
-                // console.log(game.input.mousePointer.x);
-                // console.log(game.input.mousePointer.y);
-                //socket.emit('click', { InputId: 'down', state: true });
-                socket.emit('click', { InputId: 'clickme', x: game.input.mousePointer.x, y: game.input.mousePointer.y, state: true });
-                sendcount--;
-            }
 
 
         }

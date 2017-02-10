@@ -83,7 +83,7 @@ GameState.bots = {
                 var radius = data.planet[i].rad / 140;
                 planet_scale = radius;
                 if (!data.planet[i].fade) {
-                    planet.alpha = 0.7;
+                    planet.alpha = 0.3;
                 }
                 planet.scale.setTo(planet_scale, planet_scale);
                 myGroup.add(planet);

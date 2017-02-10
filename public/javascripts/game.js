@@ -52,7 +52,8 @@ var spz = 1;
 var game = new Phaser.Game(winwidth, winheight, Phaser.AUTO);
 //game.stage.canvas.id = 'something';
 
-
+game.state.add('boot',BootState);
+game.state.add('preloader',GameState.preloader);
 game.state.add('main', GameState.main);
 game.state.add('end', GameState.end);
 game.state.add('start', GameState.start);
@@ -64,7 +65,8 @@ game.state.add('accept_request',GameState.accept_request);
 game.state.add('profilestate',GameState.profilestate);
 game.state.add('access_friends',GameState.access_friends);
 
-game.state.start('start');
+game.state.start('boot');
+//game.state.start('preloader');
 
 //---------------- functions called in game ---------------------
 function actionOnClick() {

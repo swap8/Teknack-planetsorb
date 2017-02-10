@@ -145,6 +145,7 @@ io.on("connection", function (socket) {
             var lobby = uuid.v1();
             var Game = {};
             Game.time = 40;
+            Game.planetidlist = {};
             Game.fireball_list = {};
             Game.aurora_list = {};
             //Game.generate_fireball = false;
@@ -313,8 +314,8 @@ io.on("connection", function (socket) {
     socket.on('click', function (data) {
         if (socket.location != undefined) {
             if (data.InputId === 'clickme') {
-               // console.log("x : " + data.x + "and y : " + data.y);
-               aurora.fire_aurora_beam(data.x,data.y,socket.game_id,game_list,socket.location.id);
+                // console.log("x : " + data.x + "and y : " + data.y);
+                aurora.fire_aurora_beam(data.x, data.y, socket.game_id, game_list, socket.location.id);
             }
         }
 
@@ -411,7 +412,7 @@ setInterval(function () {
                     start_the_game: game_list[socket.game_id].start_the_game,
                     start_time: game_list[socket.game_id].start_time,
                     fireball: fireball.assignfireballposition(game_list[socket.game_id]),
-                    shoot_stuff : aurora.show_aurora(game_list[socket.game_id])
+                    shoot_stuff: aurora.show_aurora(game_list[socket.game_id])
                 };
             socket.broadcast.to(socket.lobby).emit('message', their_game);
         }

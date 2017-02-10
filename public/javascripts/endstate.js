@@ -12,6 +12,37 @@ GameState.end = {
         play = game.add.text(50, 230, 'Back to Earth', { fontSize: '25px', fill: '#fff' });
         replay = game.add.button(-40, -50, 'playagain', play_again, this, 2, 1, 0);
         replay.scale.setTo(0.2, 0.2);
+
+         $.ajax({
+            type: 'POST',
+            url: '/display_leaderborad',
+            dataType: 'json',
+            success: function (response) {
+                if (response.msg === "success") {
+                    // window.location.href = "/game";
+                }
+                else {
+                    $('#error-msg').html('');
+                    $('#error-msg').append('<span>Login Failed!</span>');
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }
 

@@ -22,7 +22,7 @@ var self = module.exports = {
                     else {
                         player.location.activate_special_power = false;
                         player_one_active_power = player.location.activate_special_power;
-                        Game.activate_special_powers = false;
+                        //Game.activate_special_powers = false;
                     }
 
                     count--;
@@ -37,7 +37,7 @@ var self = module.exports = {
                     else {
                         player.location.activate_special_power = false;
                         player_two_active_power = player.location.activate_special_power;
-                        Game.activate_special_powers = false;
+                        //Game.activate_special_powers = false;
 
                     }
 

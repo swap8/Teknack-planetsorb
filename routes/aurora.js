@@ -2,15 +2,15 @@
 var self = module.exports = {
     fire_aurora_beam: function (x, y, game_id, game_list, username) {
 
-        var Game, aurora_target_x, aurora_target_y, planet;
+        var Game, aurora_target_x, aurora_target_y, planet, total_fire;
         var pass_name, playerx_location, playery_location;
         for (var i in game_list) {
             var game = game_list[i];
             if (game_id === game.id) {
                 //console.log("game found")
                 Game = game;
-                
-                
+
+
             }
         }
         if (Game != null) {
@@ -18,15 +18,24 @@ var self = module.exports = {
                 var player = Game.Game_list[i];
                 if (player.location.id === username) {
                     pass_name = username;
+                    player.location.total_fire--;
+                    total_fire = player.location.total_fire;
                     playerx_location = player.location.x;
                     playery_location = player.location.y;
                 }
             }
-            aurora_target_x = x;
-            aurora_target_y = y;
-            planet = self.check_position(x, y, Game);
-            console.log(planet);
-            self.create_aurora(Game, playerx_location, playery_location, aurora_target_x, aurora_target_y);
+            if (total_fire > 0) {
+                aurora_target_x = x;
+                aurora_target_y = y;
+                planet = self.check_position(x, y, Game);
+                if (planet != undefined) {
+                  //  console.log(planet);
+                    Game.planetidlist[planet.id] = planet;
+                }
+
+                self.create_aurora(Game, playerx_location, playery_location, aurora_target_x, aurora_target_y);
+            }
+
         }
 
 
@@ -64,34 +73,6 @@ var self = module.exports = {
     },
 
 
-    /* assignshootlocation: function (Game) {
-         count = 1;
-         var player1, player2;
-         for (var i in Game.Game_list) {
-             var player = Game.Game_list[i];
- 
-             if (count) {
-                 player1 = player;
-                 count--;
-             }
-             else {
-                 player2 = player;
-             }
-         }
- 
-         // ok i have got the player
-         //now we need assign the beam location as a player location
-         if (player1.location.active_shoot) {
-             if (player1.total_fire > 0) {
-                 //now you need check here if the event is triggered
- 
-                 //self.create_aurora(player1.location.x, player1.location.y);
-                 total_fire--;
-             }
-         }
- 
-     },*/
-
     create_aurora: function (Game, x, y, end_x, end_y) {
 
         var aurora = {
@@ -108,15 +89,31 @@ var self = module.exports = {
         Game.aurora_list[aurora.id] = aurora;
     },
 
+    check_collision: function (Game, aurora, planetidlist) {
 
-    update_aurora_position: function (aurora_list) {
-        
+        for (var i in planetidlist) {
+            var planet = planetidlist[i];
+            var dx = planet.x - aurora.x;
+            var dy = planet.y - aurora.y;
+            var distance = Math.sqrt((dx * dx) + (dy * dy));
+            if (distance < (aurora.rad + planet.rad)) {
+                delete Game.aurora_list[aurora.id];
+                delete Game.green_planet_list[planet.id];
+                delete Game.red_planet_list[planet.id];
+            }
+        }
+
+
+    },
+    update_aurora_position: function (Game, aurora_list) {
+
         for (var i in aurora_list) {
             var aurora = aurora_list[i];
             aurora.x = aurora.start_x + (aurora.end_x - aurora.start_x) * aurora.t;
             aurora.y = aurora.start_y + (aurora.end_y - aurora.start_y) * aurora.t;
             aurora.t += 0.01;
-            //self.check_collision(aurora,);
+
+            self.check_collision(Game, aurora, Game.planetidlist);
             // x = x1 + (x2-x1)t;
             // y = y1 + (y2-y1)t;
 
@@ -127,7 +124,7 @@ var self = module.exports = {
     show_aurora: function (Game) {
         var pack = [];
 
-        self.update_aurora_position(Game.aurora_list);
+        self.update_aurora_position(Game, Game.aurora_list);
         //self.check_collision(Game);
         for (var i in Game.aurora_list) {
             var aurora = Game.aurora_list[i];

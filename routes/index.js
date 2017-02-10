@@ -26,6 +26,53 @@ router.get('/game', function (req, res, next) {
 });
 
 
+
+// to display scoreboard
+router.post('/display_leaderborad', function (req, res, next) {
+	var username = req.session.user;
+	/*User.count({ username: username }, function (error, userCount) {
+
+		if (error) {
+			console.log(error);
+		}
+		if (userCount > 0) {
+			//console.log("this means user is there in the database just update his score");
+			// To display stuff in the database
+			User.find({ username: username })
+				.then(function (doc) {
+					player_id = doc;
+					//console.log(doc);
+					people_name = doc[0].pending_request;
+					//console.log(people_name);
+					send_id = player_id[0]._id;
+					res.send(JSON.stringify({ 'msg': 'success', data: people_name }));
+				});
+		}
+	});*/
+	console.log("hello i am trying to display the scoreboard");
+	res.send(JSON.stringify({ 'msg': 'success' }));
+	//console.log("i got you man");
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // this comes under add friend list
 var updatedata = function (send_id, requested_user_name) {
 
@@ -379,7 +426,7 @@ router.post('/access_friends', function (req, res, next) {
 		}
 	});
 
-	console.log("I am watching player profile");
+	//console.log("I am watching player profile");
 });
 
 

@@ -3,56 +3,6 @@ var titles = ['START','SINGLEPLAYER','VIEW MY FRIENDS', 'ACCEPT REQUESTS', 'HOW 
 
 GameState.start = {
     preload: function () {
-        game.load.image('backstart', './images/startbackground.png');
-        game.load.image('singleplayer', './images/singleplayerai.png');
-        game.load.image('multiplayer', './images/multiplayer.jpg');
-        game.load.image('matter', './images/earth10.png');
-        game.load.image('peopleplanet', './images/peopleplanet.png');
-        game.load.image('antimatter', './images/mars1.png');
-        game.load.image('over', './images/endmaterial.jpg');
-        game.load.image('playagain', './images/overearth.png');
-        game.load.image('blackhole', './images/blackhole2.png');
-        game.load.image('fireball', './images/fireball.png');
-        game.load.image('asteroid', './images/asteroid.png');
-       
-        game.load.image('man', './images/spaceman.png');
-        game.load.image('ship', './images/spaceship.png');
-        game.load.image('spaceportalborder', './images/spaceportalborder.png');
-        game.load.image('portal', './images/portal.png');
-        game.load.image('ufo', './images/ufo.png');
-        game.load.image('nstar', './images/nstar.png');
-
-        game.load.image('saturn', './images/saturn.png');
-        game.load.image('rules', './images/howtoplay.png');
-        game.load.image('storybg', './images/storybg.jpg');
-        game.load.image('storybt', './images/storybt.png');
-        game.load.image('homebt', './images/home.png');
-        game.load.image('smallstar', './images/large_star.png');
-        game.load.image('border', './images/border.png');
-        game.load.image('spaceback', './images/spaceback.jpg');
-        game.load.image('profile', './images/profile.png');
-        game.load.image('connect', './images/connect.jpg');
-        game.load.image('next', './images/next.png');
-        game.load.image('htp', './images/howtoplayinside.png');
-        game.load.image('endgame', './images/endgame.png');
-        game.load.image('accepticon', './images/accepticon.png');
-
-
-        //----------- Its music time -------------
-        game.load.audio('boden', './music/syncloading.mp3');
-        game.load.audio('multiplayermusic', './music/multiplayermusic.mp3');
-        game.load.audio('maintheme', './music/Treasure_Planet_Soundtrack_-_Track_03_12_Years_Later.mp3');
-        game.load.audio('singlemusic', './music/singleplayer.mp3');
-        game.load.audio('endmusic', './music/end.mp3');
-        //--start planets ----------
-        game.load.image('moon', './images/moon.png');
-        game.load.image('psaturn', './images/saturn1.png');
-        game.load.image('urenus', './images/urenus.png');
-        game.load.image('pluto', './images/pluto.png');
-        game.load.image('venus', '/images/venus.png');
-        game.load.image('mercury', './images/mercury.png');
-        game.load.image('steps', './images/steps.png');
-
 
     },
     create: function () {
@@ -180,78 +130,6 @@ GameState.start = {
 
         //--------------dots lines -----------------
 
-        // multiple_add = 520;
-        // multiple = 45;
-        // space = 5;
-        // y = 70;
-        // for (var i = 0; i < 15; i++) {
-        //     multiple_add += 30;
-        //     var step = game.add.sprite(multiple + multiple_add + space, 70, 'steps');
-        //     step.scale.setTo(0.05, 0.05);
-        //     step.anchor.setTo(0.5, 0.5);
-        // }
-       
-        
-        // space = 90;
-        // var morespace = 15;
-        // for (var i = 0; i < 5; i++) {
-        //     morespace += 10;
-        //     var step = game.add.sprite(50 + morespace, 100 + space, 'steps');
-        //     step.scale.setTo(0.2, 0.2);
-        //     space += 63;
-        // }
-
-        // space = 90;
-        // for (var i = 0; i < 5; i++) {
-        //     var step = game.add.sprite(700 + space, 525, 'steps');
-        //     step.scale.setTo(0.2, 0.2);
-        //     space += 63;
-        // }
-
-        // space = 90;
-        // for (var i = 0; i < 7; i++) {
-        //     var step = game.add.sprite(140 + space, 525, 'steps');
-        //     step.scale.setTo(0.2, 0.2);
-        //     space += 63;
-        // }
-
-        // space = 90;
-        // morespace = 5;
-        // for (var i = 0; i < 7; i++) {
-        //     var step = game.add.sprite(355 + space, 320 - morespace, 'steps');
-        //     step.scale.setTo(0.2, 0.2);
-        //     space += 63;
-        //     morespace += 5;
-        // }
-
-
-        // space = 90;
-        // vary = 10;
-        // for (var i = 0; i < 3; i++) {
-        //     var step = game.add.sprite(740 + space, 90 + vary, 'steps');
-        //     step.scale.setTo(0.2, 0.2);
-        //     space += 63;
-        //     vary += 10;
-        // }
-
-        // space = 90;
-        // vary = 10;
-        // for (var i = 0; i < 3; i++) {
-        //     var step = game.add.sprite(1050 + space, 130 + vary, 'steps');
-        //     step.scale.setTo(0.2, 0.2);
-        //     space += 63;
-        //     vary += 50;
-        // }
-
-        // space = 90;
-        // vary = 10;
-        // for (var i = 0; i < 3; i++) {
-        //     var step = game.add.sprite(1050 + space, 480 + vary, 'steps');
-        //     step.scale.setTo(0.2, 0.2);
-        //     space += 63;
-        //     vary -= 50;
-        // }
-        
         function calc(x1, x2, y1, y2) {
           var s , space = 10;
           var  x=x1;
