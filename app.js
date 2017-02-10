@@ -69,8 +69,8 @@ app.use( function (req, res, next) {   //enforce a cookie requirement for all re
     //req.sess.username = 'swap'; 
 	if (!req.sess.username) {              //i.e. accessing the server needs session to be set
 		console.log("redirecting cookie not found");
-		//res.redirect("http://teknack.in/"); //this url will be provided later 
-        req.sess.username = 'swap'; 
+		res.redirect("http://teknack.in/"); //this url will be provided later 
+       // req.sess.username = 'swap'; 
 		//next();
 	} else {
 		next();
