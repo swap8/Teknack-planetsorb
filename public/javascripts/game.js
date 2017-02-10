@@ -75,6 +75,7 @@ function actionOnClick() {
 }
 
 function rulespgclick() {
+    
     game.state.start('gamerules');
 }
 

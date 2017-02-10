@@ -21,6 +21,8 @@ GameState.preloader.prototype = {
         game.load.image('blackhole', './images/blackhole2.png');
         game.load.image('fireball', './images/fireball.png');
         game.load.image('asteroid', './images/asteroid.png');
+        game.load.image('bonus','./images/bonus.png');
+        game.load.image('gen','./images/bttn.png');
 
         game.load.image('man', './images/spaceman.png');
         game.load.image('ship', './images/spaceship.png');

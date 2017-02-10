@@ -332,7 +332,7 @@ GameState.main = {
                 if (data.overstate) {
                     if (lock_deadlock) {
                         myGroup.destroy();
-                        mainmusic.pause();
+                        mainmusic.destroy();
                         socket.emit('communication_lost', { communication: true });
                         socket.emit('player_lost', { gameid: data.gameid });
                         game.state.start('end');
