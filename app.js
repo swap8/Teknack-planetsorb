@@ -26,7 +26,7 @@ var single_player_updatescore = require('./routes/single_player_updatescore');
 var AI_collision_detection = require('./routes/AI_collision_detection');
 var app = express();
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://spaceworld:plutosonic@127.0.0.1:27017/users');
+mongoose.connect('mongodb://spaceworld:plutosonic@127.0.0.1:27017/virtualspace');
 var session = require('express-session');
 var session2 = require('client-sessions');
 var checking = require('./routes/checking');
