@@ -1,5 +1,5 @@
 
-function C(k){return(document.cookie.match('(^|; )'+k+'=([^;]*)')||0)[2]};
+
 GameState.main = {
     player: null,
 
@@ -410,7 +410,7 @@ GameState.main = {
             document.onkeydown = function (event) {
                 if (event.keyCode === 69)//e
                 {
-                    console.log("i pressed e");
+                    //console.log("i pressed e");
                     socket.emit('keyPress', { InputId: 'power', state: true });
                 }
 

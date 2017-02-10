@@ -60,10 +60,10 @@ GameState.bots = {
             left: game.input.keyboard.addKey(Phaser.Keyboard.A),
             right: game.input.keyboard.addKey(Phaser.Keyboard.D),
         };
-
+        var person = u;
         socket.on('send_socket_id', function (data) {
             single_id = data;
-            socket.emit('single_player_mission', single_id);
+            socket.emit('single_player_mission', {single_id : single_id , person : person});
         });
         myGroup = game.add.group();
         socket.on('bot_game', function (data) {

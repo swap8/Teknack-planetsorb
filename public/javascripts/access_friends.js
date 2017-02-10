@@ -37,56 +37,34 @@ GameState.access_friends = {
         newbutton.scale.setTo(0.05, 0.05);
         myGroup.add(newbutton);
 
-        // var profile = game.add.sprite(30 + shift_profile_pic, 130, 'profile');
-        // profile.scale.setTo(0.5, 0.5);
 
-        // var profile = game.add.sprite(50 + shift_profile_pic * 2, 130, 'profile');
-        // profile.scale.setTo(0.5, 0.5);
-
-        // var profile = game.add.sprite(50 + shift_profile_pic * 3, 130, 'profile');
-        // profile.scale.setTo(0.5, 0.5);
-
-        $.ajax({
-            type: 'POST',
-            url: '/access_friends',
-            dataType: 'json',
-            success: function (response) {
-                if (response.msg === "success") {
-                    // window.location.href = "/game";
-                }
-                else {
-                    $('#error-msg').html('');
-                    $('#error-msg').append('<span>Login Failed!</span>');
-                }
-                //console.log(response);
-                //console.log(response.data.pack);
-
-                people.stuff = response.data.pack;
-                //console.log(people.stuff);
-                // console.log(people.stuff.length);
-                stop_counter = people.stuff.length;
-                console.log("stop counter :" + stop_counter);
-                for (var i = 0; i < people.stuff.length; i++) {
-                    temp = people.stuff[i];
-                    // console.log(temp);
-                    display_screen(temp);
-                    start_counter++;
-                    stop_counter--;
-                    console.log("stop counter : " + stop_counter);
-                    if (i === 3) {
-                        console.log("limit exceeds than 3 stop the function now");
-                        display_more = true;
-                        //console.log(display_more);
-                        break;
-                    }
+        $.get("/access_friends", {}, function (response) {
+            //console.log(response);
+            people.stuff = response.data.pack;
+            //console.log(people.stuff);
+            // console.log(people.stuff.length);
+            stop_counter = people.stuff.length;
+           // console.log("stop counter :" + stop_counter);
+            for (var i = 0; i < people.stuff.length; i++) {
+                temp = people.stuff[i];
+                // console.log(temp);
+                display_screen(temp);
+                start_counter++;
+                stop_counter--;
+               // console.log("stop counter : " + stop_counter);
+                if (i === 3) {
+                    //console.log("limit exceeds than 3 stop the function now");
+                    display_more = true;
+                    //console.log(display_more);
+                    break;
                 }
             }
-
         });
+
 
         var my_profile;
         function display_screen(temp) {
-            console.log("the length of the temp is : " + temp.length);
+            //console.log("the length of the temp is : " + temp.length);
 
             myGroup = game.add.group();
             everthing = game.add.group();
@@ -94,7 +72,7 @@ GameState.access_friends = {
 
 
             for (var i = 0; i < temp.length; i++) {
-                console.log("hi");
+               // console.log("hi");
                 var something = temp[i];
                 var count = 0;
 
@@ -143,7 +121,7 @@ GameState.access_friends = {
                 mytext = game.add.text(fill_info_x + shift_profile_pic, fill_info_y + shift_space, "Total Single Player Game Won : " + something.total_single_player_game_won, style3);
                 everthing.add(mytext);
                 shift_space += well_space;
-                console.log(something.username);
+                //console.log(something.username);
                 shift_profile_pic += 380;
 
 
@@ -170,7 +148,7 @@ GameState.access_friends = {
         function show_next_friends() {
             //everthing.destroy(my_profile);
 
-            console.log(display_more);
+            //console.log(display_more);
             if (display_more) {
                 game.world.removeAll();
                 var connect_pic = game.add.sprite(0, 0, 'connect');
@@ -193,7 +171,7 @@ GameState.access_friends = {
                 shift_profile_pic = 0;
                 shift_level_position = 0;
 
-                console.log("stop counter : " + stop_counter);
+               // console.log("stop counter : " + stop_counter);
                 if (stop_counter > 0) {
                     for (i = 0; i < stop_counter; i++) {
                         //console.log(start_counter);

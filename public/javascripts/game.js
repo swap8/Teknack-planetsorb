@@ -52,8 +52,8 @@ var spz = 1;
 var game = new Phaser.Game(winwidth, winheight, Phaser.AUTO);
 //game.stage.canvas.id = 'something';
 
-game.state.add('boot',BootState);
-game.state.add('preloader',GameState.preloader);
+game.state.add('boot', BootState);
+game.state.add('preloader', GameState.preloader);
 game.state.add('main', GameState.main);
 game.state.add('end', GameState.end);
 game.state.add('start', GameState.start);
@@ -61,9 +61,9 @@ game.state.add('bots', GameState.bots);
 game.state.add('bot_end', GameState.bot_end);
 game.state.add('gamerules', GameState.gamerules);
 game.state.add('storyline', GameState.storyline);
-game.state.add('accept_request',GameState.accept_request);
-game.state.add('profilestate',GameState.profilestate);
-game.state.add('access_friends',GameState.access_friends);
+game.state.add('accept_request', GameState.accept_request);
+game.state.add('profilestate', GameState.profilestate);
+game.state.add('access_friends', GameState.access_friends);
 
 game.state.start('boot');
 //game.state.start('preloader');
@@ -75,7 +75,7 @@ function actionOnClick() {
 }
 
 function rulespgclick() {
-    
+
     game.state.start('gamerules');
 }
 
@@ -112,7 +112,7 @@ function botsattack() {
     game.state.start('bots');
 }
 
-function friends(){
+function friends() {
     game.state.start('access_friends');
 }
 
@@ -137,7 +137,7 @@ function see_request() {
     game.state.start('accept_request');
 }
 
-function see_profile(){
+function see_profile() {
     game.state.start('profilestate');
 }
 
@@ -161,25 +161,16 @@ function findfriend() {
                 return false
             }
             var username = inputValue;
-
-            $.ajax({
-                type: 'POST',
-                url: '/add_friend',
-                data: { username: username },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.msg === "success") {
-                        console.log("hiii");
-                        swal("Great!", "A Friend request has been sent succesfully.", "success");
-                    }
-                    else {
-                        swal("Sorry!", "No username exist");
-                        $('#error-msg').html('');
-                        $('#error-msg').append('<span>Login Failed!</span>');
-                    }
-                    if (response.msg === "yourself") {
-                        swal("Sorry!", "Please don't send Friend Request to Yourself");
-                    }
+            console.log(username);
+            $.get("/send_this_data/" + username, {}, function (data) {
+                console.log(data);
+                if (data == "success") {
+                    swal("Great!", "A Friend request has been sent succesfully.", "success");
+                }
+                else if (data == "yourself")
+                    swal("Sorry!", "Please don't send Friend Request to Yourself");
+                else {
+                    swal("Sorry!", "No username exist");
                 }
             });
 

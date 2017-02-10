@@ -6,19 +6,21 @@ GameState.preloader = function (game) {
 var text;
 GameState.preloader.prototype = {
     preload: function () {
-        
-        var over = game.add.sprite(0, 0, 'over');
-        over.scale.setTo(0.5, 0.5);
 
-        var over = game.add.sprite(0, 250, 'bar');
+        game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
+        game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+        var over = game.add.sprite(0, 0, 'over');
+        over.scale.setTo(0.6, 0.5);
+
+        var over = game.add.sprite(50, 250, 'bar');
         over.scale.setTo(1.4, 1.4);
 
-        this.preloadBar = this.add.sprite(100, 345, 'loader');
-        this.preloadBar.scale.setTo(1.2,1);
+        this.preloadBar = this.add.sprite(150, 345, 'loader');
+        this.preloadBar.scale.setTo(1.2, 1);
         this.load.setPreloadSprite(this.preloadBar);
 
-        
-        text = game.add.text(600,550,"Loading",{ fontSize : '18px',fill : '#000000'});
+
+        text = game.add.text(600, 550, "Loading", { fontSize: '18px', fill: '#000000' });
 
 
         game.load.image('backstart', './images/startbackground.png');
@@ -27,13 +29,13 @@ GameState.preloader.prototype = {
         game.load.image('matter', './images/earth1.png');
         game.load.image('peopleplanet', './images/peopleplanet.png');
         game.load.image('antimatter', './images/mars1.png');
-        
+
         game.load.image('playagain', './images/overearth.png');
         game.load.image('blackhole', './images/blackhole2.png');
         game.load.image('fireball', './images/fireball.png');
         game.load.image('asteroid', './images/asteroid.png');
-        game.load.image('bonus','./images/bonus.png');
-        game.load.image('gen','./images/bttn.png');
+        game.load.image('bonus', './images/bonus.png');
+        game.load.image('gen', './images/bttn.png');
 
         game.load.image('man', './images/spaceman.png');
         game.load.image('ship', './images/spaceship.png');
@@ -56,7 +58,7 @@ GameState.preloader.prototype = {
         game.load.image('htp', './images/howtoplayinside.png');
         game.load.image('endgame', './images/endgame.png');
         game.load.image('accepticon', './images/accepticon.png');
-        game.load.image('endscore','./images/leadback.png')
+        game.load.image('endscore', './images/leadback.png')
 
         //----------- Its music time -------------
         game.load.audio('boden', './music/syncloading.mp3');
@@ -74,7 +76,7 @@ GameState.preloader.prototype = {
         game.load.image('steps', './images/steps.png');
 
         //this.load.onLoadComplete.add(this.loadComplete, this);
-        game.load.onFileComplete.add(filecomplete,this);
+        game.load.onFileComplete.add(filecomplete, this);
     },
 
     loadComplete: function () {
@@ -83,11 +85,12 @@ GameState.preloader.prototype = {
 
 
     create: function () {
+
         this.state.start('start');
     }
 };
- function filecomplete(progress,cacheKey,success,totalLoaded,totalFiles){
+function filecomplete(progress, cacheKey, success, totalLoaded, totalFiles) {
 
-     text.setText("Loading Assets : " + progress);
+    text.setText("Loading Assets : " + progress);
 
 }

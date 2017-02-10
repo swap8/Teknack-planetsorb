@@ -11,7 +11,7 @@ BootState = {
 
     create: function () {
         //game.add.sprite(50, 50, 'loading');
-        console.log("no problem till here");
+        //console.log("no problem till here");
 
         game.state.start('preloader');
     },

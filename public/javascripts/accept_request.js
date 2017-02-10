@@ -33,41 +33,26 @@ GameState.accept_request = {
         //myGroup.add(mytext);
 
 
-        $.ajax({
-            type: 'POST',
-            url: '/friend_request',
-            dataType: 'json',
-            success: function (response) {
-                if (response.msg === "success") {
-                    // window.location.href = "/game";
-                }
-                else {
-                    $('#error-msg').html('');
-                    $('#error-msg').append('<span>Login Failed!</span>');
-                }
-                console.log(response);
+        $.get("/friend_request", {}, function (response) {
+            style = { fontSize: '20px', fill: '#ffffff' }
+            style1 = { fontSize: '20px', fill: '#000000' }
 
-                style = { fontSize: '20px', fill: '#ffffff' }
-                style1 = { fontSize: '20px', fill: '#000000' }
+            var shift_height = 40;
+            mytext = game.add.text(100, 120, "Friends Request Pending :", style);
+            myGroup.add(mytext);
 
-                var shift_height = 40;
-                mytext = game.add.text(100, 120, "Friends Request Pending :", style);
+
+            for (var i = 0; i < response.data.length; i++) {
+                var border = game.add.sprite(50, 120 + shift_height, 'border');
+                border.scale.setTo(0.8, 0.15);
+                myGroup.add(border);
+                //border.anchor.setTo(0.5,0.5);
+                mytext = game.add.text(120, 135 + shift_height, response.data[i], style1);
                 myGroup.add(mytext);
-
-
-                for (var i = 0; i < response.data.length; i++) {
-                    var border = game.add.sprite(50, 120 + shift_height, 'border');
-                    border.scale.setTo(0.8, 0.15);
-                    myGroup.add(border);
-                    //border.anchor.setTo(0.5,0.5);
-                    mytext = game.add.text(120, 135 + shift_height, response.data[i], style1);
-                    myGroup.add(mytext);
-                    shift_height += 60;
-                }
-
+                shift_height += 60;
             }
-        });
 
+        });
 
     },
 
@@ -97,28 +82,20 @@ function accept_request() {
             }
             var username = inputValue;
 
-            $.ajax({
-                type: 'POST',
-                url: '/accept_friend',
-                data: { username: username },
-                dataType: 'json',
-                success: function (response) {
-                    if (response.msg === "success") {
-                        //console.log("hiii");
-                        swal("Great!", "A Friend has been added succesfully", "success");
-                        location.reload(forceGet);
 
-                    }
-                    else {
-                        swal("Sorry!", "No username exist");
-                        $('#error-msg').html('');
-                        $('#error-msg').append('<span>Login Failed!</span>');
-                    }
-                    if (response.msg === "yourself") {
-                        swal("Sorry!", "Please don't send Friend Request to Yourself");
-                    }
+            $.get("/accept_friend/" + username, {}, function (data) {
+                // console.log(response);
+                console.log(data);
+                if (data == "success") {
+                    swal("Great!", "A Friend request has been sent succesfully.", "success");
+                }
+                else if (data == "yourself")
+                    swal("Sorry!", "Please don't send Friend Request to Yourself");
+                else {
+                    swal("Sorry!", "No username exist");
                 }
             });
+
 
         });
 }

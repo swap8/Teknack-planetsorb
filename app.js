@@ -29,6 +29,11 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/users');
 var session = require('express-session');
 var session2 = require('client-sessions');
+var checking = require('./routes/checking');
+
+var _ = require('underscore');
+var checklevel = require('./routes/checklevel');
+var User = require('./models/User');
 
 
 // Socket.io
@@ -57,29 +62,294 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // //*****    client-sessions usage  **********//
 // //cookie setup KEEP THIS THE SAME AS BELOW!!
-app.use(session2({                
-	cookieName: "sess",
-	secret: "134klh389dbcbsldvn1mcbj",
-	duration: 30 * 60 * 1000, //30 min session duration
-	activeDuration: 5 * 60 * 1000 //5 min active session
+app.use(session2({
+    cookieName: "sess",
+    secret: "134klh389dbcbsldvn1mcbj",
+    duration: 30 * 60 * 1000, //30 min session duration
+    activeDuration: 5 * 60 * 1000 //5 min active session
 }));
 
 
-app.use( function (req, res, next) {   //enforce a cookie requirement for all requests starting with '/'
-    //req.sess.username = 'swap'; 
-	if (!req.sess.username) {              //i.e. accessing the server needs session to be set
-		console.log("redirecting cookie not found");
-		res.redirect("http://teknack.in/"); //this url will be provided later 
-       // req.sess.username = 'swap'; 
-		//next();
-	} else {
-		next();
-	}
+app.use(function (req, res, next) {   //enforce a cookie requirement for all requests starting with '/'
+    //req.sess.username = 'fill';
+    if (!req.sess.username) {              //i.e. accessing the server needs session to be set
+        console.log("redirecting cookie not found");
+        res.redirect("http://teknack.in/"); //this url will be provided later 
+        // req.sess.username = 'swap'; 
+        //next();
+    } else {
+        next();
+    }
 });
 app.use('/', index);
 
-app.use('/who', function(req,res) {
+app.use('/who', function (req, res) {
     res.send("var u = '" + req.sess.username + "';");
+});
+
+
+// to get the leaderboard
+app.get('/leadget', function (req, res) {
+    // var send = "hellow swapnil here";
+    //console.log(send);
+    console.log("hellow");
+    // var username = req.session.user;
+    var player_id;
+    var data = [];
+    console.log("hii i am in display");
+    User.find({}).sort({ highest_multi_player_score: -1 }).exec(function (err, docs) {
+        if (err) {
+            console.log(err);
+        }
+        //console.log(docs);
+        for (var i = 0; i < 10; i++) {
+            if (docs[i] != null) {
+                data[i] = docs[i];
+            }
+
+        }
+        var new_object = {};
+        new_object.data = data;
+        //res.send(JSON.stringify({ 'msg': 'success', data: data }));
+        res.send(new_object);
+    });
+});
+
+
+// to see user profile
+app.get('/see_my_profile', function (req, res) {
+    console.log("hi it's working");
+    var sometext = "hi this is swapnil trying to display the profile board";
+
+
+    var username = req.sess.username;
+    var people_name = [];
+    User.count({ username: username }, function (error, userCount) {
+
+        if (error) {
+            console.log(error);
+        }
+        if (userCount > 0) {
+            //console.log("this means user is there in the database and just show him all the stuff");
+            // To display stuff in the database
+            User.find({ username: username })
+                .then(function (doc) {
+                    //player_id = doc;
+                    console.log(doc);
+                    //people_name = doc[0].pending_request;
+                    //console.log(people_name);
+                    //send_id = player_id[0]._id;
+                    var new_object = {};
+                    new_object.data = doc;
+                    res.send(new_object);
+                    // res.send(JSON.stringify({ 'msg': 'success', data: doc }));
+                });
+        }
+    });
+
+});
+
+
+
+
+//  i finding friend request send friend reqest
+app.get('/send_this_data/:x', function (req, res) {
+
+    console.log(req.params.x);
+    //res.send(req.params.x);
+
+    var same_name = false;
+    var username = req.params.x;
+    temp_name = username;
+    var requested_user_name = req.sess.username;
+    if (username === requested_user_name) {
+        console.log("you can't request yourself");
+        same_name = true;
+    }
+    User.count({ username: username }, function (error, userCount) {
+
+        if (error) {
+            console.log(error);
+            res.send(error);
+            //return res.status(500).send(JSON.stringify({ 'msg': 'servererror' }));
+        }
+        if (userCount > 0) {
+            console.log("i have found in the database");
+
+            //req.session.user = username;
+            if (!same_name) {
+                //User.update({ username: username }, { "$pushAll": { pending_request: requested_user_name } });
+                console.log("hi i don't know");
+                User.find({ username: temp_name })
+                    .then(function (doc) {
+                        player_id = doc;
+                        //console.log(player_id[0]._id);
+                        send_id = player_id[0]._id;
+                        console.log(send_id);
+                        checking.updatedata(send_id, requested_user_name);
+                        res.send("success");
+                    });
+
+                //res.send(JSON.stringify({ 'msg': 'success' }));
+            }
+            else
+                res.send("yourself");
+            //res.send({ msg: "yourself" });
+        }
+        else {
+            res.send("invalid");
+            //res.send({ msg: "invalid" });
+        }
+
+    });
+
+});
+
+// show pending friend requests
+app.get('/friend_request', function (req, res) {
+    var username = req.sess.username;
+    var people_name = [];
+    User.count({ username: username }, function (error, userCount) {
+
+        if (error) {
+            console.log(error);
+        }
+        if (userCount > 0) {
+            //console.log("this means user is there in the database just update his score");
+            // To display stuff in the database
+            User.find({ username: username })
+                .then(function (doc) {
+                    player_id = doc;
+                    //console.log(doc);
+                    people_name = doc[0].pending_request;
+                    //console.log(people_name);
+                    send_id = player_id[0]._id;
+                    var new_object = {};
+                    new_object.data = people_name;
+                    res.send(new_object);
+                    // res.send(JSON.stringify({ 'msg': 'success', data: people_name }));
+                });
+        }
+    });
+
+});
+
+
+//to accept the friend request
+app.get('/accept_friend/:x', function (req, res) {
+    console.log(req.params.x);
+    //res.send(req.params.x);
+
+
+    var same_name = false;
+    var username = req.params.x;
+    var requested_user_name = req.sess.username;
+    if (username === requested_user_name) {
+        console.log("you can't request yourself");
+        same_name = true;
+    }
+    User.count({ username: username }, function (error, userCount) {
+
+        if (error) {
+            console.log(error);
+            return res.status(500).send(JSON.stringify({ 'msg': 'servererror' }));
+        }
+        if (userCount > 0) {
+            //req.session.user = username;
+            if (!same_name) {
+
+                User.find({ username: username })
+                    .then(function (doc) {
+                        player_id = doc;
+                        //console.log(player_id[0]._id);
+                        send_id = player_id[0]._id;
+                        console.log("validification : to see whether this person really exist in " + requested_user_name + " database ");
+                        checking.acceptdata(send_id, requested_user_name, username);
+                        res.send("success");
+                    });
+                //res.send(JSON.stringify({ 'msg': 'success' }));
+            }
+            else
+                res.send("yourself");
+            //res.send({ msg: "yourself" });
+        }
+        else {
+            res.send("invalid");
+            //res.send({ msg: "invalid" });
+        }
+
+    });
+});
+
+//time for accessing friends
+app.get('/access_friends', function (req, res) {
+    //var pass_string = "working fine";
+    //res.send(pass_string);
+    var username = req.sess.username;
+    var people_name = [];
+    User.count({ username: username }, function (error, userCount) {
+
+        if (error) {
+            console.log(error);
+        }
+        if (userCount > 0) {
+            console.log("this means user is there in the database and just show him all the stuff");
+            // To display stuff in the database
+            User.find({ username: username })
+                .then(function (doc) {
+                    //player_id = doc;
+                    console.log(doc);
+                    //people_name = doc[0].pending_request;
+                    //console.log(people_name);
+                    //send_id = player_id[0]._id;
+                    var friends = doc[0].friends;
+                    console.log(friends);
+                    var bind = {};
+                    bind.pack = [];
+                    var send_friends = friends.length;
+                    for (var i = 0; i < friends.length; i++) {
+                        //now find info of this friends
+                        User.find({ username: friends[i] })
+                            .then(function (doc) {
+                                //player_id = doc;
+                                // console.log(doc);
+                                //people_name = doc[0].pending_request;
+                                //console.log(people_name);
+                                //send_id = player_id[0]._id;
+                                var friends = doc[0].friends;
+                                //console.log(friends);
+                                var info = doc;
+                                bind.pack.push(info)
+                            });
+                        send_friends--;
+                    }
+                    var count_time = 5;
+                    var refreshId = setInterval(function () {
+
+                        var send_details_to_client = false;
+                        if (send_friends == 0) {
+                            send_details_to_client = true;
+                        }
+                        if (send_details_to_client) {
+                            var new_object = {};
+                            new_object.data = bind;
+                            res.send(new_object);
+                            //res.send(JSON.stringify({ 'msg': 'success', data: bind }));
+                            //console.log("done");
+                            clearInterval(refreshId);
+                        }
+                        if (!count_time) {
+                            clearInterval(refreshId);
+                        }
+                        count_time--;
+                        //console.log("I am on");
+                    }, 1000)
+                    //console.log(pack);
+                    //res.send(JSON.stringify({ 'msg': 'success', data: pack }));
+                });
+        }
+    });
+
 });
 
 // catch 404 and forward to error handler
@@ -168,7 +438,7 @@ io.on("connection", function (socket) {
             var next_player_position = 0;
             var lobby = uuid.v1();
             var Game = {};
-            Game.time = 40;
+            Game.time = 100;
             Game.planetidlist = {};
             Game.fireball_list = {};
             Game.aurora_list = {};
@@ -238,8 +508,9 @@ io.on("connection", function (socket) {
         //console.log(data);
         for (var i in socket_list) {
             var player_socket = socket_list[i];
-            if (player_socket.username === data) {
+            if (player_socket.username === data.single_id) {
                 socket = player_socket;
+                socket.username = data.person;
             }
         }
         single_player_updatescore.check_exist_in_database(socket.username);
@@ -249,7 +520,7 @@ io.on("connection", function (socket) {
         var Game = {};
         Game.Game_list = {};
         Game.id = uuid.v1();
-        Game.time = 40;
+        Game.time = 60;
         Game.bot = bot;
         Game.change_object = false;
         Game.bot.status = 'Attacking';

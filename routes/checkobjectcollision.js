@@ -32,7 +32,7 @@ var self = module.exports = {
         if(distance < (material.radius + entity.location.rad) ){
             //colliding
             
-            Game.player.location.score+=20;
+            Game.player.location.score+=10;
             //delete Game.material;
         }
 
@@ -43,7 +43,7 @@ var self = module.exports = {
         var dy = object.y - entity.y;
         distance = Math.sqrt((dx*dx)+(dy*dy));
         if(distance < (object.radius + entity.rad) ){
-            Game.bot.score+=20;
+            Game.bot.score+=10;
         }
 
     }

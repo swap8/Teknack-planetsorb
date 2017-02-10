@@ -29,61 +29,46 @@ GameState.profilestate = {
         newbutton.scale.setTo(0.05, 0.05);
         myGroup.add(newbutton);
 
-        $.ajax({
-            type: 'POST',
-            url: '/see_profile',
-            dataType: 'json',
-            success: function (response) {
-                if (response.msg === "success") {
-                    // window.location.href = "/game";
-                }
-                else {
-                    $('#error-msg').html('');
-                    $('#error-msg').append('<span>Login Failed!</span>');
-                }
-                console.log(response);
-                style = { fontSize: '22px', fill: '#ffffff' };
-                style2 = { fontSize: '22px', fill: '#000000' };
-                mytext = game.add.text(270, 250, response.data[0].username, style);
-                mytext = game.add.text(140, 325, response.data[0].level, style2);
+        $.get("/see_my_profile", {}, function (response) {
+            //console.log(response);
+            style = { fontSize: '22px', fill: '#ffffff' };
+            style2 = { fontSize: '22px', fill: '#000000' };
+            mytext = game.add.text(270, 250, response.data[0].username, style);
+            mytext = game.add.text(140, 325, response.data[0].level, style2);
 
+            var shift_space = 20;
+            var well_space = 25;
+            style3 = { fontSize: '16px', fill: '#ffffff' };
+            mytext = game.add.text(120, 385, "Total Games Played : " + response.data[0].total_games_played, style3);
+            mytext = game.add.text(120, 385 + shift_space + 3, "Total Wins : " + response.data[0].total_wins, style3);
+            shift_space += well_space;
+            mytext = game.add.text(120, 385 + shift_space, "Level : " + response.data[0].level, style3);
+            shift_space += well_space;
+            mytext = game.add.text(120, 385 + shift_space, "XP : " + response.data[0].xp, style3);
+            shift_space += well_space;
+            mytext = game.add.text(120, 385 + shift_space, "Highest Single Player Score : " + response.data[0].highest_single_player_score, style3);
+            shift_space += well_space;
+            mytext = game.add.text(120, 385 + shift_space, "Highest MultiPlayer Score : " + response.data[0].highest_multi_player_score, style3);
+            shift_space += well_space;
+            mytext = game.add.text(120, 385 + shift_space, "Total MultiPlayer Game Won : " + response.data[0].total_multi_player_game_won, style3);
+            shift_space += well_space;
+            mytext = game.add.text(120, 385 + shift_space, "Total Single Player Game Won : " + response.data[0].total_single_player_game_won, style3);
+            shift_space += well_space;
+           // console.log(response.data[0].username);
 
+            graphics.beginFill(0x6A5E76, 1);
+            var rect = graphics.drawRect(88, 78, 408, 600);
+            myGroup.add(rect);
 
+            var border = game.add.sprite(177, 339, 'border');
+            var more = response.data[0].level;
 
+            // console.log(parseInt(more)+20);
+            var set_level = (parseInt(more) + 10) / 100;
+            border.scale.setTo(set_level, 0.05);
 
-                var shift_space = 20;
-                var well_space = 25;
-                style3 = { fontSize: '16px', fill: '#ffffff' };
-                mytext = game.add.text(120, 385, "Total Games Played : " + response.data[0].total_games_played, style3);
-                mytext = game.add.text(120, 385 + shift_space + 3, "Total Wins : " + response.data[0].total_wins, style3);
-                shift_space += well_space;
-                mytext = game.add.text(120, 385 + shift_space, "Level : " + response.data[0].level, style3);
-                shift_space += well_space;
-                mytext = game.add.text(120, 385 + shift_space, "XP : " + response.data[0].xp, style3);
-                shift_space += well_space;
-                mytext = game.add.text(120, 385 + shift_space, "Highest Single Player Score : " + response.data[0].highest_single_player_score, style3);
-                shift_space += well_space;
-                mytext = game.add.text(120, 385 + shift_space, "Highest MultiPlayer Score : " + response.data[0].highest_multi_player_score, style3);
-                shift_space += well_space;
-                mytext = game.add.text(120, 385 + shift_space, "Total MultiPlayer Game Won : " + response.data[0].total_multi_player_game_won, style3);
-                shift_space += well_space;
-                mytext = game.add.text(120, 385 + shift_space, "Total Single Player Game Won : " + response.data[0].total_single_player_game_won, style3);
-                shift_space += well_space;
-                console.log(response.data[0].username);
-
-                graphics.beginFill(0x6A5E76, 1);
-                var rect = graphics.drawRect(88, 78, 408, 600);
-                myGroup.add(rect);
-
-                var border = game.add.sprite(177,339,'border');
-                var more = response.data[0].level;
-
-               // console.log(parseInt(more)+20);
-                var set_level = (parseInt(more)+10)/100;
-                border.scale.setTo(set_level,0.05);
-
-            }
         });
+
     },
 
     update: function () {

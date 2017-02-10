@@ -21,7 +21,7 @@ var self = module.exports = {
                 console.log(error);
             }
             if (userCount > 0) {
-                console.log("this means user is there in the database just update his score");
+                //console.log("this means user is there in the database just update his score");
                 // To display stuff in the database
                 User.find({ username: username })
                     .then(function (doc) {
@@ -44,7 +44,7 @@ var self = module.exports = {
                 console.log(err);
             }
             else {
-                console.log(doc);
+                //console.log(doc);
                 if (doc.xp == undefined) {
                     doc.xp = 100;
                     doc.level = 1;
