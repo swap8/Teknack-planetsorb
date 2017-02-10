@@ -1,6 +1,6 @@
 
 var eye, cursors, count = 1;
-var style = { font: "50px Impact", fill: "yellow", align: "left"};
+
 var vert, horz;
 var worldScale = 2;
 var creation, words, txtlng;
@@ -36,7 +36,7 @@ GameState.storyline = {
     },
 
     createText: function() {
-
+        
     text = game.add.text(game.world.centerX, game.world.centerY, "- phaser -\nrocking with\ngoogle web fonts");
     text.anchor.setTo(0.5);
 
@@ -45,7 +45,7 @@ GameState.storyline = {
     },
     create: function () {
        
-
+        var style = { font: "50px Impact", fill: "yellow", align: "left"};
         game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
         sigi = new Phaser.Signal();

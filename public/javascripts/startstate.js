@@ -1,10 +1,12 @@
 var music;
+var titles = ['START','SINGLEPLAYER','VIEW MY FRIENDS', 'ACCEPT REQUESTS', 'HOW TO PLAY', 'STORY', 'ADD A FRIEND', 'PROFILE', 'MULTIPLAYER'];
+
 GameState.start = {
     preload: function () {
         game.load.image('backstart', './images/startbackground.png');
         game.load.image('singleplayer', './images/singleplayerai.png');
         game.load.image('multiplayer', './images/multiplayer.jpg');
-        game.load.image('matter', './images/earth1.png');
+        game.load.image('matter', './images/earth10.png');
         game.load.image('peopleplanet', './images/peopleplanet.png');
         game.load.image('antimatter', './images/mars1.png');
         game.load.image('over', './images/endmaterial.jpg');
@@ -12,7 +14,7 @@ GameState.start = {
         game.load.image('blackhole', './images/blackhole2.png');
         game.load.image('fireball', './images/fireball.png');
         game.load.image('asteroid', './images/asteroid.png');
-
+       
         game.load.image('man', './images/spaceman.png');
         game.load.image('ship', './images/spaceship.png');
         game.load.image('spaceportalborder', './images/spaceportalborder.png');
@@ -39,9 +41,9 @@ GameState.start = {
         //----------- Its music time -------------
         game.load.audio('boden', './music/syncloading.mp3');
         game.load.audio('multiplayermusic', './music/multiplayermusic.mp3');
-        game.load.audio('maintheme','./music/Treasure_Planet_Soundtrack_-_Track_03_12_Years_Later.mp3');
-        game.load.audio('singlemusic','./music/singleplayer.mp3');
-        game.load.audio('endmusic','./music/end.mp3');
+        game.load.audio('maintheme', './music/Treasure_Planet_Soundtrack_-_Track_03_12_Years_Later.mp3');
+        game.load.audio('singlemusic', './music/singleplayer.mp3');
+        game.load.audio('endmusic', './music/end.mp3');
         //--start planets ----------
         game.load.image('moon', './images/moon.png');
         game.load.image('psaturn', './images/saturn1.png');
@@ -54,150 +56,236 @@ GameState.start = {
 
     },
     create: function () {
-
+        var ind=0;
+        iconstyle={ fontSize: '30px', fill: 'yellow' };
         game.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
 
         music = game.add.audio('maintheme');
         music.loop = true;
         music.play();
-        
+
         var backstart = game.add.sprite(-50, -50, 'backstart');
         backstart.scale.setTo(0.5, 0.5);
 
+        //-------------------to generate titles and dotted path--------------
+         setTimeout(function() {
+        calc(replay.x,singleplayerbutton.x,replay.y,singleplayerbutton.y);
+        calc(singleplayerbutton.x,multiplayer.x,singleplayerbutton.y,multiplayer.y);
+        calc(how.x,story.x,how.y,story.y);
+        calc(story.x,addfrnd.x,story.y,addfrnd.y);
+        calc(addfrnd.x,replay.x,addfrnd.y,replay.y);
+        calc(replay.x,profile.x,replay.y,profile.y);
+        calc(profile.x,friendslist.x,profile.y,friendslist.y);
+        calc(addfrnd.x,profile.x,addfrnd.y,profile.y);
+        calc(friendslist.x,accfrnd.x,friendslist.y,accfrnd.y);
+        game.world.bringToTop(planetgroup);
+        
+        appear(replay);
+        appear(singleplayerbutton);
+        appear(friendslist);
+        appear(accfrnd);
+        appear(how);
+        appear(story);
+        appear(addfrnd);
+        appear(profile);
+        appear(multiplayer);
+    }, 4000);
+    
+    planetgroup = game.add.group();
 
-
-
-
-        // game.input.keyboard.onDownCallback = function (e) {
-        //     console.log(e.keyCode);
-        // }
-        // steps
-
-        multiple_add = 50;
-        multiple = 45;
-        space = 20;
-        for (var i = 0; i < 9; i++) {
-            multiple_add += 60;
-            var step = game.add.sprite(multiple + multiple_add + space, 70, 'steps');
-            step.scale.setTo(0.2, 0.2);
-        }
-
-        space = 90;
-        var morespace = 15;
-        for (var i = 0; i < 5; i++) {
-            morespace += 10;
-            var step = game.add.sprite(50 + morespace, 100 + space, 'steps');
-            step.scale.setTo(0.2, 0.2);
-            space += 63;
-        }
-
-        space = 90;
-        for (var i = 0; i < 5; i++) {
-            var step = game.add.sprite(700 + space, 525, 'steps');
-            step.scale.setTo(0.2, 0.2);
-            space += 63;
-        }
-
-        space = 90;
-        for (var i = 0; i < 7; i++) {
-            var step = game.add.sprite(140 + space, 525, 'steps');
-            step.scale.setTo(0.2, 0.2);
-            space += 63;
-        }
-
-        space = 90;
-        morespace = 5;
-        for (var i = 0; i < 7; i++) {
-            var step = game.add.sprite(355 + space, 320 - morespace, 'steps');
-            step.scale.setTo(0.2, 0.2);
-            space += 63;
-            morespace += 5;
-        }
-
-
-        space = 90;
-        vary = 10;
-        for (var i = 0; i < 3; i++) {
-            var step = game.add.sprite(740 + space, 90 + vary, 'steps');
-            step.scale.setTo(0.2, 0.2);
-            space += 63;
-            vary += 10;
-        }
-
-        space = 90;
-        vary = 10;
-        for (var i = 0; i < 3; i++) {
-            var step = game.add.sprite(1050 + space, 130 + vary, 'steps');
-            step.scale.setTo(0.2, 0.2);
-            space += 63;
-            vary += 50;
-        }
-
-        space = 90;
-        vary = 10;
-        for (var i = 0; i < 3; i++) {
-            var step = game.add.sprite(1050 + space, 480 + vary, 'steps');
-            step.scale.setTo(0.2, 0.2);
-            space += 63;
-            vary -= 50;
-        }
-
-
-        // start
-        replay = game.add.sprite(-20, -40, 'playagain');
-        replay.scale.setTo(0.15, 0.15);
-        play = game.add.text(80, 165, 'Start', { fontSize: '20px', fill: '#fff' });
+       // start
+        replay = game.add.sprite(130, 340, 'playagain');
+        replay.anchor.setTo(0.5, 0.5);
+        replay.scale.setTo(0.09, 0.09);
+        
+        planetgroup.add(replay);
 
         //single player
-        singleplayerbutton = game.add.button(winwidth / 2, winheight / 7, 'mercury', botsattack, this, 2, 1, 0);
-        singleplayerbutton.scale.setTo(1, 0.95);
+        singleplayerbutton = game.add.button(170, 340, 'mercury', botsattack, this, 2, 1, 0);
+        singleplayerbutton.scale.setTo(0.46, 0.46);
         singleplayerbutton.anchor.setTo(0.5, 0.5);
-        play = game.add.text(700, 180, 'Single Player', { fontSize: '20px', fill: '#fff' });
+        planetgroup.add(singleplayerbutton);
 
         //story
-        startbutton = game.add.button(winwidth / 1.6, winheight / 2.2, 'nstar', storyline, this, 2, 1, 0);
-        startbutton.scale.setTo(0.2, 0.2);
-        startbutton.anchor.setTo(0.5, 0.5);
-        play = game.add.text(930, 400, 'story', { fontSize: '20px', fill: '#fff' });
+        story = game.add.button(960, 340, 'nstar', storyline, this, 2, 1, 0);
+        story.scale.setTo(0.12, 0.12);
+        story.anchor.setTo(0.5, 0.5);
+        planetgroup.add(story);
 
         //how to play
-        rulesbutton = game.add.button(750, 550, 'pluto', rulespgclick, this, 2, 1, 0);
-        rulesbutton.scale.setTo(1, 0.98);
-        rulesbutton.anchor.setTo(0.5, 0.5);
-        play = game.add.text(690, 630, 'How To Play', { fontSize: '20px', fill: '#fff' });
+        how = game.add.button(800, 340, 'pluto', rulespgclick, this, 2, 1, 0);
+        how.scale.setTo(0.5, 0.5);
+        how.anchor.setTo(0.5, 0.5);
+        planetgroup.add(how);
 
         //multiplayer
-        storybutton = game.add.button(1250, 270, 'antimatter', actionOnClick, this, 2, 1, 0);
-        storybutton.scale.setTo(0.5, 0.49);
-        play = game.add.text(1280, 420, 'MultiPlayer', { fontSize: '20px', fill: '#fff' });
+        multiplayer = game.add.button(1430, 340, 'antimatter', actionOnClick, this, 2, 1, 0);
+        multiplayer.scale.setTo(0.3, 0.3);
+        multiplayer.anchor.setTo(0.5, 0.5);
+        planetgroup.add(multiplayer);
 
         //search friend
-        friend = game.add.button(290, 260, 'moon', findfriend, this, 2, 1, 0);
-        friend.scale.setTo(0.9, 0.9);
-        play = game.add.text(330, 425, 'Add a Friend', { fontSize: '20px', fill: '#fff' });
+        addfrnd = game.add.button(1140, 340, 'moon', findfriend, this, 2, 1, 0);
+        addfrnd.scale.setTo(0.5, 0.5);
+        addfrnd.anchor.setTo(0.5, 0.5);
+        planetgroup.add(addfrnd);
 
         // accept friend request 
-        newbutton = game.add.button(1000, 70, 'venus', see_request, this, 2, 1, 0);
-        newbutton.scale.setTo(1, 0.95);
-        play = game.add.text(1180, 150, 'Friend Requests', { fontSize: '20px', fill: '#fff' });
+        accfrnd = game.add.button(670, 340, 'venus', see_request, this, 2, 1, 0);
+        accfrnd.scale.setTo(0.5, 0.5);
+        accfrnd.anchor.setTo(0.5, 0.5);
+        planetgroup.add(accfrnd);
 
         // profile
-        newbutton = game.add.button(1000, 500, 'psaturn', see_profile, this, 2, 1, 0);
-        newbutton.scale.setTo(0.7, 0.7);
-        newbutton.angle = -15;
-        play = game.add.text(1110, 615, 'Profile', { fontSize: '20px', fill: '#fff' });
+        profile = game.add.button(1270, 340, 'psaturn', see_profile, this, 2, 1, 0);
+        profile.scale.setTo(0.5, 0.5);
+        profile.anchor.setTo(0.5, 0.5);
+        profile.angle = -15;
+        planetgroup.add(profile);
 
         // My friends
-        newbutton = game.add.button(50, 470, 'urenus', friends, this, 2, 1, 0);
-        newbutton.scale.setTo(0.8, 0.8);
-        newbutton.angle = 5;
-        play = game.add.text(140, 625, 'Friends', { fontSize: '20px', fill: '#fff' });
+        friendslist = game.add.button(510, 340, 'urenus', friends, this, 2, 1, 0);
+        friendslist.scale.setTo(0.5, 0.5);
+        friendslist.anchor.setTo(0.5, 0.5);
+        friendslist.angle = 5;
+        planetgroup.add(friendslist);
 
         // PLANETSORB
-        var style = { font: "65px Arial", fill: "#ffffff", align: "center" };
-        var text = game.add.text(650, 270, "Planetsorb", { fontSize: '45px', fill: '#fff' });
+        var heading = { font: "90px Impact",  align: "center" };
+        var text = game.add.text(1180, 220, "PLANET-SORB", heading);
         text.anchor.setTo(0.5, 0.5);
-    }
+        text.scale.setTo(1,1);
+        text.setShadow(5, 5, 'rgba(255,0,0,3)', 5);
+         var grd = text.context.createLinearGradient(0, 0, 0, text.height);
 
+    //  Add in 2 color stops
+    grd.addColorStop(0, '#8ED6FF');   
+    grd.addColorStop(1, '#004CB3');
+
+    //  And apply to the Text
+    text.fill = grd;
+    game.add.tween(text).to({alpha:0},2000,Phaser.Easing.Linear.None,true,0,-1,true);
+
+        //----------------experimental stuff----------------
+        game.add.tween(replay).to({ x: 520, y: 340 }, 3000, Phaser.Easing.Exponential.Out, true, 1500, 0, false);
+        game.add.tween(multiplayer).to({ x: 830, y: 90 }, 3000, Phaser.Easing.Exponential.Out, true, 1500, 0, false);
+        game.add.tween(friendslist).to({ x: 1060, y: 420 }, 3000, Phaser.Easing.Exponential.Out, true, 1500, 0, false);
+        game.add.tween(addfrnd).to({ x: 710, y: 470 }, 3000, Phaser.Easing.Exponential.Out, true, 1500, 0, false);
+        game.add.tween(profile).to({ x: 860, y: 300 }, 3000, Phaser.Easing.Exponential.Out, true, 1500, 0, false);
+        game.add.tween(accfrnd).to({ x: 1170, y: 550 }, 3000, Phaser.Easing.Exponential.Out, true, 1500, 0, false);
+        game.add.tween(story).to({ x: 550, y: 560 }, 3000, Phaser.Easing.Exponential.Out, true, 1500, 0, false);
+        game.add.tween(how).to({ x: 350, y: 550 }, 3000, Phaser.Easing.Exponential.Out, true, 1500, 0, false);
+        game.add.tween(singleplayerbutton).to({ x: 610, y: 160 }, 3000, Phaser.Easing.Exponential.Out, true, 1500, 0, false);
+
+        //--------------dots lines -----------------
+
+        // multiple_add = 520;
+        // multiple = 45;
+        // space = 5;
+        // y = 70;
+        // for (var i = 0; i < 15; i++) {
+        //     multiple_add += 30;
+        //     var step = game.add.sprite(multiple + multiple_add + space, 70, 'steps');
+        //     step.scale.setTo(0.05, 0.05);
+        //     step.anchor.setTo(0.5, 0.5);
+        // }
+       
+        
+        // space = 90;
+        // var morespace = 15;
+        // for (var i = 0; i < 5; i++) {
+        //     morespace += 10;
+        //     var step = game.add.sprite(50 + morespace, 100 + space, 'steps');
+        //     step.scale.setTo(0.2, 0.2);
+        //     space += 63;
+        // }
+
+        // space = 90;
+        // for (var i = 0; i < 5; i++) {
+        //     var step = game.add.sprite(700 + space, 525, 'steps');
+        //     step.scale.setTo(0.2, 0.2);
+        //     space += 63;
+        // }
+
+        // space = 90;
+        // for (var i = 0; i < 7; i++) {
+        //     var step = game.add.sprite(140 + space, 525, 'steps');
+        //     step.scale.setTo(0.2, 0.2);
+        //     space += 63;
+        // }
+
+        // space = 90;
+        // morespace = 5;
+        // for (var i = 0; i < 7; i++) {
+        //     var step = game.add.sprite(355 + space, 320 - morespace, 'steps');
+        //     step.scale.setTo(0.2, 0.2);
+        //     space += 63;
+        //     morespace += 5;
+        // }
+
+
+        // space = 90;
+        // vary = 10;
+        // for (var i = 0; i < 3; i++) {
+        //     var step = game.add.sprite(740 + space, 90 + vary, 'steps');
+        //     step.scale.setTo(0.2, 0.2);
+        //     space += 63;
+        //     vary += 10;
+        // }
+
+        // space = 90;
+        // vary = 10;
+        // for (var i = 0; i < 3; i++) {
+        //     var step = game.add.sprite(1050 + space, 130 + vary, 'steps');
+        //     step.scale.setTo(0.2, 0.2);
+        //     space += 63;
+        //     vary += 50;
+        // }
+
+        // space = 90;
+        // vary = 10;
+        // for (var i = 0; i < 3; i++) {
+        //     var step = game.add.sprite(1050 + space, 480 + vary, 'steps');
+        //     step.scale.setTo(0.2, 0.2);
+        //     space += 63;
+        //     vary -= 50;
+        // }
+        
+        function calc(x1, x2, y1, y2) {
+          var s , space = 10;
+          var  x=x1;
+          var  y=y1;
+          var  dx = (x2 - x1);
+          var  dy = (y2 - y1);
+            if (Math.abs(dx) > Math.abs(dy)) {
+                s = 10;
+            }
+            else {
+                s = 10;
+            }
+            var xi = dx / s;
+            var yi = dy / s;
+            
+            for (var k = 0; k < s; k++) {
+                x = x + xi;
+                y = y + yi;
+                // console.log("X:"+ Math.abs(x)+ "  Y:" + Math.abs(y));
+                var step = game.add.sprite(x,y, 'steps');
+            step.scale.setTo(0.05, 0.05);
+            step.anchor.setTo(0.5, 0.5);
+                
+            }
+        }//end of calc
+
+        function appear(x){
+            console.log("count before:" + ind);
+           play = game.add.text(x.x, x.y+60, titles[ind], iconstyle);
+           play.anchor.setTo(0.5,0.5);
+           play.scale.setTo(0.5,0.5);
+           ind++;
+            // console.log("count after:" + ind);
+        }
+    }
+    
 }
