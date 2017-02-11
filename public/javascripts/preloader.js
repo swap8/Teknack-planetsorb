@@ -25,7 +25,7 @@ GameState.preloader.prototype = {
 
         game.load.image('backstart', './images/startbackground.png');
         game.load.image('singleplayer', './images/singleplayerai.png');
-        game.load.image('multiplayer', './images/multiplayer.jpg');
+        // game.load.image('multiplayer', './images/multiplayer.jpg');
         game.load.image('matter', './images/earth1.png');
         game.load.image('peopleplanet', './images/peopleplanet.png');
         game.load.image('antimatter', './images/mars1.png');

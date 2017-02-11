@@ -284,7 +284,7 @@ GameState.storyline = {
         // }
 
         // worldScale = Phaser.Math.clamp(worldScale, 1, 3); // set a minimum and maximum scale value
-        // game.world.scale.set(worldScale);// set our world scale as needed
+        game.world.scale.set(worldScale);// set our world scale as needed
         // game.debug.text(worldScale, 32, 32);
 
 
