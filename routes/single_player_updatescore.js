@@ -58,8 +58,19 @@ var self = module.exports = {
                 else {
                     doc.xp = parseInt(doc.xp) + 100;
                     var level = checklevel.find_level(doc.xp);
-					doc.level = level;
+                    doc.level = level;
                     doc.total_wins = parseInt(doc.total_wins) + 1;
+                    if (doc.total_wins === 25) {
+                        console.log("executed");
+                        var user_score;
+                        request.getMega(doc.username, function (score) {
+                            user_score = score;
+                            user_score += 450;
+                            request.updateMega(doc.username, user_score, function (ret) {
+
+                            });
+                        });
+                    }
                     doc.total_games_played = parseInt(doc.total_games_played) + 1;
                     doc.total_single_player_game_won = parseInt(doc.total_single_player_game_won) + 1;
                     if (doc.highest_single_player_score < score) {

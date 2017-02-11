@@ -115,6 +115,31 @@ app.get('/leadget', function (req, res) {
     });
 });
 
+// to get the leaderboard
+app.get('/leadget_single', function (req, res) {
+    console.log("hellow");
+    // var username = req.session.user;
+    var player_id;
+    var data = [];
+    console.log("hii i am in display");
+    User.find({}).sort({ highest_single_player_score: -1 }).exec(function (err, docs) {
+        if (err) {
+            console.log(err);
+        }
+        //console.log(docs);
+        for (var i = 0; i < 10; i++) {
+            if (docs[i] != null) {
+                data[i] = docs[i];
+            }
+
+        }
+        var new_object = {};
+        new_object.data = data;
+        //res.send(JSON.stringify({ 'msg': 'success', data: data }));
+        res.send(new_object);
+    });
+});
+
 
 // to see user profile
 app.get('/see_my_profile', function (req, res) {

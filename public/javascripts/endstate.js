@@ -28,8 +28,6 @@ GameState.end = {
             some = game.add.text(start + more - 10, 200 + add, "Level", { fontSize: '20px', fill: '#fff' });
             some = game.add.text(start + more + 50, 200 + add, "Total Wins", { fontSize: '20px', fill: '#fff' });
             some = game.add.text(start + more + 180, 200 + add, "SinglePlayer", { fontSize: '20px', fill: '#fff' });
-            some = game.add.text(start + more + 310, 200 + add, "Total Games", { fontSize: '20px', fill: '#fff' });
-
 
             var add = 50;
             for (var i = 0; i < 10; i++) {
@@ -39,7 +37,6 @@ GameState.end = {
                 some = game.add.text(start + more, 200 + add, response.data[i].level, { fontSize: '20px', fill: '#fff' });
                 some = game.add.text(start + more + 100, 200 + add, response.data[i].total_wins, { fontSize: '20px', fill: '#fff' });
                 some = game.add.text(start + more + 200, 200 + add, response.data[i].highest_single_player_score, { fontSize: '20px', fill: '#fff' });
-                some = game.add.text(start + more + 330, 200 + add, response.data[i].total_games_played, { fontSize: '20px', fill: '#fff' });
 
                 add += 30;
             }
@@ -64,7 +61,7 @@ GameState.bot_end = {
         endscore.anchor.setTo(0.5, 0.5);
 
 
-        $.get("/leadget", {}, function (response) {
+        $.get("/leadget_single", {}, function (response) {
             var add = 10;
             var add_more = 150;
             var more = 250;
@@ -75,9 +72,7 @@ GameState.bot_end = {
             some = game.add.text(start + more - 10, 200 + add, "Level", { fontSize: '20px', fill: '#fff' });
             some = game.add.text(start + more + 50, 200 + add, "Total Wins", { fontSize: '20px', fill: '#fff' });
             some = game.add.text(start + more + 180, 200 + add, "SinglePlayer", { fontSize: '20px', fill: '#fff' });
-            some = game.add.text(start + more + 310, 200 + add, "Total Games", { fontSize: '20px', fill: '#fff' });
-
-
+            
             var add = 50;
             for (var i = 0; i < 10; i++) {
                 some = game.add.text(start - 50, 200 + add, i + 1, { fontSize: '20px', fill: '#fff' });
@@ -86,8 +81,7 @@ GameState.bot_end = {
                 some = game.add.text(start + more, 200 + add, response.data[i].level, { fontSize: '20px', fill: '#fff' });
                 some = game.add.text(start + more + 100, 200 + add, response.data[i].total_wins, { fontSize: '20px', fill: '#fff' });
                 some = game.add.text(start + more + 200, 200 + add, response.data[i].highest_single_player_score, { fontSize: '20px', fill: '#fff' });
-                some = game.add.text(start + more + 330, 200 + add, response.data[i].total_games_played, { fontSize: '20px', fill: '#fff' });
-
+ 
                 add += 30;
             }
 

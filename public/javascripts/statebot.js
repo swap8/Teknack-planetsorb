@@ -224,7 +224,7 @@ GameState.bots = {
             mytext.fixedToCamera = true;
             myGroup.add(mytext);
 
-            mytext = game.add.text(950, 30, "Staus : " + data.bot_status, { fontSize: '14px', fill: '#ffffff' });
+            mytext = game.add.text(950, 30, "Status : " + data.bot_status, { fontSize: '14px', fill: '#ffffff' });
             mytext.fixedToCamera = true;
             myGroup.add(mytext);
 

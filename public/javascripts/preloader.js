@@ -19,6 +19,9 @@ GameState.preloader.prototype = {
         this.preloadBar.scale.setTo(1.2, 1);
         this.load.setPreloadSprite(this.preloadBar);
 
+        var fullscreen = game.add.button(100, 100, 'fullscreen', go_full, this, 2, 1, 0);
+        fullscreen.anchor.setTo(0.5, 0.5);
+        fullscreen.scale.setTo(0.4, 0.4);
 
         text = game.add.text(600, 550, "Loading", { fontSize: '18px', fill: '#000000' });
 
@@ -85,12 +88,25 @@ GameState.preloader.prototype = {
 
 
     create: function () {
+        //game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
 
         this.state.start('start');
-    }
+    },
+
+
 };
 function filecomplete(progress, cacheKey, success, totalLoaded, totalFiles) {
 
     text.setText("Loading Assets : " + progress);
+
+}
+
+function go_full() {
+    if (game.scale.isFullScreen) {
+        game.scale.stopFullScreen();
+    }
+    else {
+        game.scale.startFullScreen(false);
+    }
 
 }

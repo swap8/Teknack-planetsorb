@@ -5,7 +5,7 @@ BootState = {
         game.load.image('over', './images/endmaterial.jpg');
         game.load.image('loader', './images/loader.png');
         game.load.image('bar', './images/bar.png');
-
+        game.load.image('fullscreen', './images/fullscreen.png');
         //this.load.onLoadComplete.add(this.nowstartstate, this);
     },
 

@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var _ = require('underscore');
 var checklevel = require('./checklevel');
 var User = require('../models/User');
-
+var request = require('./request');
 var self = module.exports = {
 
 	updatescore: function (Game) {
@@ -63,18 +63,29 @@ var self = module.exports = {
 					doc.total_games_played = 1;
 					doc.highest_multi_player_score = score;
 					console.log(doc.highest_multi_player_score);
-                    doc.highest_single_player_score = 0;
+					doc.highest_single_player_score = 0;
 				}
 				else {
 					doc.xp = parseInt(doc.xp) + 200;
 					var level = checklevel.find_level(doc.xp);
 					doc.level = level;
 					doc.total_wins = parseInt(doc.total_wins) + 1;
+					if (doc.total_wins === 25) {
+						console.log("executed");
+						var user_score;
+						request.getMega(doc.username, function (score) {
+							user_score = score;
+							user_score += 450;
+							request.updateMega(doc.username, user_score, function (ret) {
+
+							});
+						});
+					}
 					doc.total_games_played = parseInt(doc.total_games_played) + 1;
 					doc.total_multi_player_game_won = parseInt(doc.total_multi_player_game_won) + 1;
 					if (doc.highest_multi_player_score < score) {
-                        doc.highest_multi_player_score = score;
-                    }
+						doc.highest_multi_player_score = score;
+					}
 				}
 				doc.save();
 				console.log("score inserted succesfully");
