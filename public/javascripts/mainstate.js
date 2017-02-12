@@ -232,7 +232,7 @@ GameState.main = {
             startgroup.destroy();
             if (data.start_the_game) {
                 if (!turn_music_off) {
-                    music.pause();
+                    music.destroy();
                     turn_music_off = true;
                     mainmusic.play();
                     start_animation();

@@ -108,7 +108,7 @@ function astangle() {
     return astroid_angle;
 }
 function botsattack() {
-    music.pause();
+    music.destroy();
     game.state.start('bots');
 }
 
